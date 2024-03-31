@@ -57,7 +57,7 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
 
     classDirectories.setFrom(classesDir)
     sourceDirectories.setFrom(srcDir)
-    executionData.setFrom(files(layout.buildDirectory.asFile.get().toString() + "/jacoco/jacocoTestReport.exec"))
+    executionData.setFrom(files(layout.buildDirectory.asFile.get().toString() + "/jacoco/testDebugUnitTest.exec"))
 }
 
 tasks.withType<Test> {
