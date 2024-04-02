@@ -34,7 +34,7 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       - name: Build and analyze
-        uses: reactivecircus/android-emulator-runner@main
+        uses: reactivecircus/android-emulator-runner@1fef06a96024f43a7f8a6f9c19e26e2cda8957e7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
