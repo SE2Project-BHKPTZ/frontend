@@ -142,7 +142,10 @@ sonar {
         property("sonar.organization", "se2project-bhkptz")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+        )
     }
 }
 
