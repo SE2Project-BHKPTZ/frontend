@@ -27,6 +27,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -38,7 +42,46 @@ android {
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
-    dependsOn("testDebugUnitTest")
+    mustRunAfter("testDebugUnitTest")
+    mustRunAfter("createDebugCoverageReport")
+
+    dependsOn(
+        ":app:checkDebugDuplicateClasses",
+        ":app:compressDebugAssets",
+        ":app:generateDebugAndroidTestResValues",
+        ":app:generateDebugAndroidTestLintModel",
+        ":app:lintAnalyzeDebugAndroidTest",
+        ":app:mergeReleaseAssets",
+        ":app:jacocoDebug",
+        ":app:compressReleaseAssets",
+        ":app:extractProguardFiles",
+        ":app:dexBuilderDebug",
+        ":app:dexBuilderRelease",
+        ":app:mergeExtDexDebug",
+        ":app:mergeLibDexDebug",
+        ":app:mergeProjectDexDebug",
+        ":app:mergeDexRelease",
+        ":app:compileReleaseArtProfile",
+        ":app:checkReleaseDuplicateClasses",
+        ":app:mergeDebugJavaResource",
+        ":app:mergeDebugJniLibFolders",
+        ":app:mergeReleaseJniLibFolders",
+        ":app:packageDebug",
+        ":app:packageRelease",
+        ":app:lintAnalyzeDebug",
+        ":app:generateDebugLintReportModel",
+        ":app:lintVitalAnalyzeRelease",
+        ":app:generateReleaseLintVitalReportModel",
+        ":app:generateDebugUnitTestLintModel",
+        ":app:lintAnalyzeDebugUnitTest",
+        ":app:checkDebugAndroidTestAarMetadata",
+        ":app:mergeDebugAndroidTestResources",
+        ":app:mergeDebugAndroidTestResources",
+        ":app:processDebugAndroidTestManifest",
+        ":app:processDebugAndroidTestResources",
+        ":app:compileDebugAndroidTestKotlin",
+        ":app:compileDebugAndroidTestKotlin"
+    )
 
     reports {
         xml.required.set(true)
@@ -48,22 +91,50 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
         html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/jacocoTestReport/html"))
     }
 
-    val exclusionList = listOf("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*", "**/*Test*.*", "android/**/*.*")
-    val kotlinClassesDir = layout.buildDirectory.dir("tmp/kotlin-classes/debug").get().asFile.absolutePath
-    val javaClassesDir = layout.buildDirectory.dir("intermediates/javac/debug/classes").get().asFile.absolutePath
+    val exclusionList = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
+    val kotlinClassesDir =
+        layout.buildDirectory.dir("tmp/kotlin-classes/debug").get().asFile.absolutePath
+    val javaClassesDir =
+        layout.buildDirectory.dir("intermediates/javac/debug/classes").get().asFile.absolutePath
     val classesDir = fileTree(mapOf("dir" to kotlinClassesDir, "excludes" to exclusionList)) +
             fileTree(mapOf("dir" to javaClassesDir, "excludes" to exclusionList))
     val srcDir = files("src/main/java", "src/main/kotlin")
 
     classDirectories.setFrom(classesDir)
     sourceDirectories.setFrom(srcDir)
-    executionData.setFrom(files(layout.buildDirectory.asFile.get().toString() + "/jacoco/testDebugUnitTest.exec"))
+    executionData.setFrom(
+        fileTree(
+            mapOf(
+                "dir" to project.projectDir,
+                "includes" to listOf("**/*.exec", "**/*.ec")
+            )
+        )
+    )
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
     finalizedBy("jacocoTestReport")
 }
+
+tasks.register("androidTest", JacocoReport::class.java) {
+    dependsOn("connectedDebugAndroidTest")
+    finalizedBy("jacocoTestReport")
+}
+
+tasks.register("testAll", JacocoReport::class) {
+    dependsOn("testDebugUnitTest", "androidTest")
+    finalizedBy("jacocoTestReport")
+}
+
+project.tasks["sonarqube"].dependsOn("testAll")
 
 sonar {
     properties {
