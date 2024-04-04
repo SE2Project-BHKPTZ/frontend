@@ -1,9 +1,12 @@
 package at.aau.serg.network
 
+import io.mockk.mockk
 import okhttp3.Callback
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.concurrent.CountDownLatch
@@ -18,7 +21,7 @@ class HttpClientTest {
     fun setUp() {
         server = MockWebServer()
         server.start()
-        httpClient = HttpClient()
+        httpClient = HttpClient(server.url("/").toString())
     }
 
     @AfterEach
@@ -34,8 +37,7 @@ class HttpClientTest {
 
         server.enqueue(MockResponse().setBody("OK"))
 
-        val url = server.url("/").toString()
-        httpClient.post(url, jsonBody, authToken, object : Callback {
+        httpClient.post("", jsonBody, authToken, object : Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 latch.countDown()
             }
@@ -60,8 +62,7 @@ class HttpClientTest {
 
         server.enqueue(MockResponse().setBody("OK"))
 
-        val url = server.url("/").toString()
-        httpClient.get(url, authToken, object : Callback {
+        httpClient.get("", authToken, object : Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 latch.countDown()
             }
@@ -75,5 +76,24 @@ class HttpClientTest {
         latch.await(1, TimeUnit.SECONDS)
         val recordedRequest = server.takeRequest()
         assert(recordedRequest.getHeader("Authorization") == "Bearer $authToken")
+    }
+
+    @Test
+    fun `makeRequestUrl should correctly concatenate URLs`() {
+        val makeRequestUrl = httpClient.javaClass.getDeclaredMethod("makeRequestUrl", String::class.java)
+        makeRequestUrl.isAccessible = true
+        assertEquals("${server.url("/")}test", makeRequestUrl.invoke(httpClient, "test"))
+        assertEquals("${server.url("/")}test", makeRequestUrl.invoke(httpClient, "/test"))
+    }
+
+    @Test
+    fun `makeRequestUrl should throw IllegalArgumentException for invalid URL`() {
+        val invalidBaseUrl = "htttp://example.com"
+        val client = HttpClient(invalidBaseUrl)
+        val callback: Callback = mockk(relaxed = true)
+
+        assertThrows(IllegalArgumentException::class.java) {
+            client.get("path", null, callback)
+        }
     }
 }
