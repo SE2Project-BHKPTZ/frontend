@@ -156,8 +156,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.socketIoClient) {
+        exclude(group = "org.json", module = "json")
+    }
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.mockk.core)
+    testImplementation(libs.okhttp.mock.webserver)
     testRuntimeOnly(libs.junit.jupiter.engine)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
