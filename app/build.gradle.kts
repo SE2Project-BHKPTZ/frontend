@@ -161,6 +161,7 @@ dependencies {
     }
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
+    implementation("com.google.code.gson:gson:2.10.1")
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.mockk.core)
