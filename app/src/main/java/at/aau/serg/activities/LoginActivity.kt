@@ -1,6 +1,9 @@
 package at.aau.serg.activities
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -13,10 +16,15 @@ import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.MainActivity
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
+import at.aau.serg.logic.StoreToken
+import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
+import java.security.KeyStore
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +57,20 @@ class LoginActivity : AppCompatActivity() {
                     }
                     return
                 }
+
+                val responseBody = response.body?.string()
+                try{
+                    val jsonObject = JSONObject(responseBody)
+                    val accessToken = jsonObject.getString("accessToken")
+                    val refreshToken = jsonObject.getString("refreshToken")
+                    StoreToken().storeTokens(accessToken, refreshToken, ContextWrapper(this@LoginActivity))
+
+                }catch (e: JSONException) {
+                    e.printStackTrace()
+                    Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
                 this@LoginActivity.startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             }
         }

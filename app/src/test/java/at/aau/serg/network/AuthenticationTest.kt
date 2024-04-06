@@ -1,5 +1,7 @@
 package at.aau.serg.network
 
+import android.content.ContextWrapper
+import android.content.SharedPreferences
 import at.aau.serg.logic.Authentication
 import at.aau.serg.models.User
 import com.google.gson.Gson
@@ -116,5 +118,7 @@ class AuthenticationTest {
         assertEquals("Please fill all fields", result)
         verify { callback wasNot  Called }
     }
+
+
 
 }

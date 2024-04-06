@@ -1,5 +1,6 @@
 package at.aau.serg.activities
 
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -12,9 +13,12 @@ import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.MainActivity
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
+import at.aau.serg.logic.StoreToken
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
 
 class RegisterActivity : AppCompatActivity() {
@@ -45,6 +49,18 @@ class RegisterActivity : AppCompatActivity() {
                     runOnUiThread{
                         Toast.makeText(this@RegisterActivity, "Registration failed", Toast.LENGTH_SHORT).show()
                     }
+                    return
+                }
+                val responseBody = response.body?.string()
+                try{
+                    val jsonObject = JSONObject(responseBody)
+                    val accessToken = jsonObject.getString("accessToken")
+                    val refreshToken = jsonObject.getString("refreshToken")
+                    StoreToken().storeTokens(accessToken, refreshToken, ContextWrapper(this@RegisterActivity))
+                }catch (e: JSONException) {
+                    e.printStackTrace()
+                    Toast.makeText(this@RegisterActivity, "Registration success", Toast.LENGTH_SHORT).show()
+                    this@RegisterActivity.startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
                     return
                 }
                 this@RegisterActivity.startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
