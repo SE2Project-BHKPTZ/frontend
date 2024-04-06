@@ -166,6 +166,7 @@ dependencies {
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.mockk.core)
     testImplementation(libs.okhttp.mock.webserver)
+    testImplementation("org.testng:testng:6.9.6")
     testRuntimeOnly(libs.junit.jupiter.engine)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
