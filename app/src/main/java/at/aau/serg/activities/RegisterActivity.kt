@@ -35,12 +35,16 @@ class RegisterActivity : AppCompatActivity() {
 
         val callback = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_SHORT).show()
+                runOnUiThread{
+                    Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
-                    Toast.makeText(this@RegisterActivity, "Registration failed", Toast.LENGTH_SHORT).show()
+                    runOnUiThread{
+                        Toast.makeText(this@RegisterActivity, "Registration failed", Toast.LENGTH_SHORT).show()
+                    }
                     return
                 }
                 this@RegisterActivity.startActivity(Intent(this@RegisterActivity, MainActivity::class.java))

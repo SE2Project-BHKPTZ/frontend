@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -35,12 +36,17 @@ class LoginActivity : AppCompatActivity() {
 
         val callback = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread{
+                    Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                }
                 Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
-                    Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                    runOnUiThread{
+                        Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                    }
                     return
                 }
                 this@LoginActivity.startActivity(Intent(this@LoginActivity, MainActivity::class.java))
