@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.RegisterActivity">
+    tools:context=".activities.LoginActivity">
 
     <TextView
-        android:id="@+id/tvRegister"
+        android:id="@+id/tvLogin"
         android:layout_width="179dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="@string/register"
+        android:text="@string/login"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,29 +65,30 @@
         app:layout_constraintTop_toBottomOf="@+id/tvPassword" />
 
     <TextView
-        android:id="@+id/tvAlreadyHaveAnAccount"
+        android:id="@+id/tvNoAccountYet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="161dp"
         android:layout_marginBottom="159dp"
-        android:text="@string/alreadyHaveAccount"
+        android:text="@string/noAccountYet"
         android:textAlignment="center"
-        android:onClick="tvAlreadyHaveAnAccount_Clicked"
-        app:layout_constraintBottom_toBottomOf="@+id/btnRegister"
+        android:onClick="tvNoAccountYet_Clicked"
+        app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvPassword" />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
-        android:text="@string/register"
-        android:onClick="btnRegister_Clicked"
+        android:text="@string/login"
+        android:onClick="btnLogin_Clicked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

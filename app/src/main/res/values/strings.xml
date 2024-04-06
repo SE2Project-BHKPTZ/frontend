@@ -4,4 +4,6 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="alreadyHaveAccount"><u>Already have an account?\nLogin</u></string>
+    <string name="login">Login</string>
+    <string name="noAccountYet"><u>No account yet?\nCreate one</u></string>
 </resources>
