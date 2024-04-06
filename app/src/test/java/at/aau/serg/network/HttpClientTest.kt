@@ -21,7 +21,8 @@ class HttpClientTest {
     fun setUp() {
         server = MockWebServer()
         server.start()
-        httpClient = HttpClient(server.url("/").toString())
+        httpClient = HttpClient()
+        httpClient.updateBaseUrl(server.url("/").toString())
     }
 
     @AfterEach
@@ -89,7 +90,8 @@ class HttpClientTest {
     @Test
     fun `makeRequestUrl should throw IllegalArgumentException for invalid URL`() {
         val invalidBaseUrl = "htttp://example.com"
-        val client = HttpClient(invalidBaseUrl)
+        val client = HttpClient()
+        client.updateBaseUrl(invalidBaseUrl)
         val callback: Callback = mockk(relaxed = true)
 
         assertThrows(IllegalArgumentException::class.java) {

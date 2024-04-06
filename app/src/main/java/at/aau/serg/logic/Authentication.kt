@@ -17,9 +17,8 @@ class Authentication {
         if(username.isEmpty() || password.isEmpty()){
             return "Please fill all fields"
         }
-
         val userToRegister = User(username, password)
-        HttpClient("http://10.0.2.2:8081").post("users/register", Gson().toJson(userToRegister), null, callback)
+        HttpClient().post("users/register", Gson().toJson(userToRegister), null, callback)
         return null
     }
 
@@ -30,7 +29,7 @@ class Authentication {
 
         val userToRegister = User(username, password)
 
-        HttpClient("http://10.0.2.2:8081").post("users/login", Gson().toJson(userToRegister), null, callback)
+        HttpClient().post("users/login", Gson().toJson(userToRegister), null, callback)
         return null
     }
 
