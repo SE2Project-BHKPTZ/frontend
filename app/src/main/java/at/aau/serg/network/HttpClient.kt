@@ -1,16 +1,11 @@
 package at.aau.serg.network
 
-import android.content.res.Resources
-import androidx.core.content.ContextCompat.getString
-import at.aau.serg.R
 import okhttp3.Callback
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.util.Properties
 
 class HttpClient(private var baseUrl: String) {
     private var client: OkHttpClient = OkHttpClient()

@@ -24,6 +24,7 @@ import org.json.JSONObject
 import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,21 +36,21 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun btnLogin_Clicked(view: View) {
+    fun btnLoginClicked(view: View) {
         val username = findViewById<EditText>(R.id.editTextUsername).text
         val password = findViewById<EditText>(R.id.editTextPassword).text
 
         val callback = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread{
-                    Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
                     runOnUiThread{
-                        Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
                     }
                     return
                 }
@@ -63,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
                 }catch (e: JSONException) {
                     e.printStackTrace()
-                    Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
                     return
                 }
 
@@ -77,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun tvNoAccountYet_Clicked(view: View){
+    fun tvNoAccountYetClicked(view: View){
         startActivity(Intent(this, RegisterActivity::class.java))
     }
 }

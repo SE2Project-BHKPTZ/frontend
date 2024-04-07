@@ -35,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    fun btnRegister_Clicked(view: View) {
+    fun btnRegisterClicked(view: View) {
         val username = findViewById<EditText>(R.id.editTextUsername).text
         val password = findViewById<EditText>(R.id.editTextPassword).text
 
@@ -74,7 +74,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    fun tvAlreadyHaveAnAccount_Clicked(view: View){
+    fun tvAlreadyHaveAnAccountClicked(view: View){
         startActivity(Intent(this, LoginActivity::class.java))
     }
 }

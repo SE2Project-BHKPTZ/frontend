@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun btnGoToLogin_Clicked(view: View){
+    fun btnGoToLoginClicked(view: View){
         startActivity(Intent(this, LoginActivity::class.java))
     }
 }

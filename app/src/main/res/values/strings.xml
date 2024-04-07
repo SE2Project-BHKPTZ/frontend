@@ -6,4 +6,5 @@
     <string name="alreadyHaveAccount"><u>Already have an account?\nLogin</u></string>
     <string name="login">Login</string>
     <string name="noAccountYet"><u>No account yet?\nCreate one</u></string>
+    <string name="LoginFailed">Login failed</string>
 </resources>
