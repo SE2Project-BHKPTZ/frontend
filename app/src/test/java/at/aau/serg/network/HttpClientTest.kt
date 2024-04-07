@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class HttpClientTest {
-
     private lateinit var server: MockWebServer
     private lateinit var httpClient: HttpClient
 
@@ -56,6 +55,31 @@ class HttpClientTest {
     }
 
     @Test
+    fun `POST request should work correctly without authToken`() {
+        val jsonBody = """{"key":"value"}"""
+        val latch = CountDownLatch(1)
+
+        server.enqueue(MockResponse().setBody("OK"))
+
+        httpClient.post("", jsonBody, null, object : Callback {
+            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                latch.countDown()
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                assert(response.isSuccessful)
+                latch.countDown()
+            }
+        })
+
+        // Wait for the request to finish
+        latch.await(1, TimeUnit.SECONDS)
+        val recordedRequest = server.takeRequest()
+        assert(recordedRequest.getHeader("Authorization") == null)
+        assert(recordedRequest.body.readUtf8() == jsonBody)
+    }
+
+    @Test
     fun `GET request should correctly handle authToken`() {
         val authToken = "testToken"
         val latch = CountDownLatch(1)
@@ -76,6 +100,28 @@ class HttpClientTest {
         latch.await(1, TimeUnit.SECONDS)
         val recordedRequest = server.takeRequest()
         assert(recordedRequest.getHeader("Authorization") == "Bearer $authToken")
+    }
+
+    @Test
+    fun `GET request should work correctly without authToken`() {
+        val latch = CountDownLatch(1)
+
+        server.enqueue(MockResponse().setBody("OK"))
+
+        httpClient.get("", null, object : Callback {
+            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                latch.countDown()
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                assert(response.isSuccessful)
+                latch.countDown()
+            }
+        })
+
+        latch.await(1, TimeUnit.SECONDS)
+        val recordedRequest = server.takeRequest()
+        assert(recordedRequest.getHeader("Authorization") == null)
     }
 
     @Test
