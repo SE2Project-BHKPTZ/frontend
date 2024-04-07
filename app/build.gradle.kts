@@ -25,7 +25,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        resValue("string", "api_url", properties.getProperty("api.url"))
+        resValue("string", "api_url", properties.getProperty("api.url", "http://localhost:8081"), )
     }
 
     buildTypes {
