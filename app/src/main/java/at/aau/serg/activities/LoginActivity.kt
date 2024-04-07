@@ -70,7 +70,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        Authentication(HttpClient(getString(R.string.api_url))).loginUser(username.toString(), password.toString(), callback)
+        val error = Authentication(HttpClient(getString(R.string.api_url))).loginUser(username.toString(), password.toString(), callback)
+        if(error != null){
+            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun tvNoAccountYet_Clicked(view: View){
