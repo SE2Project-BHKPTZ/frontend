@@ -103,7 +103,7 @@ class AuthenticationTest {
     fun `loginUser with empty username`() {
         val password = "testPassword"
 
-        val result = authentication.registerUser("", password, callback)
+        val result = authentication.loginUser("", password, callback)
 
         assertEquals("Please fill all fields", result)
         verify { callback wasNot  Called }
@@ -113,7 +113,7 @@ class AuthenticationTest {
     fun `loginUser with empty password`() {
         val username = "testUser"
 
-        val result = authentication.registerUser(username, "", callback)
+        val result = authentication.loginUser(username, "", callback)
 
         assertEquals("Please fill all fields", result)
         verify { callback wasNot  Called }
