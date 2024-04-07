@@ -118,15 +118,7 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
 
     classDirectories.setFrom(classesDir)
     sourceDirectories.setFrom(srcDir)
-    executionData.setFrom(
-        fileTree(
-            mapOf(
-                "dir" to project.projectDir,
-                "includes" to listOf("**/*.exec", "**/*.ec")
-            )
-        )
-    )
-
+    executionData.setFrom(files(layout.buildDirectory.asFile.get().toString() + "/jacoco/testDebugUnitTest.exec"))
 }
 
 tasks.withType<Test> {
@@ -144,7 +136,7 @@ tasks.register("testAll", JacocoReport::class) {
     finalizedBy("jacocoTestReport")
 }
 
-project.tasks["sonarqube"].dependsOn("testAll")
+project.tasks["sonarqube"].dependsOn("testDebugUnitTest")
 
 sonar {
     properties {
@@ -156,6 +148,7 @@ sonar {
             "sonar.coverage.jacoco.xmlReportPaths",
             "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
         )
+        property("sonar.coverage.exclusions", "**/at/aau/serg/activities/**")
     }
 }
 
