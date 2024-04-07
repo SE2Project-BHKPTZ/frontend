@@ -64,7 +64,7 @@ class AuthenticationTest {
 
         val result = authentication.registerUser("", password, callback)
 
-        assertEquals("Please fill all fields", result)
+        assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
     }
 
@@ -74,7 +74,7 @@ class AuthenticationTest {
 
         val result = authentication.registerUser(username, "", callback)
 
-        assertEquals("Please fill all fields", result)
+        assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
     }
 
@@ -105,7 +105,7 @@ class AuthenticationTest {
 
         val result = authentication.loginUser("", password, callback)
 
-        assertEquals("Please fill all fields", result)
+        assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
     }
 
@@ -115,7 +115,7 @@ class AuthenticationTest {
 
         val result = authentication.loginUser(username, "", callback)
 
-        assertEquals("Please fill all fields", result)
+        assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
     }
 
