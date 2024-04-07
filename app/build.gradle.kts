@@ -11,6 +11,11 @@ android {
     namespace = "at.aau.serg"
     compileSdk = 34
 
+    val properties = Properties()
+    if(project.rootProject.file("local.properties").canRead()){
+        properties.load(project.rootProject.file("local.properties").inputStream())
+    }
+
     defaultConfig {
         applicationId = "at.aau.serg"
         minSdk = 24
@@ -19,6 +24,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue("string", "api_url", properties.getProperty("api.url"))
     }
 
     buildTypes {
@@ -28,11 +35,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-        debug {
-            val properties = Properties()
-            properties.load(project.rootProject.file("local.properties").inputStream())
-            resValue("string", "api_url", properties.getProperty("api.url"))
         }
         getByName("debug") {
             enableUnitTestCoverage = true
