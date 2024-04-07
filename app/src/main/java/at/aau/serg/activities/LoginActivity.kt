@@ -1,15 +1,12 @@
 package at.aau.serg.activities
 
-import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -18,14 +15,12 @@ import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.HttpClient
-import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
-import java.security.KeyStore
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
