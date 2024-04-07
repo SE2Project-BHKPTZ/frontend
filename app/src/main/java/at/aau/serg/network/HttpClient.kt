@@ -1,19 +1,19 @@
 package at.aau.serg.network
 
+import android.content.res.Resources
+import androidx.core.content.ContextCompat.getString
+import at.aau.serg.R
 import okhttp3.Callback
+import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.Properties
 
-class HttpClient {
+class HttpClient(private var baseUrl: String) {
     private var client: OkHttpClient = OkHttpClient()
-    private var baseUrl = "http://10.0.2.2:8081"
-
-    fun updateBaseUrl(newBaseUrl: String){
-        baseUrl = newBaseUrl
-    }
 
     fun post(url: String, jsonBody: String, authToken: String? = null, callback: Callback) {
         val body = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())

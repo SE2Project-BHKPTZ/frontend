@@ -67,7 +67,7 @@ class RegisterActivity : AppCompatActivity() {
                 this@RegisterActivity.startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
             }
         }
-        val error = Authentication(HttpClient()).registerUser(username.toString(), password.toString(), callback)
+        val error = Authentication(HttpClient(getString(R.string.api_url))).registerUser(username.toString(), password.toString(), callback)
         if(error != null){
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
         }

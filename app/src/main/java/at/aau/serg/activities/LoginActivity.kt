@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        Authentication(HttpClient()).loginUser(username.toString(), password.toString(), callback)
+        Authentication(HttpClient(getString(R.string.api_url))).loginUser(username.toString(), password.toString(), callback)
     }
 
     fun tvNoAccountYet_Clicked(view: View){
