@@ -10,7 +10,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 class HttpClient(private val baseUrl: String) {
     private var client: OkHttpClient = OkHttpClient()
 
-    fun post(url: String, jsonBody: String, authToken: String? = null, callback: Callback) {
+    fun post(url: String, jsonBody: String, authToken: String?, callback: Callback) {
         val body = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
         val requestUrl = makeRequestUrl(url)
         val request = Request.Builder()
@@ -24,7 +24,7 @@ class HttpClient(private val baseUrl: String) {
         client.newCall(request).enqueue(callback)
     }
 
-    fun get(url: String, authToken: String? = null, callback: Callback) {
+    fun get(url: String, authToken: String?, callback: Callback) {
         val requestUrl = makeRequestUrl(url)
         val request = Request.Builder()
             .url(requestUrl)
