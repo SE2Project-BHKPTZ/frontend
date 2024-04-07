@@ -27,8 +27,8 @@ class AuthenticationTest {
     private lateinit var callback: Callback
     @BeforeEach
     fun setUp() {
-        authentication = Authentication()
         httpClient = mockk()
+        authentication = Authentication(httpClient)
         callback = mockk(relaxed = true)
     }
 

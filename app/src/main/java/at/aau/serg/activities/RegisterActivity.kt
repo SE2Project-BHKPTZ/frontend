@@ -14,6 +14,7 @@ import at.aau.serg.MainActivity
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
+import at.aau.serg.network.HttpClient
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -66,7 +67,7 @@ class RegisterActivity : AppCompatActivity() {
                 this@RegisterActivity.startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
             }
         }
-        val error = Authentication().registerUser(username.toString(), password.toString(), callback)
+        val error = Authentication(HttpClient()).registerUser(username.toString(), password.toString(), callback)
         if(error != null){
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
         }

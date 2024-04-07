@@ -8,17 +8,23 @@ import at.aau.serg.MainActivity
 import at.aau.serg.models.User
 import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
+import io.socket.client.IO
 import okhttp3.Callback
 import org.json.JSONException
 import org.json.JSONObject
+import java.net.URISyntaxException
 
-class Authentication {
+class Authentication(httpClient: HttpClient) {
+    private var httpClient: HttpClient
+    init {
+        this.httpClient = httpClient
+    }
     fun registerUser(username: String, password: String, callback: Callback): String? {
         if(username.isEmpty() || password.isEmpty()){
             return "Please fill all fields"
         }
         val userToRegister = User(username, password)
-        HttpClient().post("users/register", Gson().toJson(userToRegister), null, callback)
+        httpClient.post("users/register", Gson().toJson(userToRegister), null, callback)
         return null
     }
 
@@ -29,7 +35,7 @@ class Authentication {
 
         val userToRegister = User(username, password)
 
-        HttpClient().post("users/login", Gson().toJson(userToRegister), null, callback)
+        httpClient.post("users/login", Gson().toJson(userToRegister), null, callback)
         return null
     }
 

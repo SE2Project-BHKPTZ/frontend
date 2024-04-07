@@ -17,6 +17,7 @@ import at.aau.serg.MainActivity
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
+import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
@@ -47,7 +48,6 @@ class LoginActivity : AppCompatActivity() {
                 runOnUiThread{
                     Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
                 }
-                Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        Authentication().loginUser(username.toString(), password.toString(), callback)
+        Authentication(HttpClient()).loginUser(username.toString(), password.toString(), callback)
     }
 
     fun tvNoAccountYet_Clicked(view: View){
