@@ -2,7 +2,7 @@ package at.aau.serg.network
 
 import android.content.ContextWrapper
 import android.content.SharedPreferences
-import at.aau.serg.logic.Authentication
+import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -18,16 +18,18 @@ class TokenStoreTest {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var contextWrapper: ContextWrapper
+    private lateinit var secret: Secret
 
     @BeforeEach
     fun setup() {
         storeToken = StoreToken()
         sharedPreferences = mockk()
+        secret = mockk()
         editor = mockk(relaxed = true)
-        every { sharedPreferences.edit() } returns editor
-
         contextWrapper = mockk()
-        every { contextWrapper.getSharedPreferences(any(), any()) } returns sharedPreferences
+
+        every { sharedPreferences.edit() } returns editor
+        every { secret.getSecretSharedPref(any()) } returns sharedPreferences
     }
 
     @AfterEach
@@ -40,7 +42,9 @@ class TokenStoreTest {
         val accessToken = "access_token"
         val refreshToken = "refresh_token"
 
-        storeToken.storeTokens(accessToken, refreshToken, contextWrapper)
+
+
+        storeToken.storeTokens(accessToken, refreshToken, contextWrapper, secret)
 
         verify {
             editor.putString("accessToken", "access_token")
@@ -48,5 +52,4 @@ class TokenStoreTest {
             editor.apply()
         }
     }
-
 }

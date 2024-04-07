@@ -1,14 +1,12 @@
 package at.aau.serg.logic
 
-import android.content.Context
 import android.content.ContextWrapper
 import org.json.JSONException
 
 class StoreToken {
-    fun storeTokens(accessToken: String, refreshToken: String, context: ContextWrapper){
+    fun storeTokens(accessToken: String, refreshToken: String, context: ContextWrapper, secret: Secret){
         try{
-
-            val sharedPreferences = context.getSharedPreferences("Wizard_Token", Context.MODE_PRIVATE)
+            val sharedPreferences =secret.getSecretSharedPref(context)
             val editor = sharedPreferences.edit()
             editor.putString("accessToken", accessToken)
             editor.putString("refreshToken", refreshToken)
@@ -17,4 +15,5 @@ class StoreToken {
             e.printStackTrace()
         }
     }
+
 }

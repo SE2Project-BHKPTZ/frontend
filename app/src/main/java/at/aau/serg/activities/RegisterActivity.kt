@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.MainActivity
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
+import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.HttpClient
 import okhttp3.Call
@@ -57,7 +58,7 @@ class RegisterActivity : AppCompatActivity() {
                     val jsonObject = JSONObject(responseBody)
                     val accessToken = jsonObject.getString("accessToken")
                     val refreshToken = jsonObject.getString("refreshToken")
-                    StoreToken().storeTokens(accessToken, refreshToken, ContextWrapper(this@RegisterActivity))
+                    StoreToken().storeTokens(accessToken, refreshToken, ContextWrapper(this@RegisterActivity), Secret())
                 }catch (e: JSONException) {
                     e.printStackTrace()
                     Toast.makeText(this@RegisterActivity, "Registration success", Toast.LENGTH_SHORT).show()

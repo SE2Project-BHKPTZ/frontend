@@ -14,6 +14,7 @@ socket-io-client = "2.1.0"
 mockk = "1.13.10"
 okhttp = "4.12.0"
 gson = "2.10.1"
+securityCryptoKtx = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +34,7 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 okhttp-mock-webserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson"}
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto", version.ref = "securityCryptoKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
