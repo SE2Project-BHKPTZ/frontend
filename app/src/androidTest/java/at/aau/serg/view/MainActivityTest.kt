@@ -6,7 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import at.aau.serg.MainActivity
+import at.aau.serg.activities.MainActivity
 import at.aau.serg.R
 import org.junit.Rule
 import org.junit.Test

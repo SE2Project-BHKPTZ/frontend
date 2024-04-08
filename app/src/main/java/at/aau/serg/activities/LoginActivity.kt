@@ -10,7 +10,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import at.aau.serg.MainActivity
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.Secret
