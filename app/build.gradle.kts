@@ -52,7 +52,6 @@ android {
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
     mustRunAfter("testDebugUnitTest")
-    mustRunAfter("createDebugCoverageReport")
 
     dependsOn(
         ":app:checkDebugDuplicateClasses",
@@ -118,25 +117,20 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
 
     classDirectories.setFrom(classesDir)
     sourceDirectories.setFrom(srcDir)
-    executionData.setFrom(files(layout.buildDirectory.asFile.get().toString() + "/jacoco/testDebugUnitTest.exec"))
+    executionData.setFrom(
+        fileTree(
+            mapOf(
+                "dir" to project.projectDir,
+                "includes" to listOf("**/*.exec", "**/*.ec")
+            )
+        )
+    )
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
     finalizedBy("jacocoTestReport")
 }
-
-tasks.register("androidTest", JacocoReport::class.java) {
-    dependsOn("connectedDebugAndroidTest")
-    finalizedBy("jacocoTestReport")
-}
-
-tasks.register("testAll", JacocoReport::class) {
-    dependsOn("testDebugUnitTest", "androidTest")
-    finalizedBy("jacocoTestReport")
-}
-
-project.tasks["sonarqube"].dependsOn("testDebugUnitTest")
 
 sonar {
     properties {
