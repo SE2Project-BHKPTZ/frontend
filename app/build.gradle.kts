@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -9,6 +11,11 @@ android {
     namespace = "at.aau.serg"
     compileSdk = 34
 
+    val properties = Properties()
+    if(project.rootProject.file("local.properties").canRead()){
+        properties.load(project.rootProject.file("local.properties").inputStream())
+    }
+
     defaultConfig {
         applicationId = "at.aau.serg"
         minSdk = 24
@@ -17,6 +24,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue("string", "api_url", properties.getProperty("api.url", "http://localhost:8081"), )
     }
 
     buildTypes {
@@ -149,6 +158,8 @@ dependencies {
     }
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.gson)
+    implementation(libs.androidx.security.crypto.ktx)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.mockk.core)

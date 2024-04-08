@@ -7,7 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class HttpClient(private val baseUrl: String) {
+class HttpClient(private var baseUrl: String) {
     private var client: OkHttpClient = OkHttpClient()
 
     fun post(url: String, jsonBody: String, authToken: String?, callback: Callback) {

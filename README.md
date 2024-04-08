@@ -6,6 +6,17 @@
 
 This project is an implementation of the popular Wizard card game, a strategic game of prediction and trick-taking. Players must accurately predict the number of tricks they will win in each round. Correct guesses are rewarded, while incorrect predictions result in penalties.
 
+## Configure environment variables
+
+To run the projects you need to set the following environment variables in local.properties
+
+- `api.url` - The url of the webserver
+Example:
+
+```
+api.url=http://10.0.2.2:8081 # url used by the webserver (10.0.2.2 => localhost of your developing device)
+```
+
 ## Contribution
 
 This project follows the [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/) and also enforces semantic PR titles to maintain a clear and understandable project history.
