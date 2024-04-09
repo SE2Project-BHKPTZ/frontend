@@ -12,14 +12,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
-import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.HttpClient
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONException
-import org.json.JSONObject
 import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
@@ -56,11 +54,7 @@ class LoginActivity : AppCompatActivity() {
 
                 val responseBody = response.body?.string()
                 try{
-                    val jsonObject = JSONObject(responseBody)
-                    val accessToken = jsonObject.getString("accessToken")
-                    val refreshToken = jsonObject.getString("refreshToken")
-                    StoreToken().storeTokens(accessToken, refreshToken, ContextWrapper(this@LoginActivity), Secret())
-
+                    StoreToken().storeTokenFromResponseBody(responseBody, ContextWrapper(this@LoginActivity))
                 }catch (e: JSONException) {
                     e.printStackTrace()
                     Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
