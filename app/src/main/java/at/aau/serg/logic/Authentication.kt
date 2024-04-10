@@ -1,11 +1,8 @@
 package at.aau.serg.logic
 
-import android.content.ContextWrapper
 import at.aau.serg.models.User
 import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import okhttp3.Callback
 
 class Authentication(httpClient: HttpClient) {

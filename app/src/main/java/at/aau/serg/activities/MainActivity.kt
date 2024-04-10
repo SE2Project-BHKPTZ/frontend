@@ -1,6 +1,5 @@
 package at.aau.serg.activities
 
-import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -37,40 +36,42 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    if(response.code != 403){
+                if(response.isSuccessful)
+                    return
+
+                if(response.code != 403){
+                    this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                    return
+                }
+
+
+                val refreshTokenCallback = object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
                         this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                        return
                     }
 
-                    val refreshTokenCallback = object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
+                    override fun onResponse(call: Call, response: Response) {
+                        if (!response.isSuccessful) {
                             this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                            return
+                        }
+                        val responseBody = response.body?.string()
+                        if(responseBody == null){
+                            this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                            return
                         }
 
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) {
-                                this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                                return
-                            }
-                            val responseBody = response.body?.string()
-                            if(responseBody == null){
-                                this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                                return
-                            }
-
-                            try{
-                                StoreToken(this@MainActivity, Secret()).storeAccessTokenFromBody(JSONObject(responseBody))
-                            }catch (e: JSONException) {
-                                e.printStackTrace()
-                                this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                                return
-                            }
+                        try{
+                            StoreToken(this@MainActivity, Secret()).storeAccessTokenFromBody(JSONObject(responseBody))
+                        }catch (e: JSONException) {
+                            e.printStackTrace()
+                            this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                            return
                         }
                     }
-                    if(!Authentication(HttpClient(getString(R.string.api_url))).updateToken(refreshTokenCallback, StoreToken(this@MainActivity, Secret()))) {
-                        this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                    }
+                }
+                if(!Authentication(HttpClient(getString(R.string.api_url))).updateToken(refreshTokenCallback, StoreToken(this@MainActivity, Secret()))) {
+                    this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                 }
             }
         }
