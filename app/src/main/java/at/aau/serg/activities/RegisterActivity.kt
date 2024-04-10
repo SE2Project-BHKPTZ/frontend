@@ -12,12 +12,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
+import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.HttpClient
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
 
 class RegisterActivity : AppCompatActivity() {
@@ -52,7 +54,7 @@ class RegisterActivity : AppCompatActivity() {
                 }
                 val responseBody = response.body?.string()
                 try{
-                    StoreToken().storeTokenFromResponseBody(responseBody, ContextWrapper(this@RegisterActivity))
+                    StoreToken(ContextWrapper(this@RegisterActivity), Secret()).storeTokenFromResponseBody(JSONObject(responseBody))
                 }catch (e: JSONException) {
                     e.printStackTrace()
                     Toast.makeText(this@RegisterActivity, "Registration success", Toast.LENGTH_SHORT).show()

@@ -33,15 +33,15 @@ class Authentication(httpClient: HttpClient) {
         return null
     }
 
-    fun tokenValid(context: ContextWrapper, callback: Callback, secret: Secret, storeToken: StoreToken): Boolean{
-        val accessToken = storeToken.getAccessToken(context, secret) ?: return false
+    fun tokenValid(callback: Callback, storeToken: StoreToken): Boolean{
+        val accessToken = storeToken.getAccessToken() ?: return false
 
         httpClient.get("users/me", accessToken, callback)
         return true
     }
 
-    fun updateToken(context: ContextWrapper, callback: Callback, secret: Secret, storeToken: StoreToken): Boolean{
-        val refreshToken = storeToken.getRefreshToken(context, secret) ?: return false
+    fun updateToken(callback: Callback, storeToken: StoreToken): Boolean{
+        val refreshToken = storeToken.getRefreshToken() ?: return false
         val jsonString = """
             {
             "refreshToken": """" + refreshToken + """"

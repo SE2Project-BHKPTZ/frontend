@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             try{
-                                StoreToken().storeAccessTokenFromBody(responseBody, this@MainActivity)
+                                StoreToken(this@MainActivity, Secret()).storeAccessTokenFromBody(JSONObject(responseBody))
                             }catch (e: JSONException) {
                                 e.printStackTrace()
                                 this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
@@ -68,14 +68,14 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if(!Authentication(HttpClient(getString(R.string.api_url))).updateToken(this@MainActivity,refreshTokenCallback, Secret(), StoreToken())) {
+                    if(!Authentication(HttpClient(getString(R.string.api_url))).updateToken(refreshTokenCallback, StoreToken(this@MainActivity, Secret()))) {
                         this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                     }
                 }
             }
         }
 
-        if(!Authentication(HttpClient(getString(R.string.api_url))).tokenValid(this, getTokenCallback, Secret(), StoreToken())){
+        if(!Authentication(HttpClient(getString(R.string.api_url))).tokenValid(getTokenCallback, StoreToken(this, Secret()))){
             this.startActivity(Intent(this, LoginActivity::class.java))
         }
     }
