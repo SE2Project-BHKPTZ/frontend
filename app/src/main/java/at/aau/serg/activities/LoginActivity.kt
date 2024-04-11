@@ -16,11 +16,9 @@ import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
-import okhttp3.Call
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
 
