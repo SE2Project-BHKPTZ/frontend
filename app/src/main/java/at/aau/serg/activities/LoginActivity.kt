@@ -45,13 +45,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun onFailureLogin(call: Call, e: IOException){
+    private fun onFailureLogin(){
         runOnUiThread{
             Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun onResponseLogin(call: Call, response: Response){
+    private fun onResponseLogin(response: Response){
         if (!response.isSuccessful) {
             runOnUiThread{
                 Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()

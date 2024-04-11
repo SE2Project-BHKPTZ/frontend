@@ -7,4 +7,5 @@
     <string name="login">Login</string>
     <string name="noAccountYet"><u>No account yet?\nCreate one</u></string>
     <string name="LoginFailed">Login failed</string>
+    <string name="RegisterFailed">Register failed</string>
 </resources>

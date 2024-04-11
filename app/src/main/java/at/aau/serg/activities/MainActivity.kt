@@ -36,11 +36,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startLoginActivity(call: Call, e: IOException){
+    private fun startLoginActivity(){
         this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
     }
 
-    private fun checkIfUserIsAuthenticated(call: Call, response: Response){
+    private fun checkIfUserIsAuthenticated(response: Response){
         if(response.isSuccessful)
             return
 
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkIfUpdateAccessTokenWorked(call: Call, response: Response){
+    private fun checkIfUpdateAccessTokenWorked(response: Response){
         if (!response.isSuccessful) {
             this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             return
