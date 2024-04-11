@@ -14,9 +14,9 @@ import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
+import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
@@ -38,36 +38,35 @@ class RegisterActivity : AppCompatActivity() {
         val username = findViewById<EditText>(R.id.editTextUsername).text
         val password = findViewById<EditText>(R.id.editTextPassword).text
 
-        val callback = object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread{
-                    Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    runOnUiThread{
-                        Toast.makeText(this@RegisterActivity, "Registration failed", Toast.LENGTH_SHORT).show()
-                    }
-                    return
-                }
-                val responseBody = response.body?.string()
-                try{
-                    StoreToken(ContextWrapper(this@RegisterActivity), Secret()).storeTokenFromResponseBody(JSONObject(responseBody))
-                }catch (e: JSONException) {
-                    e.printStackTrace()
-                    Toast.makeText(this@RegisterActivity, "Registration success", Toast.LENGTH_SHORT).show()
-                    this@RegisterActivity.startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
-                    return
-                }
-                this@RegisterActivity.startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
-            }
-        }
-        val error = Authentication(HttpClient(getString(R.string.api_url))).registerUser(username.toString(), password.toString(), callback)
+        val error = Authentication(HttpClient(getString(R.string.api_url))).registerUser(username.toString(), password.toString(), CallbackCreator().createCallback(::onFailureRegister, ::onResponseRegister))
         if(error != null){
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun onFailureRegister(call: Call, e: IOException){
+        runOnUiThread{
+            Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onResponseRegister(call: Call, response: Response){
+        if (!response.isSuccessful) {
+            runOnUiThread{
+                Toast.makeText(this@RegisterActivity, "Registration failed", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+        val responseBody = response.body?.string()
+        try{
+            StoreToken(ContextWrapper(this@RegisterActivity), Secret()).storeTokenFromResponseBody(JSONObject(responseBody))
+        }catch (e: JSONException) {
+            e.printStackTrace()
+            Toast.makeText(this@RegisterActivity, "Registration success", Toast.LENGTH_SHORT).show()
+            this@RegisterActivity.startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+            return
+        }
+        this@RegisterActivity.startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
     }
 
     fun tvAlreadyHaveAnAccountClicked(view: View){
