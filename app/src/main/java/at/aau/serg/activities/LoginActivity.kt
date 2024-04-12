@@ -45,14 +45,14 @@ class LoginActivity : AppCompatActivity() {
 
     private fun onFailureLogin(){
         runOnUiThread{
-            Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun onResponseLogin(response: Response){
         if (!response.isSuccessful) {
             runOnUiThread{
-                Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -62,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
             StoreToken(ContextWrapper(this@LoginActivity), Secret()).storeTokenFromResponseBody(JSONObject(responseBody))
         }catch (e: JSONException) {
             e.printStackTrace()
-            Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
             return
         }
 

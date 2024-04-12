@@ -44,14 +44,14 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun onFailureRegister(){
         runOnUiThread{
-            Toast.makeText(this@RegisterActivity, R.string.RegisterFailed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun onResponseRegister( response: Response){
         if (!response.isSuccessful) {
             runOnUiThread{
-                Toast.makeText(this@RegisterActivity, "Registration failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
             }
             return
         }
