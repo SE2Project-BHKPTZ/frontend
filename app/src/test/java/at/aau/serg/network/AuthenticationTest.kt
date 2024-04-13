@@ -1,7 +1,6 @@
 package at.aau.serg.network
 
 import android.content.ContextWrapper
-import android.content.SharedPreferences
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
@@ -32,7 +31,7 @@ class AuthenticationTest {
     @BeforeEach
     fun setUp() {
         httpClient = mockk()
-        authentication = Authentication(httpClient)
+        authentication = Authentication.getInstance(httpClient)
         callback = mockk(relaxed = true)
     }
 

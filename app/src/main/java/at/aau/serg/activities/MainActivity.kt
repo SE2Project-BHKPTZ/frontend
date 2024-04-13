@@ -19,6 +19,9 @@ import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var httpClient: HttpClient
+    private lateinit var authentication: Authentication
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,7 +32,10 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        if(!Authentication(HttpClient(getString(R.string.api_url))).tokenValid(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUserIsAuthenticated), StoreToken(this, Secret()))){
+        httpClient = HttpClient.getInstance(getString(R.string.api_url))
+        authentication = Authentication.getInstance(httpClient)
+
+        if(!authentication.tokenValid(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUserIsAuthenticated), StoreToken(this, Secret()))){
             this.startActivity(Intent(this, LoginActivity::class.java))
         }
     }
@@ -47,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if(!Authentication(HttpClient(getString(R.string.api_url))).updateToken(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUpdateAccessTokenWorked), StoreToken(this@MainActivity, Secret()))) {
+        if(!authentication.updateToken(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUpdateAccessTokenWorked), StoreToken(this@MainActivity, Secret()))) {
             this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         }
     }

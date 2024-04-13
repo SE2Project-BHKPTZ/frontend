@@ -21,6 +21,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class RegisterActivity : AppCompatActivity() {
+
+    private lateinit var httpClient: HttpClient
+    private lateinit var authentication: Authentication
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,13 +34,16 @@ class RegisterActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        httpClient = HttpClient.getInstance(getString(R.string.api_url))
+        authentication = Authentication.getInstance(httpClient)
     }
 
     fun btnRegisterClicked(view: View) {
         val username = findViewById<EditText>(R.id.editTextUsername).text
         val password = findViewById<EditText>(R.id.editTextPassword).text
 
-        val error = Authentication(HttpClient(getString(R.string.api_url))).registerUser(username.toString(), password.toString(), CallbackCreator().createCallback(::onFailureRegister, ::onResponseRegister))
+        val error = authentication.registerUser(username.toString(), password.toString(), CallbackCreator().createCallback(::onFailureRegister, ::onResponseRegister))
         if(error != null){
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
         }

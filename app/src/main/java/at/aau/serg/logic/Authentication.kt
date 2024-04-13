@@ -5,11 +5,15 @@ import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
 import okhttp3.Callback
 
-class Authentication(httpClient: HttpClient) {
-    private var httpClient: HttpClient
-    init {
-        this.httpClient = httpClient
+class Authentication private constructor(private val httpClient: HttpClient) {
+    companion object{
+        @Volatile
+        private var INSTANCE: Authentication? = null
+
+        @Synchronized
+        fun getInstance(httpClient: HttpClient): Authentication = INSTANCE ?: Authentication(httpClient)
     }
+
     fun registerUser(username: String, password: String, callback: Callback): String? {
         if(username.isEmpty() || password.isEmpty()){
             return "Username and Password cannot be empty"
