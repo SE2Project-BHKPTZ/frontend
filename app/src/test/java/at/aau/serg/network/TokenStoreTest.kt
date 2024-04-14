@@ -32,7 +32,8 @@ class TokenStoreTest {
         secret = mockk()
         editor = mockk(relaxed = true)
         contextWrapper = mockk()
-        storeToken = StoreToken(contextWrapper, secret)
+        storeToken = StoreToken(contextWrapper)
+        storeToken.setSecret(secret)
 
         every { sharedPreferences.edit() } returns editor
         every { secret.getSecretSharedPref(any()) } returns sharedPreferences

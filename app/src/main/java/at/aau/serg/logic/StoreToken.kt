@@ -4,7 +4,14 @@ import android.content.ContextWrapper
 import org.json.JSONException
 import org.json.JSONObject
 
-class StoreToken(private val context: ContextWrapper, private val secret: Secret) {
+class StoreToken(private val context: ContextWrapper) {
+    private var secret: Secret = Secret()
+
+    // for the testcases
+    fun setSecret(newSecret: Secret){
+        secret = newSecret
+    }
+
     fun storeTokens(accessToken: String, refreshToken: String){
         val sharedPreferences =secret.getSecretSharedPref(context)
         val editor = sharedPreferences.edit()

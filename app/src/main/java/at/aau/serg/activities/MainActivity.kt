@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
-import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         httpClient = HttpClient.getInstance(getString(R.string.api_url))
         authentication = Authentication.getInstance(httpClient)
 
-        if(!authentication.tokenValid(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUserIsAuthenticated), StoreToken(this, Secret()))){
+        if(!authentication.tokenValid(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUserIsAuthenticated), StoreToken(this))){
             this.startActivity(Intent(this, LoginActivity::class.java))
         }
     }
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if(!authentication.updateToken(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUpdateAccessTokenWorked), StoreToken(this@MainActivity, Secret()))) {
+        if(!authentication.updateToken(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUpdateAccessTokenWorked), StoreToken(this@MainActivity))) {
             this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         }
     }
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         try{
-            StoreToken(this@MainActivity, Secret()).storeAccessTokenFromBody(JSONObject(responseBody))
+            StoreToken(this@MainActivity).storeAccessTokenFromBody(JSONObject(responseBody))
         }catch (e: JSONException) {
             e.printStackTrace()
             this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))

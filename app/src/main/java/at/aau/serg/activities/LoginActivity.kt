@@ -12,7 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
-import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
@@ -65,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
         val responseBody = response.body?.string()
         try{
-            StoreToken(ContextWrapper(this@LoginActivity), Secret()).storeTokenFromResponseBody(JSONObject(responseBody))
+            StoreToken(ContextWrapper(this@LoginActivity)).storeTokenFromResponseBody(JSONObject(responseBody))
         }catch (e: JSONException) {
             e.printStackTrace()
             Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()

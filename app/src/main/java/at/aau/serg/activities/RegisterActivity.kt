@@ -12,7 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
-import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
@@ -64,7 +63,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         val responseBody = response.body?.string()
         try{
-            StoreToken(ContextWrapper(this@RegisterActivity), Secret()).storeTokenFromResponseBody(JSONObject(responseBody))
+            StoreToken(ContextWrapper(this@RegisterActivity)).storeTokenFromResponseBody(JSONObject(responseBody))
         }catch (e: JSONException) {
             e.printStackTrace()
             Toast.makeText(this@RegisterActivity, "Registration success", Toast.LENGTH_SHORT).show()
