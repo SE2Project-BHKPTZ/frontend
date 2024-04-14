@@ -5,15 +5,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class StoreToken(private val context: ContextWrapper) {
-    private var secret: Secret = Secret()
-
-    // for the testcases
-    fun setSecret(newSecret: Secret){
-        secret = newSecret
-    }
+    //private var secret: Secret = Secret
 
     fun storeTokens(accessToken: String, refreshToken: String){
-        val sharedPreferences =secret.getSecretSharedPref(context)
+        val sharedPreferences = Secret.getSecretSharedPref(context)
         val editor = sharedPreferences.edit()
         editor.putString("accessToken", accessToken)
         editor.putString("refreshToken", refreshToken)
@@ -21,7 +16,7 @@ class StoreToken(private val context: ContextWrapper) {
     }
 
     fun storeAccessToken(accessToken: String){
-        val sharedPreferences =secret.getSecretSharedPref(context)
+        val sharedPreferences = Secret.getSecretSharedPref(context)
         val editor = sharedPreferences.edit()
         editor.putString("accessToken", accessToken)
         editor.apply()
@@ -41,12 +36,12 @@ class StoreToken(private val context: ContextWrapper) {
     }
 
     fun getAccessToken(): String?{
-        val sharedPreferences = secret.getSecretSharedPref(context)
+        val sharedPreferences = Secret.getSecretSharedPref(context)
         return sharedPreferences.getString("accessToken", null)
     }
 
     fun getRefreshToken(): String?{
-        val sharedPreferences = secret.getSecretSharedPref(context)
+        val sharedPreferences = Secret.getSecretSharedPref(context)
         return sharedPreferences.getString("refreshToken", null)
     }
 

@@ -9,8 +9,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkClass
-import io.mockk.mockkStatic
+import io.mockk.mockkObject
 import io.mockk.verify
 import org.json.JSONObject
 import org.junit.Assert
@@ -24,19 +23,17 @@ class TokenStoreTest {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var contextWrapper: ContextWrapper
-    private lateinit var secret: Secret
 
     @BeforeEach
     fun setup() {
+        mockkObject(Secret)
         sharedPreferences = mockk()
-        secret = mockk()
         editor = mockk(relaxed = true)
         contextWrapper = mockk()
         storeToken = StoreToken(contextWrapper)
-        storeToken.setSecret(secret)
 
         every { sharedPreferences.edit() } returns editor
-        every { secret.getSecretSharedPref(any()) } returns sharedPreferences
+        every { Secret.getSecretSharedPref(any()) } returns sharedPreferences
     }
 
     @AfterEach
