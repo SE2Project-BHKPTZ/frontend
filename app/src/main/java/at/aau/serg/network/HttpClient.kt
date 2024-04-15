@@ -9,20 +9,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class HttpClient private constructor(private val baseUrl: String) {
+object HttpClient {
     private var client: OkHttpClient = OkHttpClient()
-
-    companion object{
-        private var baseUrl: String = Strings.get(R.string.api_url)
-
-        @Volatile
-        private var INSTANCE: HttpClient? = null
-
-        @Synchronized
-        fun getInstance(baseUrl: String): HttpClient {
-            return INSTANCE ?: HttpClient(baseUrl)
-        }
-    }
+    private val baseUrl: String = Strings.get(R.string.api_url)
 
     fun post(url: String, jsonBody: String, authToken: String?, callback: Callback) {
         val body = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())

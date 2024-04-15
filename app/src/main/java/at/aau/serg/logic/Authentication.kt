@@ -5,21 +5,14 @@ import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
 import okhttp3.Callback
 
-class Authentication private constructor(private val httpClient: HttpClient) {
-    companion object{
-        @Volatile
-        private var INSTANCE: Authentication? = null
-
-        @Synchronized
-        fun getInstance(httpClient: HttpClient): Authentication = INSTANCE ?: Authentication(httpClient)
-    }
+object Authentication {
 
     fun registerUser(username: String, password: String, callback: Callback): String? {
         if(username.isEmpty() || password.isEmpty()){
             return "Username and Password cannot be empty"
         }
         val userToRegister = User(username, password)
-        httpClient.post("users/register", Gson().toJson(userToRegister), null, callback)
+        HttpClient.post("users/register", Gson().toJson(userToRegister), null, callback)
         return null
     }
 
@@ -30,14 +23,14 @@ class Authentication private constructor(private val httpClient: HttpClient) {
 
         val userToRegister = User(username, password)
 
-        httpClient.post("users/login", Gson().toJson(userToRegister), null, callback)
+        HttpClient.post("users/login", Gson().toJson(userToRegister), null, callback)
         return null
     }
 
     fun tokenValid(callback: Callback, storeToken: StoreToken): Boolean{
         val accessToken = storeToken.getAccessToken() ?: return false
 
-        httpClient.get("users/me", accessToken, callback)
+        HttpClient.get("users/me", accessToken, callback)
         return true
     }
 
@@ -48,7 +41,7 @@ class Authentication private constructor(private val httpClient: HttpClient) {
             "refreshToken": """" + refreshToken + """"
             }
         """
-        httpClient.post("users/refresh", jsonString, null, callback)
+        HttpClient.post("users/refresh", jsonString, null, callback)
         return true
     }
 
