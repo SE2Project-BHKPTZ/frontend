@@ -1,8 +1,9 @@
 package at.aau.serg.network
 
 import android.content.ContextWrapper
-import android.content.SharedPreferences
 import at.aau.serg.logic.Authentication
+import at.aau.serg.logic.Secret
+import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.User
 import com.google.gson.Gson
 import io.mockk.Called
@@ -14,7 +15,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import okhttp3.Callback
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,7 +31,7 @@ class AuthenticationTest {
     @BeforeEach
     fun setUp() {
         httpClient = mockk()
-        authentication = Authentication(httpClient)
+        authentication = Authentication.getInstance(httpClient)
         callback = mockk(relaxed = true)
     }
 
@@ -119,6 +122,77 @@ class AuthenticationTest {
         verify { callback wasNot  Called }
     }
 
+    @Test
+    fun `tokenValid successful`(){
+        val context: ContextWrapper = mockk()
+        val storeToken: StoreToken = mockk()
+        val secret: Secret = mockk()
 
+        every { storeToken.getAccessToken() } returns "access_token"
+        every { httpClient.get(any(), any(), any(), ) } just Runs
+
+        val result = authentication.tokenValid(callback, storeToken)
+
+        assertTrue(result)
+        verify {
+            httpClient.get(
+                "users/me",
+                "access_token",
+                callback
+            )
+        }
+    }
+
+    @Test
+    fun `tokenValid no access token`(){
+        val context: ContextWrapper = mockk()
+        val storeToken: StoreToken = mockk()
+        val secret: Secret = mockk()
+
+        every { storeToken.getAccessToken() } returns null
+
+        val result = authentication.tokenValid(callback, storeToken)
+
+        assertFalse(result)
+        verify { callback wasNot  Called }
+    }
+
+    @Test
+    fun `updateToken successful`(){
+        val context: ContextWrapper = mockk()
+        val storeToken: StoreToken = mockk()
+        val secret: Secret = mockk()
+
+        every { storeToken.getRefreshToken() } returns "refreshToken"
+        every { httpClient.post(any(), any(), any(), any()) } just Runs
+
+        val result = authentication.updateToken(callback, storeToken)
+        val jsonString = """
+            {
+            "refreshToken": "refreshToken"
+            }
+        """
+        assertTrue(result)
+        verify {
+            httpClient.post(
+                "users/refresh",
+                jsonString,
+                null,
+                callback
+            )
+        }
+    }
+
+    @Test
+    fun `updateToken no refresh token`(){
+        val storeToken: StoreToken = mockk()
+
+        every { storeToken.getRefreshToken() } returns null
+
+        val result = authentication.updateToken(callback, storeToken)
+
+        assertFalse(result)
+        verify { callback wasNot  Called }
+    }
 
 }

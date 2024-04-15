@@ -12,17 +12,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
-import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
+import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
-import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var httpClient: HttpClient
+    private lateinit var authentication: Authentication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,48 +33,45 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        httpClient = HttpClient.getInstance(getString(R.string.api_url))
+        authentication = Authentication.getInstance(httpClient)
     }
 
     fun btnLoginClicked(view: View) {
         val username = findViewById<EditText>(R.id.editTextUsername).text
         val password = findViewById<EditText>(R.id.editTextPassword).text
 
-        val callback = object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread{
-                    Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    runOnUiThread{
-                        Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
-                    }
-                    return
-                }
-
-                val responseBody = response.body?.string()
-                try{
-                    val jsonObject = JSONObject(responseBody)
-                    val accessToken = jsonObject.getString("accessToken")
-                    val refreshToken = jsonObject.getString("refreshToken")
-                    StoreToken().storeTokens(accessToken, refreshToken, ContextWrapper(this@LoginActivity), Secret())
-
-                }catch (e: JSONException) {
-                    e.printStackTrace()
-                    Toast.makeText(this@LoginActivity, R.string.LoginFailed, Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                this@LoginActivity.startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-            }
-        }
-
-        val error = Authentication(HttpClient(getString(R.string.api_url))).loginUser(username.toString(), password.toString(), callback)
+        val error = authentication.loginUser(username.toString(), password.toString(), CallbackCreator().createCallback(::onFailureLogin, ::onResponseLogin))
         if(error != null){
             Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun onFailureLogin(){
+        runOnUiThread{
+            Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onResponseLogin(response: Response){
+        if (!response.isSuccessful) {
+            runOnUiThread{
+                Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+
+        val responseBody = response.body?.string()
+        try{
+            StoreToken(ContextWrapper(this@LoginActivity)).storeTokenFromResponseBody(JSONObject(responseBody))
+        }catch (e: JSONException) {
+            e.printStackTrace()
+            Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        this@LoginActivity.startActivity(Intent(this@LoginActivity, MainActivity::class.java))
     }
 
     fun tvNoAccountYetClicked(view: View){

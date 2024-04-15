@@ -7,8 +7,16 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class HttpClient(private var baseUrl: String) {
+class HttpClient private constructor(private val baseUrl: String) {
     private var client: OkHttpClient = OkHttpClient()
+
+    companion object{
+        @Volatile
+        private var INSTANCE: HttpClient? = null
+
+        @Synchronized
+        fun getInstance(baseUrl: String): HttpClient = INSTANCE ?: HttpClient(baseUrl)
+    }
 
     fun post(url: String, jsonBody: String, authToken: String?, callback: Callback) {
         val body = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
