@@ -5,7 +5,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class StoreToken(private val context: ContextWrapper) {
-    //private var secret: Secret = Secret
 
     fun storeTokens(accessToken: String, refreshToken: String){
         val sharedPreferences = Secret.getSecretSharedPref(context)
