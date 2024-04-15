@@ -1,5 +1,7 @@
 package at.aau.serg.network
 
+import at.aau.serg.R
+import at.aau.serg.utils.Strings
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -11,11 +13,15 @@ class HttpClient private constructor(private val baseUrl: String) {
     private var client: OkHttpClient = OkHttpClient()
 
     companion object{
+        private var baseUrl: String = Strings.get(R.string.api_url)
+
         @Volatile
         private var INSTANCE: HttpClient? = null
 
         @Synchronized
-        fun getInstance(baseUrl: String): HttpClient = INSTANCE ?: HttpClient(baseUrl)
+        fun getInstance(baseUrl: String): HttpClient {
+            return INSTANCE ?: HttpClient(baseUrl)
+        }
     }
 
     fun post(url: String, jsonBody: String, authToken: String?, callback: Callback) {

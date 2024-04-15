@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         httpClient = HttpClient.getInstance(getString(R.string.api_url))
         authentication = Authentication.getInstance(httpClient)
 
+
+
         if(!authentication.tokenValid(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUserIsAuthenticated), StoreToken(this))){
             this.startActivity(Intent(this, LoginActivity::class.java))
         }
