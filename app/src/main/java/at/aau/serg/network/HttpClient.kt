@@ -11,7 +11,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 object HttpClient {
     private var client: OkHttpClient = OkHttpClient()
-    private val baseUrl: String = Strings.get(R.string.api_url)
+    private var baseUrl: String = Strings.get(R.string.api_url)
 
     fun post(url: String, jsonBody: String, authToken: String?, callback: Callback) {
         val body = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
@@ -29,6 +29,7 @@ object HttpClient {
 
     fun get(url: String, authToken: String?, callback: Callback) {
         val requestUrl = makeRequestUrl(url)
+        print(requestUrl)
         val request = Request.Builder()
             .url(requestUrl)
             .apply {
@@ -42,5 +43,10 @@ object HttpClient {
     @Throws(IllegalArgumentException::class)
     private fun makeRequestUrl(path: String): String {
         return baseUrl.toHttpUrl().newBuilder().addPathSegments(path.trimStart('/')).build().toString()
+    }
+
+    fun resetClient(baseUrl: String = Strings.get(R.string.api_url)) {
+        client = OkHttpClient()
+        this.baseUrl = baseUrl
     }
 }
