@@ -29,7 +29,6 @@ object HttpClient {
 
     fun get(url: String, authToken: String?, callback: Callback) {
         val requestUrl = makeRequestUrl(url)
-        print(requestUrl)
         val request = Request.Builder()
             .url(requestUrl)
             .apply {
