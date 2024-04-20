@@ -5,6 +5,8 @@ import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.Secret
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.User
+import at.aau.serg.utils.App
+import at.aau.serg.utils.Strings
 import com.google.gson.Gson
 import io.mockk.Called
 import io.mockk.Runs
@@ -12,26 +14,31 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import io.mockk.verify
 import okhttp3.Callback
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 
 class AuthenticationTest {
-
-    private lateinit var authentication: Authentication
-    private lateinit var httpClient: HttpClient
     private lateinit var callback: Callback
     @BeforeEach
     fun setUp() {
-        httpClient = mockk()
-        authentication = Authentication.getInstance(httpClient)
+        mockkObject(App.Companion)
+        val mockApp = mockk<App>()
+        every { App.instance } returns mockApp
+
+        mockkStatic(Strings::class)
+        every { Strings.get(any()) } returns "http://localhost:8080"
+
+        mockkObject(HttpClient)
         callback = mockk(relaxed = true)
     }
 
@@ -47,12 +54,12 @@ class AuthenticationTest {
         val userToRegister = User(username, password)
         val expectedRequestBody = Gson().toJson(userToRegister)
 
-        every { httpClient.post(any(), any(), any(), any()) } just Runs
+        every { HttpClient.post(any(), any(), any(), any()) } just Runs
 
-        val result = authentication.registerUser(username, password, callback)
+        val result = Authentication.registerUser(username, password, callback)
         assertNull(result)
         verify {
-            httpClient.post(
+            HttpClient.post(
                 "users/register",
                 expectedRequestBody,
                 null,
@@ -65,7 +72,7 @@ class AuthenticationTest {
     fun `registerUser with empty username`() {
         val password = "testPassword"
 
-        val result = authentication.registerUser("", password, callback)
+        val result = Authentication.registerUser("", password, callback)
 
         assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
@@ -75,7 +82,7 @@ class AuthenticationTest {
     fun `registerUser with empty password`() {
         val username = "testUser"
 
-        val result = authentication.registerUser(username, "", callback)
+        val result = Authentication.registerUser(username, "", callback)
 
         assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
@@ -88,12 +95,12 @@ class AuthenticationTest {
         val userToRegister = User(username, password)
         val expectedRequestBody = Gson().toJson(userToRegister)
 
-        every { httpClient.post(any(), any(), any(), any()) } just Runs
+        every { HttpClient.post(any(), any(), any(), any()) } just Runs
 
-        val result = authentication.loginUser(username, password, callback)
+        val result = Authentication.loginUser(username, password, callback)
         assertNull(result)
         verify {
-            httpClient.post(
+            HttpClient.post(
                 "users/login",
                 expectedRequestBody,
                 null,
@@ -106,7 +113,7 @@ class AuthenticationTest {
     fun `loginUser with empty username`() {
         val password = "testPassword"
 
-        val result = authentication.loginUser("", password, callback)
+        val result = Authentication.loginUser("", password, callback)
 
         assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
@@ -116,7 +123,7 @@ class AuthenticationTest {
     fun `loginUser with empty password`() {
         val username = "testUser"
 
-        val result = authentication.loginUser(username, "", callback)
+        val result = Authentication.loginUser(username, "", callback)
 
         assertEquals("Username and Password cannot be empty", result)
         verify { callback wasNot  Called }
@@ -129,13 +136,13 @@ class AuthenticationTest {
         val secret: Secret = mockk()
 
         every { storeToken.getAccessToken() } returns "access_token"
-        every { httpClient.get(any(), any(), any(), ) } just Runs
+        every { HttpClient.get(any(), any(), any(), ) } just Runs
 
-        val result = authentication.tokenValid(callback, storeToken)
+        val result = Authentication.tokenValid(callback, storeToken)
 
         assertTrue(result)
         verify {
-            httpClient.get(
+            HttpClient.get(
                 "users/me",
                 "access_token",
                 callback
@@ -145,13 +152,11 @@ class AuthenticationTest {
 
     @Test
     fun `tokenValid no access token`(){
-        val context: ContextWrapper = mockk()
         val storeToken: StoreToken = mockk()
-        val secret: Secret = mockk()
 
         every { storeToken.getAccessToken() } returns null
 
-        val result = authentication.tokenValid(callback, storeToken)
+        val result = Authentication.tokenValid(callback, storeToken)
 
         assertFalse(result)
         verify { callback wasNot  Called }
@@ -159,14 +164,12 @@ class AuthenticationTest {
 
     @Test
     fun `updateToken successful`(){
-        val context: ContextWrapper = mockk()
         val storeToken: StoreToken = mockk()
-        val secret: Secret = mockk()
 
         every { storeToken.getRefreshToken() } returns "refreshToken"
-        every { httpClient.post(any(), any(), any(), any()) } just Runs
+        every { HttpClient.post(any(), any(), any(), any()) } just Runs
 
-        val result = authentication.updateToken(callback, storeToken)
+        val result = Authentication.updateToken(callback, storeToken)
         val jsonString = """
             {
             "refreshToken": "refreshToken"
@@ -174,7 +177,7 @@ class AuthenticationTest {
         """
         assertTrue(result)
         verify {
-            httpClient.post(
+            HttpClient.post(
                 "users/refresh",
                 jsonString,
                 null,
@@ -189,7 +192,7 @@ class AuthenticationTest {
 
         every { storeToken.getRefreshToken() } returns null
 
-        val result = authentication.updateToken(callback, storeToken)
+        val result = Authentication.updateToken(callback, storeToken)
 
         assertFalse(result)
         verify { callback wasNot  Called }

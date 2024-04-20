@@ -1,6 +1,12 @@
 package at.aau.serg.network
 
+import at.aau.serg.utils.App
+import at.aau.serg.utils.Strings
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import okhttp3.Callback
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -14,18 +20,26 @@ import java.util.concurrent.TimeUnit
 
 class HttpClientTest {
     private lateinit var server: MockWebServer
-    private lateinit var httpClient: HttpClient
 
     @BeforeEach
     fun setUp() {
         server = MockWebServer()
-        server.start()
-        httpClient = HttpClient.getInstance(server.url("/").toString())
+        server.start(45527)
+
+        mockkObject(App.Companion)
+        val mockApp = mockk<App>()
+        every { App.instance } returns mockApp
+
+        mockkStatic(Strings::class)
+        every { Strings.get(any()) } returns server.url("/").toString()
+
+        HttpClient.resetClient(server.url("/").toString())
     }
 
     @AfterEach
     fun tearDown() {
         server.shutdown()
+        unmockkAll()
     }
 
     @Test
@@ -36,7 +50,7 @@ class HttpClientTest {
 
         server.enqueue(MockResponse().setBody("OK"))
 
-        httpClient.post("", jsonBody, authToken, object : Callback {
+        HttpClient.post("", jsonBody, authToken, object : Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 latch.countDown()
             }
@@ -61,7 +75,7 @@ class HttpClientTest {
 
         server.enqueue(MockResponse().setBody("OK"))
 
-        httpClient.post("", jsonBody, null, object : Callback {
+        HttpClient.post("", jsonBody, null, object : Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 latch.countDown()
             }
@@ -86,7 +100,7 @@ class HttpClientTest {
 
         server.enqueue(MockResponse().setBody("OK"))
 
-        httpClient.get("", authToken, object : Callback {
+        HttpClient.get("", authToken, object : Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 latch.countDown()
             }
@@ -108,7 +122,7 @@ class HttpClientTest {
 
         server.enqueue(MockResponse().setBody("OK"))
 
-        httpClient.get("", null, object : Callback {
+        HttpClient.get("", null, object : Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 latch.countDown()
             }
@@ -126,20 +140,21 @@ class HttpClientTest {
 
     @Test
     fun `makeRequestUrl should correctly concatenate URLs`() {
-        val makeRequestUrl = httpClient.javaClass.getDeclaredMethod("makeRequestUrl", String::class.java)
+        val makeRequestUrl = HttpClient.javaClass.getDeclaredMethod("makeRequestUrl", String::class.java)
         makeRequestUrl.isAccessible = true
-        assertEquals("${server.url("/")}test", makeRequestUrl.invoke(httpClient, "test"))
-        assertEquals("${server.url("/")}test", makeRequestUrl.invoke(httpClient, "/test"))
+        assertEquals("${server.url("/")}test", makeRequestUrl.invoke(HttpClient, "test"))
+        assertEquals("${server.url("/")}test", makeRequestUrl.invoke(HttpClient, "/test"))
     }
 
     @Test
     fun `makeRequestUrl should throw IllegalArgumentException for invalid URL`() {
         val invalidBaseUrl = "htttp://example.com"
-        val client = HttpClient.getInstance(invalidBaseUrl)
+        HttpClient.resetClient(invalidBaseUrl)
+
         val callback: Callback = mockk(relaxed = true)
 
         assertThrows(IllegalArgumentException::class.java) {
-            client.get("path", null, callback)
+            HttpClient.get("/path", null, callback)
         }
     }
 }

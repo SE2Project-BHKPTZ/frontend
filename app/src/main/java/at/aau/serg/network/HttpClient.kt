@@ -1,5 +1,7 @@
 package at.aau.serg.network
 
+import at.aau.serg.R
+import at.aau.serg.utils.Strings
 import okhttp3.Callback
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -7,16 +9,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class HttpClient private constructor(private val baseUrl: String) {
+object HttpClient {
     private var client: OkHttpClient = OkHttpClient()
-
-    companion object{
-        @Volatile
-        private var INSTANCE: HttpClient? = null
-
-        @Synchronized
-        fun getInstance(baseUrl: String): HttpClient = INSTANCE ?: HttpClient(baseUrl)
-    }
+    private var baseUrl: String = Strings.get(R.string.api_url)
 
     fun post(url: String, jsonBody: String, authToken: String?, callback: Callback) {
         val body = jsonBody.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
@@ -47,5 +42,10 @@ class HttpClient private constructor(private val baseUrl: String) {
     @Throws(IllegalArgumentException::class)
     private fun makeRequestUrl(path: String): String {
         return baseUrl.toHttpUrl().newBuilder().addPathSegments(path.trimStart('/')).build().toString()
+    }
+
+    fun resetClient(baseUrl: String = Strings.get(R.string.api_url)) {
+        client = OkHttpClient()
+        this.baseUrl = baseUrl
     }
 }
