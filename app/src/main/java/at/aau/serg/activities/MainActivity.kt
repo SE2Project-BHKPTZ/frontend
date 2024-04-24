@@ -12,6 +12,7 @@ import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
+import at.aau.serg.network.SocketHandler
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
@@ -30,9 +31,24 @@ class MainActivity : AppCompatActivity() {
 
         if(!Authentication.tokenValid(CallbackCreator().createCallback(::startLoginActivity, ::checkIfUserIsAuthenticated), StoreToken(this))){
             this.startActivity(Intent(this, LoginActivity::class.java))
+        }else{
+            Authentication.getMe(CallbackCreator().createCallback(::startLoginActivity, ::connectSocket), StoreToken(this))
+
         }
     }
 
+    private fun connectSocket(response: Response){
+
+        if(response.isSuccessful){
+            val responseBody = response.body?.string()
+            if(responseBody!=null){
+
+                SocketHandler.connect(JSONObject(responseBody).getString("uuid"))
+                return
+            }
+        }
+        startLoginActivity()
+    }
     private fun startLoginActivity(){
         this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
     }
