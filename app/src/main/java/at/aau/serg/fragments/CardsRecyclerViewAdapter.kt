@@ -1,20 +1,13 @@
 package at.aau.serg.fragments
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.databinding.FragmentCardBinding
-import at.aau.serg.placeholder.CardContent.CardItem
+import at.aau.serg.models.CardItem
 
-
-/**
- * [RecyclerView.Adapter] that can display a [CardItem].
- * TODO: Replace the implementation with code for your data type.
- */
 class CardsRecyclerViewAdapter(
     private val values: List<CardItem>
 ) : RecyclerView.Adapter<CardsRecyclerViewAdapter.ViewHolder>() {
@@ -32,7 +25,7 @@ class CardsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         val cardResourceId = holder.itemView.context.resources.getIdentifier(
-            "cardclubs${item.id}", "drawable", holder.itemView.context.packageName)
+            "cardclubs${item.value}", "drawable", holder.itemView.context.packageName)
         if (cardResourceId != 0) {
             holder.imageView.setImageResource(cardResourceId)
         } else {

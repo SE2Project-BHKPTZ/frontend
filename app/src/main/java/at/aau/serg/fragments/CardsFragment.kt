@@ -11,9 +11,6 @@ import android.view.ViewGroup
 import at.aau.serg.R
 import at.aau.serg.placeholder.CardContent
 
-/**
- * A fragment representing a list of Items.
- */
 class CardsFragment : Fragment() {
 
     private var columnCount = 1
