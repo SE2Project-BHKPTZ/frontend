@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import at.aau.serg.R
-import at.aau.serg.placeholder.PlaceholderContent
+import at.aau.serg.placeholder.CardContent
 
 /**
  * A fragment representing a list of Items.
@@ -35,7 +35,7 @@ class CardsFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = CardsRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                adapter = CardsRecyclerViewAdapter(CardContent.ITEMS)
                 val overlapWidth = resources.getDimensionPixelSize(R.dimen.overlap_width)
                 addItemDecoration(OverlapDecoration(overlapWidth))
             }
