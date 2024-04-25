@@ -8,4 +8,9 @@
     <string name="noAccountYet"><u>No account yet?\nCreate one</u></string>
     <string name="loginFailed">Login failed</string>
     <string name="registerFailed">Registriation failed</string>
+    <!--LobbyActivity-->
+    <string name="LobbyCode">Code: %s</string>
+    <string name="LobbyLeave">Leave Lobby</string>
+    <string name="LobbyStart">Start</string>
+    <string name="Lobby">Lobby</string>
 </resources>
