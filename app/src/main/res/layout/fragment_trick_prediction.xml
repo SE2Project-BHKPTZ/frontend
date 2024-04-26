@@ -30,16 +30,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/predictionInfoTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Predict the number of tricks for this round!"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trumpCardImageView" />
+
         <com.google.android.material.slider.Slider
             android:id="@+id/trickPredictionSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="32dp"
+            android:layout_margin="16dp"
             android:valueFrom="0"
             android:valueTo="20"
+            android:stepSize="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/trumpCardImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/predictionInfoTV" />
 
         <TextView
             android:id="@+id/predictionScoreInfoTV"
