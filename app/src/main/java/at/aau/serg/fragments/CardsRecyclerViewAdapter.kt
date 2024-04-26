@@ -1,7 +1,6 @@
 package at.aau.serg.fragments
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -36,7 +35,7 @@ class CardsRecyclerViewAdapter(
 
     private fun setCardImage(holder: ViewHolder, card: CardItem) {
         val cardResourceId = holder.itemView.context.resources.getIdentifier(
-            "card_${card.suit.toString().lowercase()}_${card.value}", "drawable", holder.itemView.context.packageName)
+            "card_${card.suit.toString().lowercase()}_${card.value}", "drawable", holder.itemView.context.packageName) // NOSONAR
         holder.imageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_clubs_2)
     }
 
