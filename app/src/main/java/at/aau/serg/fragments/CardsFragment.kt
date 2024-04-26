@@ -33,7 +33,7 @@ class CardsFragment : Fragment() {
                 adapter = CardsRecyclerViewAdapter(CardContent.ITEMS) {
                     cardItem ->  onCardClicked(cardItem)
                 }
-                val overlapWidth = resources.getDimensionPixelSize(R.dimen.overlap_width)
+                val overlapWidth = resources.getDimensionPixelSize(R.dimen.overlapWidth)
                 addItemDecoration(OverlapDecoration(overlapWidth))
             }
         }
