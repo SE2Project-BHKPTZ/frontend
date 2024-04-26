@@ -7,19 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
 import com.google.android.material.slider.Slider
 
 private const val ARG_ROUND = "round"
 
 class TrickPredictionFragment : Fragment() {
-    private var round: Int = 1
+    private val viewModel: TrickPredictionViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            round = it.getInt(ARG_ROUND)
-        }
     }
 
     override fun onCreateView(
@@ -36,22 +34,19 @@ class TrickPredictionFragment : Fragment() {
             scoreTextView.text = predictionPoints
         }
 
-        trickPredictionSlider.valueTo = round.toFloat()
+        viewModel.round.observe(viewLifecycleOwner) {round ->
+            setMaximumPrediction(round)
+        }
 
         return view
+    }
+
+    private fun setMaximumPrediction(round: Int) {
+        view?.findViewById<Slider>(R.id.trickPredictionSlider)?.valueTo = round.toFloat()
     }
 
     private fun calculateReachablePoints(prediction: Int): Int {
         return prediction * 20 + 20;
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(round: Int) =
-            TrickPredictionFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_ROUND, round)
-                }
-            }
-    }
 }
