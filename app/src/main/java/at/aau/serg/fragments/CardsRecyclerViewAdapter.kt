@@ -43,10 +43,17 @@ class CardsRecyclerViewAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            // Redraw old and new selected items
-            val previousItem = selectedPosition
-            selectedPosition = holder.absoluteAdapterPosition
-            notifyItemChanged(previousItem)
+            val position = holder.absoluteAdapterPosition
+            if (selectedPosition == position) {
+                selectedPosition = RecyclerView.NO_POSITION
+            } else {
+                val previousItem = selectedPosition
+                selectedPosition = position
+
+                if (previousItem != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(previousItem)
+                }
+            }
             notifyItemChanged(position)
 
             onCardClick(card)
