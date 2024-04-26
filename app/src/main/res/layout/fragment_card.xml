@@ -12,6 +12,6 @@
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:src="@drawable/cardclubs2" />
+        android:src="@drawable/card_clubs_2" />
 
 </LinearLayout>

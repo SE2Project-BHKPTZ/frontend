@@ -15,7 +15,7 @@ object CardContent {
 
     init {
         for (i in 2..COUNT) {
-            addItem(createPlaceholderItem(i))
+            addItem(createPlaceholderItem(i, Suit.CLUBS))
         }
     }
 
@@ -24,7 +24,7 @@ object CardContent {
         ITEM_MAP.put(item.value, item)
     }
 
-    private fun createPlaceholderItem(position: Int): CardItem {
-        return CardItem(position.toString(), Suit.CLUBS)
+    private fun createPlaceholderItem(position: Int, suit: Suit): CardItem {
+        return CardItem(position.toString(), suit)
     }
 }

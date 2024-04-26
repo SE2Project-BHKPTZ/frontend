@@ -23,13 +23,13 @@ class CardsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val card = values[position]
         val cardResourceId = holder.itemView.context.resources.getIdentifier(
-            "cardclubs${item.value}", "drawable", holder.itemView.context.packageName)
+            "card_${card.suit.toString().lowercase()}_${card.value}", "drawable", holder.itemView.context.packageName)
         if (cardResourceId != 0) {
             holder.imageView.setImageResource(cardResourceId)
         } else {
-            holder.imageView.setImageResource(R.drawable.cardclubs2)
+            holder.imageView.setImageResource(R.drawable.card_clubs_2)
         }
     }
 

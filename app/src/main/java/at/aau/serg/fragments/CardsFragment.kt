@@ -13,13 +13,10 @@ import at.aau.serg.placeholder.CardContent
 
 class CardsFragment : Fragment() {
 
-    private var columnCount = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-        }
+        arguments?.let {}
     }
 
     override fun onCreateView(
@@ -28,7 +25,6 @@ class CardsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cards, container, false)
 
-        // Set the adapter
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -42,7 +38,7 @@ class CardsFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(columnCount: Int) =
+        fun newInstance() =
             CardsFragment().apply {
                 arguments = Bundle().apply {
                 }
