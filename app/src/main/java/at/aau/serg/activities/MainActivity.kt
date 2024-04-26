@@ -74,4 +74,8 @@ class MainActivity : AppCompatActivity() {
     fun btnGoToLoginClicked(view: View){
         startActivity(Intent(this, LoginActivity::class.java))
     }
+
+    fun openGameActivity(view: View){
+        startActivity(Intent(this, GameScreenActivity::class.java))
+    }
 }

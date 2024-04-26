@@ -9,4 +9,5 @@
     <string name="loginFailed">Login failed</string>
     <string name="registerFailed">Registriation failed</string>
     <string name="card_image_description">Wizard card</string>
+    <string name="gameActivity">Game Activity</string>
 </resources>

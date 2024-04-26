@@ -35,7 +35,7 @@ class CardsRecyclerViewAdapter(
 
     private fun setCardImage(holder: ViewHolder, card: CardItem) {
         val cardResourceId = holder.itemView.context.resources.getIdentifier(
-            "card_${card.suit.toString().lowercase()}_${card.value}", "drawable", holder.itemView.context.packageName) // NOSONAR
+            "card_${card.suit.toString().lowercase()}_${card.value}", "drawable", holder.itemView.context.packageName)
         holder.imageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_clubs_2)
     }
 
