@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import at.aau.serg.R
+import at.aau.serg.models.CardItem
 import at.aau.serg.placeholder.CardContent
 
 class CardsFragment : Fragment() {
@@ -28,12 +30,18 @@ class CardsFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = CardsRecyclerViewAdapter(CardContent.ITEMS)
+                adapter = CardsRecyclerViewAdapter(CardContent.ITEMS) {
+                    cardItem ->  onCardClicked(cardItem)
+                }
                 val overlapWidth = resources.getDimensionPixelSize(R.dimen.overlap_width)
                 addItemDecoration(OverlapDecoration(overlapWidth))
             }
         }
         return view
+    }
+
+    private fun onCardClicked(cardItem: CardItem) {
+        Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

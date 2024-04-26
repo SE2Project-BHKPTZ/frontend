@@ -9,7 +9,8 @@ import at.aau.serg.databinding.FragmentCardBinding
 import at.aau.serg.models.CardItem
 
 class CardsRecyclerViewAdapter(
-    private val values: List<CardItem>
+    private val values: List<CardItem>,
+    private val onCardClick: (CardItem) -> Unit
 ) : RecyclerView.Adapter<CardsRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,6 +31,10 @@ class CardsRecyclerViewAdapter(
             holder.imageView.setImageResource(cardResourceId)
         } else {
             holder.imageView.setImageResource(R.drawable.card_clubs_2)
+        }
+
+        holder.itemView.setOnClickListener {
+            onCardClick(card)
         }
     }
 
