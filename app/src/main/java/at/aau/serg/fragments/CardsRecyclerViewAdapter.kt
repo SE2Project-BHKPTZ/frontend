@@ -1,6 +1,7 @@
 package at.aau.serg.fragments
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -28,22 +29,24 @@ class CardsRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val card = values[position]
+        setCardImage(holder, card)
+        setCardBackground(holder, position)
+        setupClickListener(holder, card, position)
+    }
+
+    private fun setCardImage(holder: ViewHolder, card: CardItem) {
         val cardResourceId = holder.itemView.context.resources.getIdentifier(
             "card_${card.suit.toString().lowercase()}_${card.value}", "drawable", holder.itemView.context.packageName)
-        if (cardResourceId != 0) {
-            holder.imageView.setImageResource(cardResourceId)
-        } else {
-            holder.imageView.setImageResource(R.drawable.card_clubs_2)
-        }
+        holder.imageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_clubs_2)
+    }
 
-        holder.itemView.background = if (position == selectedPosition) {
-            ContextCompat.getDrawable(holder.itemView.context, R.drawable.card_border_selected)
-        } else {
-            ContextCompat.getDrawable(holder.itemView.context, R.drawable.card_border_default)
-        }
+    private fun setCardBackground(holder: ViewHolder, position: Int) {
+        holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context,
+            if (position == selectedPosition) R.drawable.card_border_selected else R.drawable.card_border_default)
+    }
 
+    private fun setupClickListener(holder: ViewHolder, card: CardItem, position: Int) {
         holder.itemView.setOnClickListener {
-            val position = holder.absoluteAdapterPosition
             if (selectedPosition == position) {
                 selectedPosition = RecyclerView.NO_POSITION
             } else {
