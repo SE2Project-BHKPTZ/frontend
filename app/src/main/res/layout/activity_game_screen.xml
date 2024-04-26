@@ -13,7 +13,8 @@
         android:layout_height="0dp"
         android:name="at.aau.serg.fragments.TrickPredictionFragment"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHeight_percent="0.70"/>
+        app:layout_constraintHeight_percent="0.70"
+        />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/cards_fragment_container_view"
