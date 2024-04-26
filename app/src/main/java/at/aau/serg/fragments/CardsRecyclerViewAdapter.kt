@@ -3,6 +3,7 @@ package at.aau.serg.fragments
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.databinding.FragmentCardBinding
@@ -12,6 +13,8 @@ class CardsRecyclerViewAdapter(
     private val values: List<CardItem>,
     private val onCardClick: (CardItem) -> Unit
 ) : RecyclerView.Adapter<CardsRecyclerViewAdapter.ViewHolder>() {
+
+    private var selectedPosition = RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -33,7 +36,19 @@ class CardsRecyclerViewAdapter(
             holder.imageView.setImageResource(R.drawable.card_clubs_2)
         }
 
+        holder.itemView.background = if (position == selectedPosition) {
+            ContextCompat.getDrawable(holder.itemView.context, R.drawable.card_border_selected)
+        } else {
+            ContextCompat.getDrawable(holder.itemView.context, R.drawable.card_border_default)
+        }
+
         holder.itemView.setOnClickListener {
+            // Redraw old and new selected items
+            val previousItem = selectedPosition
+            selectedPosition = holder.absoluteAdapterPosition
+            notifyItemChanged(previousItem)
+            notifyItemChanged(position)
+
             onCardClick(card)
         }
     }
