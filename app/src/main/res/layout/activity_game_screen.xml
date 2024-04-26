@@ -8,8 +8,18 @@
     tools:context=".activities.GameScreenActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_view"
+        android:id="@+id/game_fragment_container_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="at.aau.serg.fragments.CardsFragment" />
+        android:layout_height="0dp"
+        android:name="at.aau.serg.fragments.TrickPredictionFragment"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent="0.70"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/cards_fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:name="at.aau.serg.fragments.CardsFragment"
+        app:layout_constraintTop_toBottomOf="@id/game_fragment_container_view"
+        app:layout_constraintHeight_percent="0.30"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
