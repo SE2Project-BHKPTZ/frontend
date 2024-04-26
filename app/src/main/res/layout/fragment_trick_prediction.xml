@@ -10,36 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnShowPoints"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show Points"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/trumpCardImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/card_image_description"
-            android:scaleType="fitCenter"
-            android:src="@drawable/card_clubs_2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/predictionInfoTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Predict the number of tricks for this round!"
+            android:text="@string/predictTrickNumber"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/trumpCardImageView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/trickPredictionSlider"
@@ -57,7 +38,7 @@
             android:id="@+id/predictionScoreInfoTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Highest score with your Predtiction:"
+            android:text="@string/predictionScore"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/trickPredictionSlider" />
@@ -66,7 +47,6 @@
             android:id="@+id/predictionScoreTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="40 Points"
             android:layout_marginTop="8dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Confirm"
+            android:text="@string/confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/predictionScoreTV" />

@@ -1,7 +1,6 @@
 package at.aau.serg.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
 import com.google.android.material.slider.Slider
-
-private const val ARG_ROUND = "round"
 
 class TrickPredictionFragment : Fragment() {
     private val viewModel: TrickPredictionViewModel by activityViewModels()

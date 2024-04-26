@@ -10,4 +10,9 @@
     <string name="registerFailed">Registriation failed</string>
     <string name="card_image_description">Wizard card</string>
     <string name="gameActivity">Game Activity</string>
+    <string name="showPoints">Show Points</string>
+    <string name="predictTrickNumber">Predict the number of tricks for this round!</string>
+    <string name="predictionScore">Highest score with your Prediction:</string>
+    <string name="confirm">Confirm</string>
+    <string name="roundPlaceholder">Round: 1 of 15</string>
 </resources>
