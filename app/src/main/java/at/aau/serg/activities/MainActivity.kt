@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         if (response.isSuccessful) {
             val responseBody = response.body?.string()
             if (responseBody != null) {
-
+                StoreToken(this).storeUUID(JSONObject(responseBody).getString("uuid"))
                 SocketHandler.connect(JSONObject(responseBody).getString("uuid"))
                 return
             }
@@ -135,17 +135,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSuccessCLobby(response: Response) {
-
         Log.d("cLobby", response.toString())
 
         if (response.isSuccessful) {
             response.body?.string()?.let {
                 Log.d("cLobby", it)
                 val intent = Intent(this, LobbyActivity::class.java)
-                intent.putExtra("lobbyData", it)
+                intent.putExtra("lobbyCode", it)
                 startActivity(intent)
             }
-
         } else {
             HttpClient.get(
                 "/lobbys/leave",
@@ -166,11 +164,8 @@ class MainActivity : AppCompatActivity() {
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT)
         builder.setView(input)
-
         builder.setPositiveButton("OK"
         ) { dialog, which ->
-
-
             val lobbyToJoin = LobbyJoin(input.getText().toString())
             HttpClient.post(
                 "/lobbys/join",
@@ -178,29 +173,22 @@ class MainActivity : AppCompatActivity() {
                 StoreToken(this).getAccessToken(),
                 CallbackCreator().createCallback(::onFailureLobby, ::onSuccessJLobby)
             )
-
         }
         builder.setNegativeButton("Cancel"
         ) { dialog, which -> dialog.cancel() }
-
         builder.show()
-
-
-
     }
 
     private fun onSuccessJLobby(response: Response) {
-
         Log.d("jLobby", response.toString())
 
         if (response.isSuccessful) {
             response.body?.string()?.let {
                 Log.d("jLobby", it)
                 val intent = Intent(this, LobbyActivity::class.java)
-                intent.putExtra("lobbyData", it)
+                intent.putExtra("lobbyCode", it)
                 startActivity(intent)
             }
-
         } else {
             HttpClient.get(
                 "/lobbys/leave",

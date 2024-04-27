@@ -13,4 +13,7 @@
     <string name="LobbyLeave">Leave Lobby</string>
     <string name="LobbyStart">Start</string>
     <string name="Lobby">Lobby</string>
+    <string name="LobbyPlayersPlayerNamePlaceholder">Player</string>
+    <string name="LobbyPlayersKick">Kick</string>
+    <string name="LobbyPlayers">Players:</string>
 </resources>
