@@ -10,4 +10,5 @@
     <string name="registerFailed">Registriation failed</string>
     <string name="card_image_description">Wizard card</string>
     <string name="gameActivity">Game Activity</string>
+    <string name="menu">Menu</string>
 </resources>

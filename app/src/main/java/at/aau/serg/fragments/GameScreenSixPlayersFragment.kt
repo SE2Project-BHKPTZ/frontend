@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import at.aau.serg.R
 
-class GamescreenSixPlayersFragment : Fragment() {
+class GameScreenSixPlayersFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class GamescreenSixPlayersFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() =
-            GamescreenSixPlayersFragment().apply {
+            GameScreenSixPlayersFragment().apply {
                 arguments = Bundle().apply {
                 }
             }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.GamescreenThreePlayersFragment">
+    tools:context=".fragments.`GameS#creenThreePlayersFragment`">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,10 +42,11 @@
             android:name="at.aau.serg.fragments.CardsFragment"
             android:layout_width="80dp"
             android:layout_height="120dp"
+            android:layout_marginEnd="50dp"
             android:background="@drawable/card_border_default"
             android:rotation="-45"
             app:layout_constraintBottom_toTopOf="@+id/gamescreenTriangleImageView"
-            app:layout_constraintEnd_toStartOf="@+id/gamescreenTriangleImageView"
+            app:layout_constraintEnd_toStartOf="@+id/player3FragmentContainerView"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -54,12 +55,13 @@
             android:name="at.aau.serg.fragments.CardsFragment"
             android:layout_width="80dp"
             android:layout_height="120dp"
+            android:layout_marginStart="50dp"
             android:background="@drawable/card_border_default"
             android:rotation="45"
             app:layout_constraintBottom_toTopOf="@+id/gamescreenTriangleImageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/gamescreenTriangleImageView" />
+            app:layout_constraintStart_toEndOf="@+id/player4FragmentContainerView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

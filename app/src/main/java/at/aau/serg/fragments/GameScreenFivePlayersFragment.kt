@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import at.aau.serg.R
 
-class GamescreenThreePlayersFragment : Fragment() {
+class GameScreenFivePlayersFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,13 +20,13 @@ class GamescreenThreePlayersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gamescreen_three_players, container, false)
+        return inflater.inflate(R.layout.fragment_gamescreen_five_players, container, false)
     }
 
     companion object {
         @JvmStatic
         fun newInstance() =
-            GamescreenThreePlayersFragment().apply {
+            GameScreenFivePlayersFragment().apply {
                 arguments = Bundle().apply {
                 }
             }

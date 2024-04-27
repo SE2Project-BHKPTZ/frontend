@@ -7,9 +7,38 @@
     android:layout_height="match_parent"
     tools:context=".activities.GameScreenActivity">
 
+    <FrameLayout
+        android:id="@+id/fragmentView_GameScreen"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginBottom="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
+        android:name="at.aau.serg.fragments.CardsFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="at.aau.serg.fragments.CardsFragment" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentView_GameScreen" />
+
+    <Button
+        android:id="@+id/btnMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:onClick="btnMenuClicked"
+        android:text="@string/menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
