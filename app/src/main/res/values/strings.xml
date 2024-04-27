@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wizard</string>
+    <string name="appName">Wizard</string>
     <string name="register">Register</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -8,6 +8,8 @@
     <string name="noAccountYet"><u>No account yet?\nCreate one</u></string>
     <string name="loginFailed">Login failed</string>
     <string name="registerFailed">Registriation failed</string>
+    <string name="cardImageDescription">Wizard card</string>
+    <string name="gameActivity">Game Activity</string>
     <!--LobbyActivity-->
     <string name="LobbyCode">Code: %s</string>
     <string name="LobbyLeave">Leave Lobby</string>

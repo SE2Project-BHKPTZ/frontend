@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach
 import java.net.URISyntaxException
 
 class SocketHandlerTest {
-    private lateinit var socketHandler: SocketHandler
     private val mockSocket = mockk<Socket>(relaxed = true)
 
     @BeforeEach
@@ -24,22 +23,11 @@ class SocketHandlerTest {
         mockkStatic(Log::class)
         every { IO.socket(any<String>()) } returns mockSocket
         every { Log.i(any(), any()) } returns 0
-
-        socketHandler = SocketHandler("http://localhost")
-    }
-
-    @Test
-    fun `test URISyntaxException is caught in init block`() {
-        every { IO.socket(any<String>()) } throws URISyntaxException("", "")
-
-        assertDoesNotThrow { SocketHandler("http123://invalid-url") }
-
-        verify { IO.socket(any<String>()) }
     }
 
     @Test
     fun `connect should initiate connection and setup basic listeners`() {
-        socketHandler.connect()
+        SocketHandler.connect("uuid")
 
         verify { mockSocket.connect() }
         verify(exactly = 1) { mockSocket.on(eq(Socket.EVENT_CONNECT), any()) }
@@ -48,7 +36,7 @@ class SocketHandlerTest {
 
     @Test
     fun `disconnect should terminate the connection`() {
-        socketHandler.disconnect()
+        SocketHandler.disconnect()
         verify { mockSocket.disconnect() }
     }
 
@@ -57,7 +45,7 @@ class SocketHandlerTest {
         val eventName = "testEvent"
         val args = arrayOf("test1", "test2")
 
-        socketHandler.emit(eventName, *args)
+        SocketHandler.emit(eventName, *args)
 
         verify { mockSocket.emit(eventName, *args) }
     }
@@ -67,7 +55,7 @@ class SocketHandlerTest {
         val eventName = "custom_event"
         val args = arrayOfNulls<Any>(0)
 
-        socketHandler.on(eventName) {
+        SocketHandler.on(eventName) {
             Log.i("socket", "registered $eventName")
         }
 
@@ -84,7 +72,7 @@ class SocketHandlerTest {
         val connectCaptor = slot<Emitter.Listener>()
         val disconnectCaptor = slot<Emitter.Listener>()
 
-        socketHandler.connect()
+        SocketHandler.connect("uuid")
 
         verify { mockSocket.on(eq(Socket.EVENT_CONNECT), capture(connectCaptor)) }
         verify { mockSocket.on(eq(Socket.EVENT_DISCONNECT), capture(disconnectCaptor)) }

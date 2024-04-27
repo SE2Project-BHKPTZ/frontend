@@ -25,7 +25,6 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 
-
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +115,10 @@ class MainActivity : AppCompatActivity() {
 
     fun btnGoToLoginClicked(view: View) {
         startActivity(Intent(this, LoginActivity::class.java))
+    }
+
+    fun openGameActivity(view: View){
+        startActivity(Intent(this, GameScreenActivity::class.java))
     }
 
     //START OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9
