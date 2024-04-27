@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
-import at.aau.serg.logic.LobbyPlayerAdapter
+import at.aau.serg.adapters.LobbyPlayerAdapter
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.network.CallbackCreator

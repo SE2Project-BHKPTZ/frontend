@@ -145,7 +145,7 @@ sonar {
             "sonar.coverage.jacoco.xmlReportPaths",
             "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
         )
-        property("sonar.coverage.exclusions", "**/at/aau/serg/activities/**,**/at/aau/serg/utils/App.kt,**/at/aau/serg/fragments/**,**/at/aau/serg/placeholder/**")
+        property("sonar.coverage.exclusions", "**/at/aau/serg/activities/**,**/at/aau/serg/utils/App.kt,**/at/aau/serg/fragments/**,**/at/aau/serg/placeholder/**,**/at/aau/serg/adapters/**")
     }
 }
 

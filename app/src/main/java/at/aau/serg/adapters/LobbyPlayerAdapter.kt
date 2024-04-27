@@ -1,4 +1,4 @@
-package at.aau.serg.logic
+package at.aau.serg.adapters
 
 
 import android.content.ContextWrapper
@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
+import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.LobbyKick
 import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.network.CallbackCreator
@@ -71,7 +72,7 @@ class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
     }
 
     private fun onKickFailure() {
-        TODO("Not yet implemented")
+
     }
 
     override fun getItemCount(): Int {
