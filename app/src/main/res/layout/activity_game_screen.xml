@@ -9,9 +9,9 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
+        android:name="at.aau.serg.fragments.CardsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:name="at.aau.serg.fragments.CardsFragment"
         app:layout_constraintHeight_percent="0.20"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
