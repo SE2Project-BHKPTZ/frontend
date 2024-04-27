@@ -11,11 +11,12 @@ object CardContent {
     val ITEM_MAP: MutableMap<String, CardItem> = HashMap()
 
     // TODO: Get cards using HTTP call or as parameters
-    private val COUNT = 10
+    private val COUNT = 14
 
     init {
-        for (i in 2..COUNT) {
-            addItem(createPlaceholderItem(i, Suit.CLUBS))
+        for (i in 0..COUNT) {
+            val suit = Suit.entries.shuffled().first()
+            addItem(createPlaceholderItem(i, suit))
         }
     }
 
