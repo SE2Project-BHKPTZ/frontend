@@ -48,6 +48,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
@@ -142,7 +145,7 @@ sonar {
             "sonar.coverage.jacoco.xmlReportPaths",
             "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
         )
-        property("sonar.coverage.exclusions", "**/at/aau/serg/activities/**,**/at/aau/serg/utils/App.kt")
+        property("sonar.coverage.exclusions", "**/at/aau/serg/activities/**,**/at/aau/serg/utils/App.kt,**/at/aau/serg/fragments/**,**/at/aau/serg/placeholder/**")
     }
 }
 
@@ -160,6 +163,8 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.gson)
     implementation(libs.androidx.security.crypto.ktx)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.mockk.core)
