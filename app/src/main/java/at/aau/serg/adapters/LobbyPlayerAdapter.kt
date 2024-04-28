@@ -40,39 +40,41 @@ class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val myListData: LobbyPlayer = listdata[position]
-        holder.txtPlayerName.text = myListData.name
-        holder.btnKick.visibility = myListData.isVisible
+        val player: LobbyPlayer = listdata[position]
+        holder.txtPlayerName.text = player.name
+        holder.btnKick.visibility = player.isVisible.value
         holder.btnKick.setOnClickListener { view ->
 
-            kickPlayer(myListData)
+            kickPlayer(player)
 
             Toast.makeText(
                 view.context,
-                "click on item: " + myListData.uuid,
+                "click on item: " + player.uuid,
                 Toast.LENGTH_LONG
             ).show()
         }
     }
 
-    private fun kickPlayer(myListData: LobbyPlayer) {
-
+    private fun kickPlayer(player: LobbyPlayer) {
         HttpClient.post(
-            "lobbys/kick", Gson().toJson(LobbyKick(myListData.uuid)),
+            "lobbys/kick", Gson().toJson(LobbyKick(player.uuid)),
             StoreToken(context).getAccessToken(),
-            CallbackCreator().createCallback(::onKickFailure, ::onSuccessGetLobby)
+            CallbackCreator().createCallback(::onKickFailure, ::onSuccessKickPlayer)
         )
     }
 
-    private fun onSuccessGetLobby(response: Response) {
-
+    private fun onSuccessKickPlayer(response: Response) {
         val responseBody = response.body.toString()
 
-        Log.d("Lobby",responseBody)
+        Log.d("LobbyPlayerAdapter",responseBody)
     }
 
     private fun onKickFailure() {
-
+        Toast.makeText(
+            context,
+            "Error kicking player",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun getItemCount(): Int {

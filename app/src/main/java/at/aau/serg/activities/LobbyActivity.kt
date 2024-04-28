@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +16,7 @@ import at.aau.serg.R
 import at.aau.serg.adapters.LobbyPlayerAdapter
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.LobbyPlayer
+import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
@@ -24,14 +26,9 @@ import org.json.JSONObject
 
 class LobbyActivity : AppCompatActivity() {
 
-    val lobbyPlayers: Array<LobbyPlayer> = arrayOf<LobbyPlayer>(
-        LobbyPlayer("", "",4),
-        LobbyPlayer("", "",4),
-        LobbyPlayer("", "",4),
-        LobbyPlayer("", "",4),
-        LobbyPlayer("", "",4),
-        LobbyPlayer("", "",4),
-    )
+    val lobbyPlayers: Array<LobbyPlayer> = Array(6) {
+        LobbyPlayer()
+    }
 
     private lateinit var adapter: LobbyPlayerAdapter
     private var isAdmin:Boolean = false
@@ -105,7 +102,7 @@ class LobbyActivity : AppCompatActivity() {
                 player.uuid = playerData.getString("playerUUID")
                 player.name = playerData.getString("playerName")
                 if(isAdmin){
-                    player.isVisible = 0
+                    player.isVisible = Visibilities.VISIBLE
                 }
                 adapter.notifyItemChanged(index)
                 break
@@ -119,11 +116,14 @@ class LobbyActivity : AppCompatActivity() {
         val plyerToRemove = lobbyPlayers.indexOfFirst { it.uuid == playerData }
         lobbyPlayers[plyerToRemove].uuid = ""
         lobbyPlayers[plyerToRemove].name = ""
-        lobbyPlayers[plyerToRemove].isVisible =4
+        lobbyPlayers[plyerToRemove].isVisible = Visibilities.INVISIBLE
         adapter.notifyItemChanged(plyerToRemove)
     }
 
     private fun userKick(anies: Array<Any>) {
+        this.runOnUiThread(Runnable {
+            Toast.makeText(this, "You are kicked from the lobby", Toast.LENGTH_SHORT).show()
+        })
         startActivity(Intent(this, MainActivity::class.java))
     }
 
@@ -131,7 +131,7 @@ class LobbyActivity : AppCompatActivity() {
         HttpClient.get(
             "/lobbys/leave",
             StoreToken(this).getAccessToken(),
-            CallbackCreator().createCallback(::onFailureCLobby, ::leftLobby)
+            CallbackCreator().createCallback(::onFailureLeaveLobby, ::leftLobby)
         )
     }
 
@@ -139,9 +139,9 @@ class LobbyActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
     }
 
-    private fun onFailureCLobby() {
-
+    private fun onFailureLeaveLobby() {
+        this.runOnUiThread(Runnable {
+            Toast.makeText(this, "Error leaving lobby", Toast.LENGTH_SHORT).show()
+        })
     }
-
-
 }
