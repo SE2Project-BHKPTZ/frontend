@@ -22,13 +22,4 @@ class GameScreenThreePlayersFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_gamescreen_three_players, container, false)
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            GameScreenThreePlayersFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
 }

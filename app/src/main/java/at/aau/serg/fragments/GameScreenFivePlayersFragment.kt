@@ -23,12 +23,4 @@ class GameScreenFivePlayersFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_gamescreen_five_players, container, false)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            GameScreenFivePlayersFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
 }
