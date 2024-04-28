@@ -12,10 +12,8 @@ import io.mockk.verify
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
-import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
-import java.net.URISyntaxException
 
 class SocketHandlerTest {
     private val mockSocket = mockk<Socket>(relaxed = true)
