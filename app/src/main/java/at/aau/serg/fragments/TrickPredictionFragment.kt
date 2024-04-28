@@ -43,7 +43,7 @@ class TrickPredictionFragment : Fragment() {
     }
 
     private fun calculateReachablePoints(prediction: Int): Int {
-        return prediction * 20 + 20;
+        return prediction * 10 + 20;
     }
 
 }

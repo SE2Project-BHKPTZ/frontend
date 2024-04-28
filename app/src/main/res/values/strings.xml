@@ -7,7 +7,7 @@
     <string name="login">Login</string>
     <string name="noAccountYet"><u>No account yet?\nCreate one</u></string>
     <string name="loginFailed">Login failed</string>
-    <string name="registerFailed">Registriation failed</string>
+    <string name="registerFailed">Registration failed</string>
     <string name="cardImageDescription">Wizard card</string>
     <string name="gameActivity">Game Activity</string>
     <string name="showPoints">Show Points</string>
