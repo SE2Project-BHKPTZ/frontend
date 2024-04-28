@@ -108,7 +108,10 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
         "**/BuildConfig.*",
         "**/Manifest*.*",
         "**/*Test*.*",
-        "android/**/*.*"
+        "android/**/*.*",
+        "at/aau/serg/activities/*",
+        "at/aau/serg/fragments/*",
+        "at/aau/serg/adapters/*"
     )
     val kotlinClassesDir =
         layout.buildDirectory.dir("tmp/kotlin-classes/debug").get().asFile.absolutePath
