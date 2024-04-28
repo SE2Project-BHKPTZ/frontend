@@ -132,28 +132,9 @@ class MainActivity : AppCompatActivity() {
             "/lobbys",
             Gson().toJson(lobbyToCreate),
             StoreToken(this).getAccessToken(),
-            CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCLobby)
+            CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCreateOrJoinLobby)
         )
 
-    }
-
-    private fun onSuccessCLobby(response: Response) {
-        Log.d("cLobby", response.toString())
-
-        if (response.isSuccessful) {
-            response.body?.string()?.let {
-                Log.d("cLobby", it)
-                val intent = Intent(this, LobbyActivity::class.java)
-                intent.putExtra("lobbyCode", it)
-                startActivity(intent)
-            }
-        } else {
-            HttpClient.get(
-                "/lobbys/leave",
-                StoreToken(this).getAccessToken(),
-                CallbackCreator().createCallback(::onFailureLobby, ::cLobby)
-            )
-        }
     }
 
     private fun onFailureLobby() {
@@ -174,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                 "/lobbys/join",
                 Gson().toJson(lobbyToJoin),
                 StoreToken(this).getAccessToken(),
-                CallbackCreator().createCallback(::onFailureLobby, ::onSuccessJLobby)
+                CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCreateOrJoinLobby)
             )
         }
         builder.setNegativeButton("Cancel"
@@ -182,12 +163,12 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
-    private fun onSuccessJLobby(response: Response) {
-        Log.d("jLobby", response.toString())
+    private fun onSuccessCreateOrJoinLobby(response: Response) {
+        Log.d("Lobby", response.toString())
 
         if (response.isSuccessful) {
             response.body?.string()?.let {
-                Log.d("jLobby", it)
+                Log.d("Lobby", it)
                 val intent = Intent(this, LobbyActivity::class.java)
                 intent.putExtra("lobbyCode", it)
                 startActivity(intent)
