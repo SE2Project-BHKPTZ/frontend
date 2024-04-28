@@ -21,56 +21,53 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/four_point_star" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/player1FragmentContainerView"
-            android:name="at.aau.serg.fragments.CardsFragment"
+        <ImageView
+            android:id="@+id/player1Card"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/card_border_default"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gamescreenTriangleImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/gamescreenTriangleImageView"
+            app:srcCompat="@drawable/card_border_default"/>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/player2FragmentContainerView"
-            android:name="at.aau.serg.fragments.CardsFragment"
+        <ImageView
+            android:id="@+id/player2Card"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/card_border_default"
             android:rotation="-90"
-            app:layout_constraintBottom_toTopOf="@+id/player1FragmentContainerView"
+            app:layout_constraintBottom_toTopOf="@+id/player1Card"
             app:layout_constraintEnd_toStartOf="@+id/gamescreenTriangleImageView"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/card_border_default"/>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/player3FragmentContainerView"
+        <ImageView
+            android:id="@+id/player3Card"
             android:name="at.aau.serg.fragments.CardsFragment"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/card_border_default"
             android:rotation="0"
             app:layout_constraintBottom_toTopOf="@+id/gamescreenTriangleImageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/card_border_default"/>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/player4FragmentContainerView"
-            android:name="at.aau.serg.fragments.CardsFragment"
+        <ImageView
+            android:id="@+id/player4Card"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/card_border_default"
             android:rotation="90"
-            app:layout_constraintBottom_toTopOf="@+id/player1FragmentContainerView"
+            app:layout_constraintBottom_toTopOf="@+id/player1Card"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/gamescreenTriangleImageView" />
+            app:layout_constraintStart_toEndOf="@+id/gamescreenTriangleImageView"
+            app:srcCompat="@drawable/card_border_default"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
