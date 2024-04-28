@@ -1,14 +1,21 @@
 package at.aau.serg.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import at.aau.serg.R
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.fragments.TrickPredictionViewModel
+import at.aau.serg.fragments.GameScreenFivePlayersFragment
+import at.aau.serg.fragments.GameScreenFourPlayersFragment
+import at.aau.serg.fragments.GameScreenSixPlayersFragment
+import at.aau.serg.fragments.GameScreenThreePlayersFragment
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
@@ -27,5 +34,29 @@ class GameScreenActivity : AppCompatActivity() {
         if (fragment is TrickPredictionFragment) {
             trickViewModel.setRound(10)
         }
+
+        val gameScreen = getGameScreen()
+        if (gameScreen != null) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragmentView_GameScreen, gameScreen)
+            transaction.commit()
+        }
+
+    }
+
+    // only for showing the different GameScreens now
+    fun getGameScreen(): Fragment? {
+        val randomInt = (3..6).random()
+        return when (randomInt){
+            3 -> GameScreenThreePlayersFragment()
+            4 -> GameScreenFourPlayersFragment()
+            5 -> GameScreenFivePlayersFragment()
+            6 -> GameScreenSixPlayersFragment()
+            else -> null
+        }
+    }
+
+    fun btnMenuClicked(view: View){
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

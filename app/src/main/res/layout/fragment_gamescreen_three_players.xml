@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.GameScreenThreePlayersFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/gamescreenTriangleImageView"
+            android:layout_width="102dp"
+            android:layout_height="73dp"
+            android:adjustViewBounds="true"
+            android:rotation="-180"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:srcCompat="@drawable/triangle" />
+
+        <ImageView
+            android:id="@+id/player1Card"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gamescreenTriangleImageView"
+            app:srcCompat="@drawable/card_border_default"/>
+
+        <ImageView
+            android:id="@+id/player2Card"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:layout_marginEnd="50dp"
+            android:rotation="-45"
+            app:layout_constraintBottom_toTopOf="@+id/gamescreenTriangleImageView"
+            app:layout_constraintEnd_toStartOf="@+id/player3Card"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/card_border_default"/>
+
+        <ImageView
+            android:id="@+id/player3Card"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="50dp"
+            android:rotation="45"
+            app:layout_constraintBottom_toTopOf="@+id/gamescreenTriangleImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/player2Card"
+            app:srcCompat="@drawable/card_border_default" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
