@@ -198,4 +198,36 @@ class AuthenticationTest {
         verify { callback wasNot  Called }
     }
 
+    @Test
+    fun `getMe successful`(){
+        val context: ContextWrapper = mockk()
+        val storeToken: StoreToken = mockk()
+        val secret: Secret = mockk()
+
+        every { storeToken.getAccessToken() } returns "access_token"
+        every { HttpClient.get(any(), any(), any(), ) } just Runs
+
+        val result = Authentication.getMe(callback, storeToken)
+
+        assertTrue(result)
+        verify {
+            HttpClient.get(
+                "users/me",
+                "access_token",
+                callback
+            )
+        }
+    }
+
+    @Test
+    fun `getMe no access token`(){
+        val storeToken: StoreToken = mockk()
+
+        every { storeToken.getAccessToken() } returns null
+
+        val result = Authentication.getMe(callback, storeToken)
+
+        assertFalse(result)
+        verify { callback wasNot  Called }
+    }
 }

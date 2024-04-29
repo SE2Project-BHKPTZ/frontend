@@ -1,22 +1,24 @@
 package at.aau.serg.network
 
 import android.util.Log
+import at.aau.serg.R
+import at.aau.serg.utils.Strings
 import io.socket.client.Socket
 import io.socket.client.IO
+import io.socket.client.IO.Options
+import io.socket.client.SocketOptionBuilder
 import java.net.URISyntaxException
 
-class SocketHandler(url: String) {
+object SocketHandler {
     private lateinit var socket: Socket
-
-    init {
+    fun connect(uuid: String) {
         try {
-            socket = IO.socket(url)
+            val options: IO.Options = IO.Options()
+            options.query = "uuid=$uuid"
+            socket = IO.socket(Strings.get(R.string.api_url),options)
         } catch (e: URISyntaxException) {
             e.printStackTrace()
         }
-    }
-
-    fun connect() {
         socket.connect()
         setupBasicListeners()
     }
