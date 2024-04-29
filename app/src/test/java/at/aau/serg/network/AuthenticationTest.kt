@@ -130,7 +130,7 @@ class AuthenticationTest {
     }
 
     @Test
-    fun `tokenValid successful`(){
+    fun `getCurrentUser successful`(){
         val context: ContextWrapper = mockk()
         val storeToken: StoreToken = mockk()
         val secret: Secret = mockk()
@@ -138,7 +138,7 @@ class AuthenticationTest {
         every { storeToken.getAccessToken() } returns "access_token"
         every { HttpClient.get(any(), any(), any(), ) } just Runs
 
-        val result = Authentication.tokenValid(callback, storeToken)
+        val result = Authentication.getCurrentUser(callback, storeToken)
 
         assertTrue(result)
         verify {
@@ -151,12 +151,12 @@ class AuthenticationTest {
     }
 
     @Test
-    fun `tokenValid no access token`(){
+    fun `getCurrentUser no access token`(){
         val storeToken: StoreToken = mockk()
 
         every { storeToken.getAccessToken() } returns null
 
-        val result = Authentication.tokenValid(callback, storeToken)
+        val result = Authentication.getCurrentUser(callback, storeToken)
 
         assertFalse(result)
         verify { callback wasNot  Called }
@@ -193,39 +193,6 @@ class AuthenticationTest {
         every { storeToken.getRefreshToken() } returns null
 
         val result = Authentication.updateToken(callback, storeToken)
-
-        assertFalse(result)
-        verify { callback wasNot  Called }
-    }
-
-    @Test
-    fun `getMe successful`(){
-        val context: ContextWrapper = mockk()
-        val storeToken: StoreToken = mockk()
-        val secret: Secret = mockk()
-
-        every { storeToken.getAccessToken() } returns "access_token"
-        every { HttpClient.get(any(), any(), any(), ) } just Runs
-
-        val result = Authentication.tokenValid(callback, storeToken)
-
-        assertTrue(result)
-        verify {
-            HttpClient.get(
-                "users/me",
-                "access_token",
-                callback
-            )
-        }
-    }
-
-    @Test
-    fun `getMe no access token`(){
-        val storeToken: StoreToken = mockk()
-
-        every { storeToken.getAccessToken() } returns null
-
-        val result = Authentication.tokenValid(callback, storeToken)
 
         assertFalse(result)
         verify { callback wasNot  Called }

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        if (!Authentication.tokenValid(
+        if (!Authentication.getCurrentUser(
                 CallbackCreator().createCallback(
                     ::startLoginActivity,
                     ::checkIfUserIsAuthenticated
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         ) {
             this.startActivity(Intent(this, LoginActivity::class.java))
         } else {
-            Authentication.tokenValid(
+            Authentication.getCurrentUser(
                 CallbackCreator().createCallback(
                     ::startLoginActivity,
                     ::connectSocket
