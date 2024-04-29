@@ -21,6 +21,13 @@ class StoreToken(private val context: ContextWrapper) {
         editor.apply()
     }
 
+    fun storeUUID(uuid: String){
+        val sharedPreferences = Secret.getSecretSharedPref(context)
+        val editor = sharedPreferences.edit()
+        editor.putString("uuid", uuid)
+        editor.apply()
+    }
+
     @Throws(JSONException::class)
     fun storeTokenFromResponseBody(jsonObject: JSONObject) {
         val accessToken = jsonObject.getString("accessToken")
@@ -42,6 +49,11 @@ class StoreToken(private val context: ContextWrapper) {
     fun getRefreshToken(): String?{
         val sharedPreferences = Secret.getSecretSharedPref(context)
         return sharedPreferences.getString("refreshToken", null)
+    }
+
+    fun getUUID(): String?{
+        val sharedPreferences = Secret.getSecretSharedPref(context)
+        return sharedPreferences.getString("uuid", null)
     }
 
 }

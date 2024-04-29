@@ -20,6 +20,9 @@
             android:name=".activities.GameScreenActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.LobbyActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity

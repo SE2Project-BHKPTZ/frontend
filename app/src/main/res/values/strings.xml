@@ -17,4 +17,12 @@
     <string name="roundPlaceholder">Round: 1 of 15</string>
     <string name="menu">Menu</string>
     <string name="changeFragment">Change fragment</string>
+    <!--LobbyActivity-->
+    <string name="LobbyCode">Code: %s</string>
+    <string name="LobbyLeave">Leave Lobby</string>
+    <string name="LobbyStart">Start</string>
+    <string name="Lobby">Lobby</string>
+    <string name="LobbyPlayersPlayerNamePlaceholder">Player</string>
+    <string name="LobbyPlayersKick">Kick</string>
+    <string name="LobbyPlayers">Players:</string>
 </resources>

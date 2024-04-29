@@ -1,4 +1,4 @@
-package at.aau.serg.fragments
+package at.aau.serg.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

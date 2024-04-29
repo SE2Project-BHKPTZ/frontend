@@ -122,4 +122,28 @@ class TokenStoreTest {
             sharedPreferences.getString("refreshToken", null)
         }
     }
+
+    @Test
+    fun `storeUUID should store UUID in SharedPreferences`(){
+        val uuid = "uuid"
+
+        storeToken.storeUUID(uuid)
+
+        verify {
+            editor.putString("uuid", "uuid")
+            editor.apply()
+        }
+    }
+
+    @Test
+    fun getUUID(){
+        every { sharedPreferences.getString("uuid", null) } returns "uuid"
+
+        val result = storeToken.getUUID()
+        Assert.assertEquals("uuid", result)
+
+        verify {
+            sharedPreferences.getString("uuid", null)
+        }
+    }
 }

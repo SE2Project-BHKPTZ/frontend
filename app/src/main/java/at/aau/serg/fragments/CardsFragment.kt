@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import at.aau.serg.R
+import at.aau.serg.adapters.CardsRecyclerViewAdapter
 import at.aau.serg.models.CardItem
 import at.aau.serg.placeholder.CardContent
 
