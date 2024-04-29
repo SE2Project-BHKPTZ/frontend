@@ -38,25 +38,37 @@ class GameScreenActivity : AppCompatActivity() {
         val gameScreen = getGameScreen()
         if (gameScreen != null) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentView_GameScreen, gameScreen)
+            transaction.replace(R.id.game_fragment_container_view, gameScreen)
             transaction.commit()
         }
 
     }
 
     // only for showing the different GameScreens now
-    fun getGameScreen(): Fragment? {
+    fun getGameScreen(): Fragment {
         val randomInt = (3..6).random()
         return when (randomInt){
             3 -> GameScreenThreePlayersFragment()
             4 -> GameScreenFourPlayersFragment()
             5 -> GameScreenFivePlayersFragment()
             6 -> GameScreenSixPlayersFragment()
-            else -> null
+            else -> GameScreenThreePlayersFragment()
         }
     }
 
     fun btnMenuClicked(view: View){
         startActivity(Intent(this, MainActivity::class.java))
+    }
+
+    fun btnChangeFragmentClicked(view: View) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.game_fragment_container_view)
+        val newFragment = when (fragment) {
+            is TrickPredictionFragment -> getGameScreen()
+            else -> TrickPredictionFragment()
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.game_fragment_container_view, newFragment)
+            .commit()
     }
 }

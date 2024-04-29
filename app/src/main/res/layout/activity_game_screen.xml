@@ -15,6 +15,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:onClick="btnMenuClicked"
+        android:text="@string/menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnShowPoints" />
+
+    <Button
+        android:id="@+id/btnChangeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="btnChangeFragmentClicked"
+        android:textSize="12sp"
+        android:text="@string/changeFragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMenu" />
+
     <TextView
         android:id="@+id/roundCountTV"
         android:layout_width="wrap_content"
@@ -37,24 +57,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/fragmentView_GameScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/game_fragment_container_view"
         android:name="at.aau.serg.fragments.TrickPredictionFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.50"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintHeight_percent="0.55"
         app:layout_constraintTop_toBottomOf="@+id/trumpCardImageView" />
 
     <androidx.fragment.app.FragmentContainerView
@@ -62,21 +72,12 @@
         android:name="at.aau.serg.fragments.CardsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.30"
+        app:layout_constraintHeight_percent="0.25"
         app:layout_constraintTop_toBottomOf="@id/game_fragment_container_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btnMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="50dp"
-        android:onClick="btnMenuClicked"
-        android:text="@string/menu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
