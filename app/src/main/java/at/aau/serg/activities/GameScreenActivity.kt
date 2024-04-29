@@ -45,14 +45,14 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     // only for showing the different GameScreens now
-    fun getGameScreen(): Fragment {
+    fun getGameScreen(): Fragment? {
         val randomInt = (3..6).random()
         return when (randomInt){
             3 -> GameScreenThreePlayersFragment()
             4 -> GameScreenFourPlayersFragment()
             5 -> GameScreenFivePlayersFragment()
             6 -> GameScreenSixPlayersFragment()
-            else -> GameScreenThreePlayersFragment()
+            else -> null
         }
     }
 
@@ -67,8 +67,10 @@ class GameScreenActivity : AppCompatActivity() {
             else -> TrickPredictionFragment()
         }
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.game_fragment_container_view, newFragment)
-            .commit()
+        if (newFragment != null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.game_fragment_container_view, newFragment)
+                .commit()
+        }
     }
 }
