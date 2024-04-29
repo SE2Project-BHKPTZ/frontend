@@ -62,9 +62,7 @@
         android:name="at.aau.serg.fragments.TrickPredictionFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        app:layout_constraintHeight_percent="0.55"
+        app:layout_constraintHeight_percent="0.60"
         app:layout_constraintTop_toBottomOf="@+id/trumpCardImageView" />
 
     <androidx.fragment.app.FragmentContainerView
@@ -72,7 +70,7 @@
         android:name="at.aau.serg.fragments.CardsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintHeight_percent="0.20"
         app:layout_constraintTop_toBottomOf="@id/game_fragment_container_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
