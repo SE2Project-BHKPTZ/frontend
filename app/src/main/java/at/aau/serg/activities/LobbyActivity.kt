@@ -26,12 +26,12 @@ import org.json.JSONObject
 
 class LobbyActivity : AppCompatActivity() {
 
-    val lobbyPlayers: Array<LobbyPlayer> = Array(6) {
+    private val lobbyPlayers: Array<LobbyPlayer> = Array(6) {
         LobbyPlayer()
     }
-
     private lateinit var adapter: LobbyPlayerAdapter
-    private var isAdmin:Boolean = false
+    private var isAdmin: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,7 +43,7 @@ class LobbyActivity : AppCompatActivity() {
         }
 
         val recyclerView = findViewById<View>(R.id.rcylPlayers) as RecyclerView
-        adapter = LobbyPlayerAdapter(this,lobbyPlayers)
+        adapter = LobbyPlayerAdapter(this, lobbyPlayers)
         recyclerView.setHasFixedSize(true)
         recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setAdapter(adapter)
@@ -63,28 +63,23 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.on("lobby:userKick", ::userKick)
     }
 
-       private fun onSuccessGetLobby(response: Response) {
+    private fun onSuccessGetLobby(response: Response) {
         if (response.isSuccessful) {
             val responseBody = response.body?.string()
             if (responseBody != null) {
-                Log.d("Lobby", responseBody)
                 val players = Array(JSONObject(responseBody).getJSONArray("players").length()) {
                     JSONObject(responseBody).getJSONArray("players").getString(it)
                 }
                 for ((index, player) in players.withIndex()) {
-                    Log.d("Lobby", player.toString())
                     lobbyPlayers[index].uuid = JSONObject(player).getString("uuid")
                     lobbyPlayers[index].name = JSONObject(player).getString("username")
                     adapter.notifyItemChanged(index)
                 }
                 val adminUUID: String = JSONObject(players[0]).getString("uuid")
                 val uuid: String = StoreToken(this).getUUID().toString()
-                if(adminUUID == uuid){
+                if (adminUUID == uuid) {
                     isAdmin = true
                 }
-
-                Log.d("Lobby", adminUUID)
-                Log.d("Lobby", uuid)
             }
         }
     }
@@ -93,15 +88,15 @@ class LobbyActivity : AppCompatActivity() {
         this.startActivity(Intent(this, MainActivity::class.java))
     }
 
-    private fun userJoined(anies: Array<Any>) {
-        val playerData = (anies[0] as JSONObject)
+    private fun userJoined(socketResponse: Array<Any>) {
+        val playerData = (socketResponse[0] as JSONObject)
         Log.d("Lobby", "$playerData joined")
 
         for ((index, player) in lobbyPlayers.withIndex()) {
             if (player.uuid == "") {
                 player.uuid = playerData.getString("playerUUID")
                 player.name = playerData.getString("playerName")
-                if(isAdmin){
+                if (isAdmin) {
                     player.isVisible = Visibilities.VISIBLE
                 }
                 adapter.notifyItemChanged(index)
@@ -110,20 +105,20 @@ class LobbyActivity : AppCompatActivity() {
         }
     }
 
-    private fun userLeft(anies: Array<Any>) {
-        val playerData = (anies[0] as JSONObject).getString("playerUUID")
+    private fun userLeft(socketResponse: Array<Any>) {
+        val playerData = (socketResponse[0] as JSONObject).getString("playerUUID")
         Log.d("Lobby", "$playerData left")
-        val plyerToRemove = lobbyPlayers.indexOfFirst { it.uuid == playerData }
-        lobbyPlayers[plyerToRemove].uuid = ""
-        lobbyPlayers[plyerToRemove].name = ""
-        lobbyPlayers[plyerToRemove].isVisible = Visibilities.INVISIBLE
-        adapter.notifyItemChanged(plyerToRemove)
+        val playerToRemove = lobbyPlayers.indexOfFirst { it.uuid == playerData }
+        lobbyPlayers[playerToRemove].uuid = ""
+        lobbyPlayers[playerToRemove].name = ""
+        lobbyPlayers[playerToRemove].isVisible = Visibilities.INVISIBLE
+        adapter.notifyItemChanged(playerToRemove)
     }
 
-    private fun userKick(anies: Array<Any>) {
-        this.runOnUiThread(Runnable {
+    private fun userKick(socketResponse: Array<Any>) {
+        this.runOnUiThread {
             Toast.makeText(this, "You are kicked from the lobby", Toast.LENGTH_SHORT).show()
-        })
+        }
         startActivity(Intent(this, MainActivity::class.java))
     }
 
@@ -140,8 +135,8 @@ class LobbyActivity : AppCompatActivity() {
     }
 
     private fun onFailureLeaveLobby() {
-        this.runOnUiThread(Runnable {
+        this.runOnUiThread {
             Toast.makeText(this, "Error leaving lobby", Toast.LENGTH_SHORT).show()
-        })
+        }
     }
 }
