@@ -1,13 +1,13 @@
 package at.aau.serg.activities
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -46,18 +46,16 @@ class MainActivity : AppCompatActivity() {
         ) {
             this.startActivity(Intent(this, LoginActivity::class.java))
         } else {
-            Authentication.getMe(
+            Authentication.tokenValid(
                 CallbackCreator().createCallback(
                     ::startLoginActivity,
                     ::connectSocket
                 ), StoreToken(this)
             )
-
         }
     }
 
     private fun connectSocket(response: Response) {
-
         if (response.isSuccessful) {
             val responseBody = response.body?.string()
             if (responseBody != null) {
@@ -134,11 +132,12 @@ class MainActivity : AppCompatActivity() {
             StoreToken(this).getAccessToken(),
             CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCreateOrJoinLobby)
         )
-
     }
 
     private fun onFailureLobby() {
-
+        this.runOnUiThread {
+            Toast.makeText(this, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun tmpBtnJLobbyClicked(view: View) {
@@ -149,7 +148,7 @@ class MainActivity : AppCompatActivity() {
         input.setInputType(InputType.TYPE_CLASS_TEXT)
         builder.setView(input)
         builder.setPositiveButton("OK"
-        ) { dialog, which ->
+        ) { _, _ ->
             val lobbyToJoin = LobbyJoin(input.getText().toString())
             HttpClient.post(
                 "/lobbys/join",
@@ -159,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
         builder.setNegativeButton("Cancel"
-        ) { dialog, which -> dialog.cancel() }
+        ) { dialog, _ -> dialog.cancel() }
         builder.show()
     }
 

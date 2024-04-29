@@ -23,7 +23,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
-            app:srcCompat="@drawable/triangle" />
+            app:srcCompat="@drawable/triangle"
+            android:contentDescription="@string/triangleLogo"/>
 
         <ImageView
             android:id="@+id/player1Card"
@@ -34,7 +35,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gamescreenTriangleImageView"
-            app:srcCompat="@drawable/card_border_default"/>
+            app:srcCompat="@drawable/card_border_default"
+            android:contentDescription="@string/player1Card"/>
 
         <ImageView
             android:id="@+id/player2Card"
@@ -46,7 +48,8 @@
             app:layout_constraintEnd_toStartOf="@+id/player3Card"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/card_border_default"/>
+            app:srcCompat="@drawable/card_border_default"
+            android:contentDescription="@string/player2Card"/>
 
         <ImageView
             android:id="@+id/player3Card"
@@ -58,7 +61,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/player2Card"
-            app:srcCompat="@drawable/card_border_default" />
+            app:srcCompat="@drawable/card_border_default"
+            android:contentDescription="@string/player3Card"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

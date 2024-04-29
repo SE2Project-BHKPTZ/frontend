@@ -24,4 +24,13 @@
     <string name="LobbyPlayersPlayerNamePlaceholder">Player</string>
     <string name="LobbyPlayersKick">Kick</string>
     <string name="LobbyPlayers">Players:</string>
+    <string name="tmpCreateLobby">TMP Create Lobby</string>
+    <string name="tmpJoinLobby">TMP Join Lobby</string>
+    <string name="triangleLogo">triangle_logo</string>
+    <string name="player1Card">Player 1 Card</string>
+    <string name="player2Card">Player 2 Card</string>
+    <string name="player3Card">Player 3 Card</string>
+    <string name="player4Card">Player 4 Card</string>
+    <string name="player5Card">Player 5 Card</string>
+    <string name="player6Card">Player 6 Card</string>
 </resources>

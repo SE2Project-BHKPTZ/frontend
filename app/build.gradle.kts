@@ -54,6 +54,9 @@ android {
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
+    description = "Generates unit test coverage using jacoco "
+    group = JavaBasePlugin.VERIFICATION_GROUP
+
     mustRunAfter("testDebugUnitTest")
 
     dependsOn(

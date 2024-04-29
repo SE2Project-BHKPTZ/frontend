@@ -5,8 +5,6 @@ import at.aau.serg.R
 import at.aau.serg.utils.Strings
 import io.socket.client.Socket
 import io.socket.client.IO
-import io.socket.client.IO.Options
-import io.socket.client.SocketOptionBuilder
 import java.net.URISyntaxException
 
 object SocketHandler {

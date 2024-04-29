@@ -207,7 +207,7 @@ class AuthenticationTest {
         every { storeToken.getAccessToken() } returns "access_token"
         every { HttpClient.get(any(), any(), any(), ) } just Runs
 
-        val result = Authentication.getMe(callback, storeToken)
+        val result = Authentication.tokenValid(callback, storeToken)
 
         assertTrue(result)
         verify {
@@ -225,7 +225,7 @@ class AuthenticationTest {
 
         every { storeToken.getAccessToken() } returns null
 
-        val result = Authentication.getMe(callback, storeToken)
+        val result = Authentication.tokenValid(callback, storeToken)
 
         assertFalse(result)
         verify { callback wasNot  Called }

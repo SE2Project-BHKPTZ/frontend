@@ -44,11 +44,4 @@ object Authentication {
         HttpClient.post("users/refresh", jsonString, null, callback)
         return true
     }
-
-    fun getMe(callback: Callback, storeToken: StoreToken): Boolean{
-        val accessToken = storeToken.getAccessToken() ?: return false
-
-        HttpClient.get("users/me", accessToken, callback)
-        return true
-    }
 }
