@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/gamescreenTriangleImageView"
+            android:id="@+id/ivGameScreenCenter"
             android:layout_width="102dp"
             android:layout_height="73dp"
             android:adjustViewBounds="true"
@@ -24,45 +24,45 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
             app:srcCompat="@drawable/triangle"
-            android:contentDescription="@string/triangleLogo"/>
+            android:contentDescription="@string/triangleIconDescription"/>
 
         <ImageView
-            android:id="@+id/player1Card"
+            android:id="@+id/ivPlayer1Card"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gamescreenTriangleImageView"
+            app:layout_constraintTop_toBottomOf="@+id/ivGameScreenCenter"
             app:srcCompat="@drawable/card_border_default"
-            android:contentDescription="@string/player1Card"/>
+            android:contentDescription="@string/gamePlayer1Card"/>
 
         <ImageView
-            android:id="@+id/player2Card"
+            android:id="@+id/ivPlayer2Card"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginEnd="50dp"
             android:rotation="-45"
-            app:layout_constraintBottom_toTopOf="@+id/gamescreenTriangleImageView"
-            app:layout_constraintEnd_toStartOf="@+id/player3Card"
+            app:layout_constraintBottom_toTopOf="@+id/ivGameScreenCenter"
+            app:layout_constraintEnd_toStartOf="@+id/ivPlayer3Card"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/card_border_default"
-            android:contentDescription="@string/player2Card"/>
+            android:contentDescription="@string/gamePlayer2Card"/>
 
         <ImageView
-            android:id="@+id/player3Card"
+            android:id="@+id/ivPlayer3Card"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginStart="50dp"
             android:rotation="45"
-            app:layout_constraintBottom_toTopOf="@+id/gamescreenTriangleImageView"
+            app:layout_constraintBottom_toTopOf="@+id/ivGameScreenCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/player2Card"
+            app:layout_constraintStart_toEndOf="@+id/ivPlayer2Card"
             app:srcCompat="@drawable/card_border_default"
-            android:contentDescription="@string/player3Card"/>
+            android:contentDescription="@string/gamePlayer3Card"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

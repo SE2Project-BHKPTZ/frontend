@@ -88,7 +88,7 @@ class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
 
         init {
             btnKick = itemView.findViewById<View>(R.id.btnKick) as Button
-            txtPlayerName = itemView.findViewById<View>(R.id.txtPlayerName) as TextView
+            txtPlayerName = itemView.findViewById<View>(R.id.tvPlayerName) as TextView
             constraintLayout = itemView.findViewById<View>(R.id.constraintLayout) as ConstraintLayout
         }
     }

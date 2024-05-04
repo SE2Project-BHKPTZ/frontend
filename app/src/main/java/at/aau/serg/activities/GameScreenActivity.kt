@@ -30,7 +30,7 @@ class GameScreenActivity : AppCompatActivity() {
             insets
         }
 
-        val fragment = supportFragmentManager.findFragmentById(R.id.game_fragment_container_view)
+        val fragment = supportFragmentManager.findFragmentById(R.id.gameFragmentContainerView)
         if (fragment is TrickPredictionFragment) {
             trickViewModel.setRound(10)
         }
@@ -38,7 +38,7 @@ class GameScreenActivity : AppCompatActivity() {
         val gameScreen = getGameScreen()
         if (gameScreen != null) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.game_fragment_container_view, gameScreen)
+            transaction.replace(R.id.gameFragmentContainerView, gameScreen)
             transaction.commit()
         }
 
@@ -61,7 +61,7 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     fun btnChangeFragmentClicked(view: View) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.game_fragment_container_view)
+        val fragment = supportFragmentManager.findFragmentById(R.id.gameFragmentContainerView)
         val newFragment = when (fragment) {
             is TrickPredictionFragment -> getGameScreen()
             else -> TrickPredictionFragment()
@@ -69,7 +69,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         if (newFragment != null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.game_fragment_container_view, newFragment)
+                .replace(R.id.gameFragmentContainerView, newFragment)
                 .commit()
         }
     }
