@@ -21,7 +21,6 @@ import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
 import okhttp3.Response
-import okhttp3.internal.wait
 import org.json.JSONObject
 
 
