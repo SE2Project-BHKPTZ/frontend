@@ -42,12 +42,19 @@ class CardsFragment : Fragment() {
         return view
     }
 
-    private fun onCardClicked(cardItem: CardItem) {
+    private fun onCardClicked(cardItem: CardItem): Unit {
         val activity = activity
-        if (activity is GameScreenActivity) {
-            activity.onCardClicked(cardItem)
-        }
         Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
+        if (activity is GameScreenActivity) {
+            val cardIsPlayed = activity.onCardClicked(cardItem)
+            if (cardIsPlayed.not()) return
+
+            (requireView() as RecyclerView).adapter?.let { adapter ->
+                if (adapter is CardsRecyclerViewAdapter) {
+                    adapter.removeCard(cardItem, CardContent.ITEMS.indexOf(cardItem))
+                }
+            }
+        }
     }
 
     companion object {

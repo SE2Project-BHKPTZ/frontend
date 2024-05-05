@@ -79,13 +79,14 @@ class GameScreenActivity : AppCompatActivity() {
         }
     }
 
-    fun onCardClicked(cardItem: CardItem) {
+    fun onCardClicked(cardItem: CardItem): Boolean {
         val player1CardImageView = findViewById<ImageView>(R.id.player1Card)
-        if(cardPlayed) return
+        if(cardPlayed) return false
 
         val cardResourceId = resources.getIdentifier(
             "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
         player1CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
         cardPlayed = true
+        return true
     }
 }

@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.databinding.FragmentCardBinding
 import at.aau.serg.models.CardItem
+import kotlinx.coroutines.delay
 
 class CardsRecyclerViewAdapter(
-    private val values: List<CardItem>,
+    private var values: List<CardItem>,
     private val onCardClick: (CardItem) -> Unit
 ) : RecyclerView.Adapter<CardsRecyclerViewAdapter.ViewHolder>() {
 
@@ -60,6 +61,12 @@ class CardsRecyclerViewAdapter(
 
             onCardClick(card)
         }
+    }
+
+    fun removeCard(cardItem: CardItem, position: Int) {
+        values = values.minus(cardItem)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount)
     }
 
     override fun getItemCount(): Int = values.size
