@@ -3,6 +3,7 @@ package at.aau.serg.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import at.aau.serg.fragments.GameScreenFivePlayersFragment
 import at.aau.serg.fragments.GameScreenFourPlayersFragment
 import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
+import at.aau.serg.models.CardItem
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
@@ -72,5 +74,12 @@ class GameScreenActivity : AppCompatActivity() {
                 .replace(R.id.game_fragment_container_view, newFragment)
                 .commit()
         }
+    }
+
+    fun onCardClicked(cardItem: CardItem) {
+        val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
+        val cardResourceId = resources.getIdentifier(
+            "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+        player1CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
     }
 }
