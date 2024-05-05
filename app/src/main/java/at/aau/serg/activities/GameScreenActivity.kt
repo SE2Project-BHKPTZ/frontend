@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import at.aau.serg.models.CardItem
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
+    private var cardPlayed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +72,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         if (newFragment != null) {
+            cardPlayed = false
             supportFragmentManager.beginTransaction()
                 .replace(R.id.game_fragment_container_view, newFragment)
                 .commit()
@@ -77,9 +80,12 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     fun onCardClicked(cardItem: CardItem) {
-        val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
+        val player1CardImageView = findViewById<ImageView>(R.id.player1Card)
+        if(cardPlayed) return
+
         val cardResourceId = resources.getIdentifier(
             "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
         player1CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+        cardPlayed = true
     }
 }
