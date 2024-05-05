@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.databinding.FragmentCardBinding
 import at.aau.serg.models.CardItem
-import kotlinx.coroutines.delay
 
 class CardsRecyclerViewAdapter(
     private var values: List<CardItem>,
