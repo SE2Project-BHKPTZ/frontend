@@ -58,7 +58,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/gameFragmentContainerView"
+        android:id="@+id/fragmentContainerViewGame"
         android:name="at.aau.serg.fragments.TrickPredictionFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -66,12 +66,12 @@
         app:layout_constraintTop_toBottomOf="@+id/ivTrumpCard" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
+        android:id="@+id/fragmentContainerViewCards"
         android:name="at.aau.serg.fragments.CardsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.20"
-        app:layout_constraintTop_toBottomOf="@id/gameFragmentContainerView"
+        app:layout_constraintTop_toBottomOf="@id/fragmentContainerViewGame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
