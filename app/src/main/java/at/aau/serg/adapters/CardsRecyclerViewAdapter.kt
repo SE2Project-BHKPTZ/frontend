@@ -64,8 +64,7 @@ class CardsRecyclerViewAdapter(
 
     fun removeCard(cardItem: CardItem, position: Int) {
         values = values.minus(cardItem)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, itemCount)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = values.size
