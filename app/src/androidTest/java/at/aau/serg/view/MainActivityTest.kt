@@ -25,7 +25,7 @@ class MainActivityTest {
 
     @Test
     fun checkHelloWorldIsDisplayed() {
-        onView(withId(R.id.hellotext))
+        onView(withId(R.id.tvHello))
             .check(matches(withText("Hello World!")))
     }
 }

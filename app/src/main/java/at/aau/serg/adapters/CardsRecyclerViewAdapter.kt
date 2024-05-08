@@ -69,7 +69,7 @@ class CardsRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(binding: FragmentCardBinding) : RecyclerView.ViewHolder(binding.root) {
-        val imageView: ImageView = binding.cardImageView
+        val imageView: ImageView = binding.ivCard
 
         override fun toString(): String {
             return super.toString()
