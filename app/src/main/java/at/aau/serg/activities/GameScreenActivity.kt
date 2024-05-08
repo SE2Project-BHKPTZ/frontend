@@ -79,7 +79,7 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     fun onCardClicked(cardItem: CardItem): Boolean {
-        val player1CardImageView = findViewById<ImageView>(R.id.player1Card)
+        val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
         if(cardPlayed) return false
 
         val cardResourceId = resources.getIdentifier(

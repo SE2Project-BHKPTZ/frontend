@@ -42,7 +42,7 @@ class CardsFragment : Fragment() {
         return view
     }
 
-    private fun onCardClicked(cardItem: CardItem): Unit {
+    private fun onCardClicked(cardItem: CardItem) {
         val activity = activity
         Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
         if (activity is GameScreenActivity) {
