@@ -12,10 +12,10 @@
 
 
         <TextView
-            android:id="@+id/predictionInfoTV"
+            android:id="@+id/tvPredictionInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/predictTrickNumber"
+            android:text="@string/gamePredictTrickNumber"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/trickPredictionSlider"
+            android:id="@+id/sliderTrickPrediction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -32,35 +32,35 @@
             android:stepSize="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/predictionInfoTV" />
+            app:layout_constraintTop_toBottomOf="@+id/tvPredictionInfo" />
 
         <TextView
-            android:id="@+id/predictionScoreInfoTV"
+            android:id="@+id/tvPredictionScoreInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/predictionScore"
+            android:text="@string/gamePredictionScore"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/trickPredictionSlider" />
+            app:layout_constraintTop_toBottomOf="@+id/sliderTrickPrediction" />
 
         <TextView
-            android:id="@+id/predictionScoreTV"
+            android:id="@+id/tvPredictionScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/predictionScoreInfoTV" />
+            app:layout_constraintTop_toBottomOf="@+id/tvPredictionScoreInfo" />
 
         <Button
             android:id="@+id/btnConfirmPrediction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="@string/confirm"
+            android:text="@string/gameConfirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/predictionScoreTV" />
+            app:layout_constraintTop_toBottomOf="@+id/tvPredictionScore" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

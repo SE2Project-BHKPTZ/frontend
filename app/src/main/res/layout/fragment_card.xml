@@ -7,7 +7,7 @@
     >
 
     <ImageView
-        android:id="@+id/cardImageView"
+        android:id="@+id/ivCard"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
