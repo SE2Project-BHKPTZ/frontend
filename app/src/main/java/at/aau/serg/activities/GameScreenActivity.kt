@@ -1,25 +1,31 @@
 package at.aau.serg.activities
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import at.aau.serg.R
-import at.aau.serg.fragments.TrickPredictionFragment
-import at.aau.serg.fragments.TrickPredictionViewModel
 import at.aau.serg.fragments.GameScreenFivePlayersFragment
 import at.aau.serg.fragments.GameScreenFourPlayersFragment
 import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
+import at.aau.serg.fragments.TrickPredictionFragment
+import at.aau.serg.fragments.TrickPredictionViewModel
+import at.aau.serg.models.CardItem
+import at.aau.serg.network.SocketHandler
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,6 +48,13 @@ class GameScreenActivity : AppCompatActivity() {
             transaction.commit()
         }
 
+        val initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
+        val initialTrumpCard = intent.getStringExtra("trump")
+
+        // TODO: Pass initial cards to the Cards fragment
+
+        SocketHandler.on("cardPlayed", ::cardPlayed)
+        SocketHandler.on("trickPrediction", ::trickPrediction)
     }
 
     // only for showing the different GameScreens now
@@ -72,5 +85,13 @@ class GameScreenActivity : AppCompatActivity() {
                 .replace(R.id.game_fragment_container_view, newFragment)
                 .commit()
         }
+    }
+
+    private fun cardPlayed(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received cardPlayed event")
+    }
+
+    private fun trickPrediction(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received trickPrediction event")
     }
 }

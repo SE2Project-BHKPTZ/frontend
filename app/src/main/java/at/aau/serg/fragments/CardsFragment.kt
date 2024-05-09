@@ -44,15 +44,6 @@ class CardsFragment : Fragment() {
     private fun onCardClicked(cardItem: CardItem) {
         Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            CardsFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
 }
 
 

@@ -3,6 +3,7 @@ package at.aau.serg.activities
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -41,13 +42,16 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun onFailureRegister(){
+        Log.d("Register", "Request failed")
         runOnUiThread{
             Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun onResponseRegister( response: Response){
+        Log.d("Register", response.toString())
         if (!response.isSuccessful) {
+
             runOnUiThread{
                 Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
             }
