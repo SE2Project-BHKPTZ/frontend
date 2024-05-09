@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -12,18 +13,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
 import at.aau.serg.fragments.GameScreenFivePlayersFragment
 import at.aau.serg.fragments.GameScreenFourPlayersFragment
 import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
-import at.aau.serg.fragments.TrickPredictionViewModel
+import at.aau.serg.viewmodels.TrickPredictionViewModel
 import at.aau.serg.models.CardItem
 import at.aau.serg.network.SocketHandler
+import at.aau.serg.viewmodels.CardsViewModel
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
+    private val cardsViewModel: CardsViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +53,16 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         val initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
-        val initialTrumpCard = intent.getStringExtra("trump")
+        val initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
 
-        // TODO: Pass initial cards to the Cards fragment
+        if (initialCards != null) {
+            cardsViewModel.setCards(initialCards)
+        }
+
+        val trumpImageView: ImageView = findViewById<ImageView>(R.id.trumpCardImageView)
+        val cardResourceId = trumpImageView.context.resources.getIdentifier(
+            "card_${initialTrumpCard?.suit.toString().lowercase()}_${initialTrumpCard?.value}", "drawable", trumpImageView.context.packageName)
+        trumpImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
 
         SocketHandler.on("cardPlayed", ::cardPlayed)
         SocketHandler.on("trickPrediction", ::trickPrediction)

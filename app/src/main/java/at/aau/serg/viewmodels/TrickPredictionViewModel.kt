@@ -1,4 +1,4 @@
-package at.aau.serg.fragments
+package at.aau.serg.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

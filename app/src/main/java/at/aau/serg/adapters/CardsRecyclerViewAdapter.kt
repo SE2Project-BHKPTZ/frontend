@@ -4,17 +4,28 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.databinding.FragmentCardBinding
 import at.aau.serg.models.CardItem
+import at.aau.serg.viewmodels.CardsViewModel
 
 class CardsRecyclerViewAdapter(
-    private val values: List<CardItem>,
+    private val viewModel: CardsViewModel,
+    private val lifecycleOwner: LifecycleOwner,
     private val onCardClick: (CardItem) -> Unit
 ) : RecyclerView.Adapter<CardsRecyclerViewAdapter.ViewHolder>() {
-
     private var selectedPosition = RecyclerView.NO_POSITION
+    private var cards: Array<CardItem> = arrayOf()
+
+    init {
+        viewModel.cards.observe(lifecycleOwner, Observer { data ->
+            cards = data
+            notifyDataSetChanged()
+        })
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -27,7 +38,7 @@ class CardsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val card = values[position]
+        val card = cards[position]
         setCardImage(holder, card)
         setCardBackground(holder, position)
         setupClickListener(holder, card, position)
@@ -62,7 +73,7 @@ class CardsRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = cards.size
 
     inner class ViewHolder(binding: FragmentCardBinding) : RecyclerView.ViewHolder(binding.root) {
         val imageView: ImageView = binding.cardImageView
