@@ -12,4 +12,10 @@ class CardsViewModel : ViewModel() {
     fun setCards(data: Array<CardItem>) {
         _cards.value = data
     }
+
+    fun removeCard(cardItem: CardItem) {
+        val currentCards = _cards.value ?: return
+        val updatedCards = currentCards.filter { it != cardItem }.toTypedArray()
+        _cards.value = updatedCards
+    }
 }

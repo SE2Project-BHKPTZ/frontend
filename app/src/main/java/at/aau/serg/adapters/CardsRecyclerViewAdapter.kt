@@ -40,7 +40,7 @@ class CardsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val card = cards[position]
         setCardImage(holder, card)
-        setCardBackground(holder, position)
+        setCardBackground(holder)
         setupClickListener(holder, card, position)
     }
 
@@ -50,9 +50,8 @@ class CardsRecyclerViewAdapter(
         holder.imageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
     }
 
-    private fun setCardBackground(holder: ViewHolder, position: Int) {
-        holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context,
-            if (position == selectedPosition) R.drawable.card_border_selected else R.drawable.card_border_default)
+    private fun setCardBackground(holder: ViewHolder) {
+        holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.card_border_default)
     }
 
     private fun setupClickListener(holder: ViewHolder, card: CardItem, position: Int) {
@@ -73,10 +72,15 @@ class CardsRecyclerViewAdapter(
         }
     }
 
+    fun removeCard(cardItem: CardItem, position: Int) {
+        viewModel.removeCard(cardItem)
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int = cards.size
 
     inner class ViewHolder(binding: FragmentCardBinding) : RecyclerView.ViewHolder(binding.root) {
-        val imageView: ImageView = binding.cardImageView
+        val imageView: ImageView = binding.ivCard
 
         override fun toString(): String {
             return super.toString()

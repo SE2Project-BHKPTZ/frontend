@@ -10,7 +10,6 @@ object CardContent {
     val ITEMS: MutableList<CardItem> = ArrayList()
     val ITEM_MAP: MutableMap<String, CardItem> = HashMap()
 
-    // TODO: Get cards using HTTP call or as parameters
     private val COUNT = 14
 
     init {

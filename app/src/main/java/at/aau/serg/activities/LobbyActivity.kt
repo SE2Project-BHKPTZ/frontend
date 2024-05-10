@@ -46,15 +46,15 @@ class LobbyActivity : AppCompatActivity() {
             insets
         }
 
-        val recyclerView = findViewById<View>(R.id.rcylPlayers) as RecyclerView
+        val recyclerView = findViewById<View>(R.id.recyclerViewPlayers) as RecyclerView
         adapter = LobbyPlayerAdapter(this, lobbyPlayers)
         recyclerView.setHasFixedSize(true)
         recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setAdapter(adapter)
 
         val lobbyID = intent.getStringExtra("lobbyCode")
-        val txtLobbyCode = findViewById<TextView>(R.id.txtLobbyCode)
-        txtLobbyCode.text = getString(R.string.LobbyCode, lobbyID)
+        val txtLobbyCode = findViewById<TextView>(R.id.tvLobbyCode)
+        txtLobbyCode.text = getString(R.string.lobbyCode, lobbyID)
 
         HttpClient.get(
             "lobbys/my",
@@ -78,7 +78,9 @@ class LobbyActivity : AppCompatActivity() {
                 for ((index, player) in players.withIndex()) {
                     lobbyPlayers[index].uuid = JSONObject(player).getString("uuid")
                     lobbyPlayers[index].name = JSONObject(player).getString("username")
-                    adapter.notifyItemChanged(index)
+                    runOnUiThread { // fixes a bug that can occur
+                        adapter.notifyItemChanged(index)
+                    }
                 }
                 val adminUUID: String = JSONObject(players[0]).getString("uuid")
                 val uuid: String = StoreToken(this).getUUID().toString()

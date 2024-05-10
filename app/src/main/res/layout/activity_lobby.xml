@@ -8,26 +8,26 @@
     tools:context=".activities.LobbyActivity">
 
     <TextView
-        android:id="@+id/txtLobby"
+        android:id="@+id/tvLobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/Lobby"
+        android:text="@string/lobby"
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtLobbyCode"
+        android:id="@+id/tvLobbyCode"
         android:layout_width="201dp"
         android:layout_height="27dp"
         android:gravity="center_horizontal"
-        android:text="@string/LobbyCode"
+        android:text="@string/lobbyCode"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLobby" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLobby" />
 
     <Button
         android:id="@+id/btnLeave"
@@ -36,7 +36,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="32dp"
         android:onClick="btnLeaveClicked"
-        android:text="@string/LobbyLeave"
+        android:text="@string/lobbyLeave"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -48,12 +48,12 @@
         android:layout_marginBottom="32dp"
         android:enabled="false"
         android:onClick="btnStartGame"
-        android:text="@string/LobbyStart"
+        android:text="@string/lobbyStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcylPlayers"
+        android:id="@+id/recyclerViewPlayers"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="32dp"
@@ -64,6 +64,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLobbyCode" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLobbyCode" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

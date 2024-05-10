@@ -21,13 +21,14 @@ import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.viewmodels.TrickPredictionViewModel
-import at.aau.serg.models.CardItem
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.viewmodels.CardsViewModel
+import at.aau.serg.models.CardItem
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
     private val cardsViewModel: CardsViewModel by viewModels()
+    private var cardPlayed: Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +41,7 @@ class GameScreenActivity : AppCompatActivity() {
             insets
         }
 
-        val fragment = supportFragmentManager.findFragmentById(R.id.game_fragment_container_view)
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame)
         if (fragment is TrickPredictionFragment) {
             trickViewModel.setRound(10)
         }
@@ -48,7 +49,7 @@ class GameScreenActivity : AppCompatActivity() {
         val gameScreen = getGameScreen()
         if (gameScreen != null) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.game_fragment_container_view, gameScreen)
+            transaction.replace(R.id.fragmentContainerViewGame, gameScreen)
             transaction.commit()
         }
 
@@ -59,7 +60,7 @@ class GameScreenActivity : AppCompatActivity() {
             cardsViewModel.setCards(initialCards)
         }
 
-        val trumpImageView: ImageView = findViewById<ImageView>(R.id.trumpCardImageView)
+        val trumpImageView: ImageView = findViewById<ImageView>(R.id.ivTrumpCard)
         val cardResourceId = trumpImageView.context.resources.getIdentifier(
             "card_${initialTrumpCard?.suit.toString().lowercase()}_${initialTrumpCard?.value}", "drawable", trumpImageView.context.packageName)
         trumpImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
@@ -85,17 +86,29 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     fun btnChangeFragmentClicked(view: View) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.game_fragment_container_view)
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame)
         val newFragment = when (fragment) {
             is TrickPredictionFragment -> getGameScreen()
             else -> TrickPredictionFragment()
         }
 
         if (newFragment != null) {
+            cardPlayed = false
             supportFragmentManager.beginTransaction()
-                .replace(R.id.game_fragment_container_view, newFragment)
+                .replace(R.id.fragmentContainerViewGame, newFragment)
                 .commit()
         }
+    }
+
+    fun onCardClicked(cardItem: CardItem): Boolean {
+        val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
+        if(cardPlayed) return false
+
+        val cardResourceId = resources.getIdentifier(
+            "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+        player1CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+        cardPlayed = true
+        return true
     }
 
     private fun cardPlayed(socketResponse: Array<Any>) {

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
+import at.aau.serg.activities.GameScreenActivity
 import at.aau.serg.adapters.CardsRecyclerViewAdapter
 import at.aau.serg.models.CardItem
 import at.aau.serg.placeholder.CardContent
@@ -47,7 +48,18 @@ class CardsFragment : Fragment() {
     }
 
     private fun onCardClicked(cardItem: CardItem) {
+        val activity = activity
         Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
+        if (activity is GameScreenActivity) {
+            val cardIsPlayed = activity.onCardClicked(cardItem)
+            if (cardIsPlayed.not()) return
+
+            (requireView() as RecyclerView).adapter?.let { adapter ->
+                if (adapter is CardsRecyclerViewAdapter) {
+                    adapter.removeCard(cardItem, CardContent.ITEMS.indexOf(cardItem))
+                }
+            }
+        }
     }
 }
 

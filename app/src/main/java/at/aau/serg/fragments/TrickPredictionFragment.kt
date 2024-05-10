@@ -24,8 +24,8 @@ class TrickPredictionFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_trick_prediction, container, false)
 
-        val trickPredictionSlider: Slider =  view.findViewById(R.id.trickPredictionSlider)
-        val scoreTextView: TextView = view.findViewById(R.id.predictionScoreTV)
+        val trickPredictionSlider: Slider =  view.findViewById(R.id.sliderTrickPrediction)
+        val scoreTextView: TextView = view.findViewById(R.id.tvPredictionScore)
 
         trickPredictionSlider.addOnChangeListener { _, value, _ ->
             val predictionPoints = "${calculateReachablePoints(value.toInt())} Points"
@@ -40,7 +40,7 @@ class TrickPredictionFragment : Fragment() {
     }
 
     private fun setMaximumPrediction(round: Int) {
-        view?.findViewById<Slider>(R.id.trickPredictionSlider)?.valueTo = round.toFloat()
+        view?.findViewById<Slider>(R.id.sliderTrickPrediction)?.valueTo = round.toFloat()
     }
 
     private fun calculateReachablePoints(prediction: Int): Int {
