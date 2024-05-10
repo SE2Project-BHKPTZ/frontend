@@ -11,7 +11,6 @@ class CallbackCreator {
     fun createCallback(onFailure: () -> Unit, onResponse: (response: Response) -> Unit):Callback {
         return object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.d("Register", e.toString())
                 onFailure()
             }
 

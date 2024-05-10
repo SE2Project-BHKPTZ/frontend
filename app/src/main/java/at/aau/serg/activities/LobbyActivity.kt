@@ -166,10 +166,7 @@ class LobbyActivity : AppCompatActivity() {
     }
 
     private fun startGame(socketResponse: Array<Any>) {
-        Log.d("Socket", "Received startGame event")
-
         val gameData = (socketResponse[0] as JSONObject)
-        Log.d("Socket", gameData.toString())
         val cards = gameData.getJSONArray("hands").getJSONArray(getPlayerIndex())
         val trumpCard = gameData.getJSONObject("trump")
 
