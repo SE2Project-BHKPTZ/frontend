@@ -3,6 +3,7 @@ package at.aau.serg.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,15 +11,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import at.aau.serg.R
+import at.aau.serg.fragments.TrickPredictionFragment
+import at.aau.serg.fragments.TrickPredictionViewModel
 import at.aau.serg.fragments.GameScreenFivePlayersFragment
 import at.aau.serg.fragments.GameScreenFourPlayersFragment
 import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
-import at.aau.serg.fragments.TrickPredictionFragment
-import at.aau.serg.fragments.TrickPredictionViewModel
+import at.aau.serg.models.CardItem
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
+    private var cardPlayed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,9 +71,21 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         if (newFragment != null) {
+            cardPlayed = false
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerViewGame, newFragment)
                 .commit()
         }
+    }
+
+    fun onCardClicked(cardItem: CardItem): Boolean {
+        val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
+        if(cardPlayed) return false
+
+        val cardResourceId = resources.getIdentifier(
+            "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+        player1CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+        cardPlayed = true
+        return true
     }
 }
