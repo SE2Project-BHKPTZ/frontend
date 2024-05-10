@@ -1,6 +1,5 @@
 package at.aau.serg.network
 
-import android.util.Log
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
