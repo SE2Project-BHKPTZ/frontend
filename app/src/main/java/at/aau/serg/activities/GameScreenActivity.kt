@@ -53,8 +53,18 @@ class GameScreenActivity : AppCompatActivity() {
             transaction.commit()
         }
 
-        val initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
-        val initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
+        val initialCards: Array<CardItem>?
+        val initialTrumpCard: CardItem?
+
+        // Check version as getSerializableExtra changed for API version > 33
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
+            initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
+        } else {
+            initialCards = intent.getSerializableExtra("cards") as? Array<CardItem>
+            initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
+        }
+
 
         if (initialCards != null) {
             cardsViewModel.setCards(initialCards)
