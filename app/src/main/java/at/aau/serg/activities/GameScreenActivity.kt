@@ -30,7 +30,6 @@ class GameScreenActivity : AppCompatActivity() {
     private val cardsViewModel: CardsViewModel by viewModels()
     private var cardPlayed: Boolean = false
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

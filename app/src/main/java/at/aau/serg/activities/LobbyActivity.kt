@@ -128,7 +128,7 @@ class LobbyActivity : AppCompatActivity() {
         lobbyPlayers[playerToRemove].isVisible = Visibilities.INVISIBLE
         adapter.notifyItemChanged(playerToRemove)
 
-        if (playerCount() < 3) {
+        if (playerCount() < 3 && isAdmin) {
             this.runOnUiThread {
                 val startBtn: Button = findViewById(R.id.btnStartGame)
                 startBtn.isEnabled = false
