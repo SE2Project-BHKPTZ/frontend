@@ -10,7 +10,7 @@ import at.aau.serg.databinding.FragmentCardBinding
 import at.aau.serg.models.CardItem
 
 class CardsRecyclerViewAdapter(
-    private val values: List<CardItem>,
+    private var values: List<CardItem>,
     private val onCardClick: (CardItem) -> Unit
 ) : RecyclerView.Adapter<CardsRecyclerViewAdapter.ViewHolder>() {
 
@@ -29,7 +29,7 @@ class CardsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val card = values[position]
         setCardImage(holder, card)
-        setCardBackground(holder, position)
+        setCardBackground(holder)
         setupClickListener(holder, card, position)
     }
 
@@ -39,9 +39,8 @@ class CardsRecyclerViewAdapter(
         holder.imageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
     }
 
-    private fun setCardBackground(holder: ViewHolder, position: Int) {
-        holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context,
-            if (position == selectedPosition) R.drawable.card_border_selected else R.drawable.card_border_default)
+    private fun setCardBackground(holder: ViewHolder) {
+        holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.card_border_default)
     }
 
     private fun setupClickListener(holder: ViewHolder, card: CardItem, position: Int) {
@@ -60,6 +59,11 @@ class CardsRecyclerViewAdapter(
 
             onCardClick(card)
         }
+    }
+
+    fun removeCard(cardItem: CardItem, position: Int) {
+        values = values.minus(cardItem)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = values.size
