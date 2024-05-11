@@ -79,6 +79,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         SocketHandler.on("cardPlayed", ::cardPlayed)
         SocketHandler.on("trickPrediction", ::trickPrediction)
+        SocketHandler.on("nextSubround", :: nextSubRound)
     }
 
     // only for showing the different GameScreens now
@@ -153,12 +154,12 @@ class GameScreenActivity : AppCompatActivity() {
                 "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
             val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
             when(countPlayedCards){
-                2 -> setPlayer2Card(player2CardImageView, cardResourceId)
+                2 -> setPlayerCard(player2CardImageView, cardResourceId)
                 3 ->{
                     val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
                     switchCards(player2CardImageView, player3CardImageView)
 
-                    setPlayer2Card(player2CardImageView, cardResourceId)
+                    setPlayerCard(player2CardImageView, cardResourceId)
                 }
                 else -> {}
             }
@@ -171,13 +172,13 @@ class GameScreenActivity : AppCompatActivity() {
 
         when(countPlayedCards){
             1 -> {
-                setPlayer2Card(player2CardImageView, cardResourceId)
+                setPlayerCard(player2CardImageView, cardResourceId)
             }
             2 ->{
                 val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
                 switchCards(player2CardImageView, player3CardImageView)
 
-                setPlayer2Card(player2CardImageView, cardResourceId)
+                setPlayerCard(player2CardImageView, cardResourceId)
             }
             3 ->{
                 val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
@@ -185,7 +186,7 @@ class GameScreenActivity : AppCompatActivity() {
                 switchCards(player3CardImageView, player4CardImageView)
                 switchCards(player2CardImageView, player3CardImageView)
 
-                setPlayer2Card(player2CardImageView, cardResourceId)
+                setPlayerCard(player2CardImageView, cardResourceId)
             }
             4 ->{
                 val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
@@ -195,7 +196,7 @@ class GameScreenActivity : AppCompatActivity() {
                 switchCards(player3CardImageView, player4CardImageView)
                 switchCards(player2CardImageView, player3CardImageView)
 
-                setPlayer2Card(player2CardImageView, cardResourceId)
+                setPlayerCard(player2CardImageView, cardResourceId)
             }
             5 ->{
                 val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
@@ -207,7 +208,7 @@ class GameScreenActivity : AppCompatActivity() {
                 switchCards(player3CardImageView, player4CardImageView)
                 switchCards(player2CardImageView, player3CardImageView)
 
-                setPlayer2Card(player2CardImageView, cardResourceId)
+                setPlayerCard(player2CardImageView, cardResourceId)
             }
             else -> {}
         }
@@ -221,14 +222,33 @@ class GameScreenActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPlayer2Card(player2CardImageView: ImageView, cardResourceId: Int){
+    private fun setPlayerCard(cardImageView: ImageView, cardResourceId: Int){
         runOnUiThread {
-            player2CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
-            player2CardImageView.tag = cardResourceId
+            cardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+            cardImageView.tag = cardResourceId
         }
     }
 
     private fun trickPrediction(socketResponse: Array<Any>) {
         Log.d("Socket", "Received trickPrediction event")
+    }
+
+    private fun nextSubRound(socketResponse: Array<Any>){
+        Log.d("Socket", "Received nextSubRound event")
+
+        val gameScreenFragment = getGameScreen()
+        if(gameScreenFragment != null){
+            // TODO: throws error
+            runOnUiThread {
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.fragmentContainerViewGame, gameScreenFragment)
+                transaction.commitAllowingStateLoss()
+            }
+
+        }
+
+        cardPlayed = false
+        lastPlayedCard = null
+        countPlayedCards = 0
     }
 }
