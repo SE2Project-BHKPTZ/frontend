@@ -9,13 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
 import at.aau.serg.activities.GameScreenActivity
 import at.aau.serg.adapters.CardsRecyclerViewAdapter
 import at.aau.serg.models.CardItem
 import at.aau.serg.placeholder.CardContent
+import at.aau.serg.viewmodels.CardsViewModel
+import at.aau.serg.viewmodels.TrickPredictionViewModel
 
 class CardsFragment : Fragment() {
+    private val viewModel: CardsViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,20 +36,21 @@ class CardsFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = CardsRecyclerViewAdapter(CardContent.ITEMS) {
+                adapter = CardsRecyclerViewAdapter(viewModel, viewLifecycleOwner) {
                     cardItem ->  onCardClicked(cardItem)
                 }
                 val overlapWidth = resources.getDimensionPixelSize(R.dimen.overlapWidth)
                 addItemDecoration(OverlapDecoration(overlapWidth))
             }
         }
+
         return view
     }
 
     private fun onCardClicked(cardItem: CardItem) {
         val activity = activity
         Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
-        if (activity is GameScreenActivity) {
+        if (activity is GameScreenActivity && activity.supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame) !is TrickPredictionFragment) {
             val cardIsPlayed = activity.onCardClicked(cardItem)
             if (cardIsPlayed.not()) return
 
@@ -55,15 +60,6 @@ class CardsFragment : Fragment() {
                 }
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            CardsFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
     }
 }
 

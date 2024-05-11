@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,14 +16,17 @@ import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.adapters.LobbyPlayerAdapter
 import at.aau.serg.logic.StoreToken
+import at.aau.serg.models.CardItem
 import at.aau.serg.models.LobbyPlayer
+import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
 import okhttp3.Response
+import org.json.JSONArray
 import org.json.JSONObject
-
+import java.util.Arrays
 
 class LobbyActivity : AppCompatActivity() {
 
@@ -61,6 +65,7 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.on("lobby:userJoined", ::userJoined)
         SocketHandler.on("lobby:userLeft", ::userLeft)
         SocketHandler.on("lobby:userKick", ::userKick)
+        SocketHandler.on("startGame", ::startGame)
     }
 
     private fun onSuccessGetLobby(response: Response) {
@@ -105,6 +110,13 @@ class LobbyActivity : AppCompatActivity() {
                 break
             }
         }
+
+        if (playerCount() >= 3 && isAdmin) {
+            this.runOnUiThread {
+                val startBtn: Button = findViewById(R.id.btnStartGame)
+                startBtn.isEnabled = true
+            }
+        }
     }
 
     private fun userLeft(socketResponse: Array<Any>) {
@@ -115,6 +127,13 @@ class LobbyActivity : AppCompatActivity() {
         lobbyPlayers[playerToRemove].name = ""
         lobbyPlayers[playerToRemove].isVisible = Visibilities.INVISIBLE
         adapter.notifyItemChanged(playerToRemove)
+
+        if (playerCount() < 3 && isAdmin) {
+            this.runOnUiThread {
+                val startBtn: Button = findViewById(R.id.btnStartGame)
+                startBtn.isEnabled = false
+            }
+        }
     }
 
     private fun userKick(socketResponse: Array<Any>) {
@@ -132,6 +151,10 @@ class LobbyActivity : AppCompatActivity() {
         )
     }
 
+    fun btnStartGame(view: View) {
+        SocketHandler.emit("startGame", "")
+    }
+
     private fun leftLobby(response: Response) {
         startActivity(Intent(this, MainActivity::class.java))
     }
@@ -139,6 +162,59 @@ class LobbyActivity : AppCompatActivity() {
     private fun onFailureLeaveLobby() {
         this.runOnUiThread {
             Toast.makeText(this, "Error leaving lobby", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun startGame(socketResponse: Array<Any>) {
+        val gameData = (socketResponse[0] as JSONObject)
+        val cards = gameData.getJSONArray("hands").getJSONArray(getPlayerIndex())
+        val trumpCard = gameData.getJSONObject("trump")
+
+        val intent = Intent(
+            baseContext,
+            GameScreenActivity::class.java
+        )
+        intent.putExtra("cards", convertCards(cards))
+        intent.putExtra("trump", convertCard(trumpCard))
+
+        startActivity(intent)
+    }
+
+    private fun playerCount(): Int {
+        return Arrays.stream<Any>(lobbyPlayers).filter { e: Any? -> e != null }.count()
+            .toInt();
+    }
+
+    private fun getPlayerIndex(): Int {
+        val uuid: String = StoreToken(this).getUUID().toString()
+        return lobbyPlayers.indexOfFirst { player -> player.uuid == uuid}
+    }
+
+    private fun convertCards(cardsJsonArray: JSONArray): Array<CardItem> {
+        val cardsList = mutableListOf<CardItem>()
+        for (i in 0 until cardsJsonArray.length()) {
+            val cardJson = cardsJsonArray.getJSONObject(i)
+            val card = convertCard(cardJson)
+            cardsList.add(card)
+        }
+
+        return cardsList.toTypedArray()
+    }
+
+    private fun convertCard(cardJson: JSONObject): CardItem {
+        return CardItem(
+            cardJson.getString("value"),
+            stringToSuit(cardJson.getString("suit"))
+        )
+    }
+
+    private fun stringToSuit(suitString: String): Suit {
+        return when (suitString.uppercase()) {
+            "HEARTS" -> Suit.HEARTS
+            "DIAMONDS" -> Suit.DIAMONDS
+            "CLUBS" -> Suit.CLUBS
+            "SPADES" -> Suit.SPADES
+            else -> throw IllegalArgumentException("Unknown suit: $suitString")
         }
     }
 }

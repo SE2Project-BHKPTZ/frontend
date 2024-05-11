@@ -15,8 +15,10 @@ import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
+import at.aau.serg.models.CardItem
 import at.aau.serg.models.LobbyCreate
 import at.aau.serg.models.LobbyJoin
+import at.aau.serg.models.Suit
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
@@ -116,7 +118,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openGameActivity(view: View){
-        startActivity(Intent(this, GameScreenActivity::class.java))
+        val intent = Intent(
+            baseContext,
+            GameScreenActivity::class.java
+        )
+
+        val sampleCards: Array<CardItem> = arrayOf(
+            CardItem("2", Suit.HEARTS),
+            CardItem("5", Suit.SPADES),
+            CardItem("7", Suit.DIAMONDS),
+            CardItem("13", Suit.CLUBS),
+            CardItem("4", Suit.HEARTS)
+        )
+        intent.putExtra("cards", sampleCards)
+        intent.putExtra("trump", CardItem("3", Suit.HEARTS))
+
+        startActivity(intent)
     }
 
     //START OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9

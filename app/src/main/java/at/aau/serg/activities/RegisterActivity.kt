@@ -48,6 +48,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun onResponseRegister( response: Response){
         if (!response.isSuccessful) {
+
             runOnUiThread{
                 Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
             }

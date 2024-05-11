@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
+import at.aau.serg.viewmodels.TrickPredictionViewModel
 import com.google.android.material.slider.Slider
 
 class TrickPredictionFragment : Fragment() {
