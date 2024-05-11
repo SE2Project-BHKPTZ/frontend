@@ -8,23 +8,21 @@ import android.view.View
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
 import at.aau.serg.fragments.GameScreenFivePlayersFragment
 import at.aau.serg.fragments.GameScreenFourPlayersFragment
 import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
-import at.aau.serg.viewmodels.TrickPredictionViewModel
-import at.aau.serg.network.SocketHandler
-import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.models.CardItem
 import at.aau.serg.models.Suit
+import at.aau.serg.network.SocketHandler
+import at.aau.serg.viewmodels.CardsViewModel
+import at.aau.serg.viewmodels.TrickPredictionViewModel
 import org.json.JSONObject
 
 class GameScreenActivity : AppCompatActivity() {
@@ -33,6 +31,7 @@ class GameScreenActivity : AppCompatActivity() {
     private var cardPlayed: Boolean = false
     private var lastPlayedCard: CardItem? = null
     private var countPlayedCards = 0
+    private lateinit var trumpCard: CardItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +76,10 @@ class GameScreenActivity : AppCompatActivity() {
         val cardResourceId = trumpImageView.context.resources.getIdentifier(
             "card_${initialTrumpCard?.suit.toString().lowercase()}_${initialTrumpCard?.value}", "drawable", trumpImageView.context.packageName)
         trumpImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+
+        if (initialTrumpCard != null) {
+            trumpCard = initialTrumpCard
+        }
 
         SocketHandler.on("cardPlayed", ::cardPlayed)
         SocketHandler.on("trickPrediction", ::trickPrediction)
@@ -128,7 +131,10 @@ class GameScreenActivity : AppCompatActivity() {
 
         lastPlayedCard = cardItem
         countPlayedCards += 1
-        SocketHandler.emit("cardPlayed", cardItem.toJson())
+        val json: JSONObject = cardItem.toJson()
+        json.put("trump", trumpCard.suit)
+
+        SocketHandler.emit("cardPlayed", json)
         return true
     }
 
