@@ -48,12 +48,9 @@ class GameScreenActivity : AppCompatActivity() {
             trickViewModel.setRound(10)
         }
 
-        val gameScreen = getGameScreen()
-        if (gameScreen != null) {
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentContainerViewGame, gameScreen)
-            transaction.commit()
-        }
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragmentContainerViewGame, TrickPredictionFragment())
+        transaction.commit()
 
         val initialCards: Array<CardItem>?
         val initialTrumpCard: CardItem?
@@ -66,7 +63,6 @@ class GameScreenActivity : AppCompatActivity() {
             initialCards = intent.getSerializableExtra("cards") as? Array<CardItem>
             initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
         }
-
 
         if (initialCards != null) {
             cardsViewModel.setCards(initialCards)

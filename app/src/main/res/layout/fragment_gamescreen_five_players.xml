@@ -12,16 +12,16 @@
 
         <ImageView
             android:id="@+id/ivGameScreenCenter"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="115dp"
+            android:contentDescription="@string/starIconDescription"
             android:rotation="-180"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/star"
-            android:contentDescription="@string/starIconDescription" />
+            app:srcCompat="@drawable/star" />
 
         <ImageView
             android:id="@+id/ivPlayer1Card"
@@ -40,13 +40,14 @@
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginTop="70dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/gamePlayer2Card"
             android:rotation="-130"
             app:layout_constraintEnd_toStartOf="@+id/ivPlayer1Card"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ivGameScreenCenter"
-            app:srcCompat="@drawable/card_border_default"
-            android:contentDescription="@string/gamePlayer2Card"/>
+            app:srcCompat="@drawable/card_border_default" />
 
         <ImageView
             android:id="@+id/ivPlayer3Card"
@@ -81,14 +82,65 @@
             android:id="@+id/ivPlayer5Card"
             android:layout_width="80dp"
             android:layout_height="120dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="70dp"
+            android:contentDescription="@string/gamePlayer5Card"
             android:rotation="130"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/ivPlayer1Card"
             app:layout_constraintTop_toTopOf="@+id/ivGameScreenCenter"
-            app:srcCompat="@drawable/card_border_default"
-            android:contentDescription="@string/gamePlayer5Card"/>
+            app:srcCompat="@drawable/card_border_default" />
+
+        <TextView
+            android:id="@+id/tvPlayer1Points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gameNoPoints"
+            app:layout_constraintBottom_toTopOf="@+id/ivPlayer1Card"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivGameScreenCenter"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <TextView
+            android:id="@+id/tvPlayer2Points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-20dp"
+            android:text="@string/gameNoPoints"
+            app:layout_constraintBottom_toTopOf="@+id/ivPlayer2Card"
+            app:layout_constraintEnd_toStartOf="@+id/ivGameScreenCenter"
+            app:layout_constraintStart_toEndOf="@+id/ivPlayer2Card" />
+
+        <TextView
+            android:id="@+id/tvPlayer3Points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gameNoPoints"
+            app:layout_constraintBottom_toTopOf="@+id/ivGameScreenCenter"
+            app:layout_constraintStart_toEndOf="@+id/ivPlayer3Card"
+            app:layout_constraintTop_toBottomOf="@+id/ivPlayer3Card"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <TextView
+            android:id="@+id/tvPlayer4Points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gameNoPoints"
+            app:layout_constraintEnd_toStartOf="@+id/ivPlayer4Card"
+            app:layout_constraintTop_toBottomOf="@+id/ivPlayer4Card" />
+
+        <TextView
+            android:id="@+id/tvPlayer5Points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-20dp"
+            android:text="@string/gameNoPoints"
+            app:layout_constraintBottom_toTopOf="@+id/ivPlayer5Card"
+            app:layout_constraintEnd_toStartOf="@+id/ivPlayer5Card"
+            app:layout_constraintStart_toEndOf="@+id/ivGameScreenCenter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

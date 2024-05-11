@@ -50,7 +50,7 @@ class CardsFragment : Fragment() {
     private fun onCardClicked(cardItem: CardItem) {
         val activity = activity
         Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
-        if (activity is GameScreenActivity) {
+        if (activity is GameScreenActivity && activity.supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame) !is TrickPredictionFragment) {
             val cardIsPlayed = activity.onCardClicked(cardItem)
             if (cardIsPlayed.not()) return
 
