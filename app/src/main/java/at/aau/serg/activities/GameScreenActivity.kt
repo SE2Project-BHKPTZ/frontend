@@ -24,11 +24,15 @@ import at.aau.serg.viewmodels.TrickPredictionViewModel
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.Suit
+import org.json.JSONObject
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
     private val cardsViewModel: CardsViewModel by viewModels()
     private var cardPlayed: Boolean = false
+    private var lastPlayedCard: CardItem? = null
+    private var countPlayedCards = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,13 +119,111 @@ class GameScreenActivity : AppCompatActivity() {
 
         val cardResourceId = resources.getIdentifier(
             "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
-        player1CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+        runOnUiThread{
+            player1CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+            player1CardImageView.tag = cardResourceId
+        }
+
         cardPlayed = true
+
+        lastPlayedCard = cardItem
+        countPlayedCards += 1
+        SocketHandler.emit("cardPlayed", cardItem.toJson())
         return true
     }
 
     private fun cardPlayed(socketResponse: Array<Any>) {
         Log.d("Socket", "Received cardPlayed event")
+        val suit = (socketResponse[0] as JSONObject).getString("suit")
+        val value = (socketResponse[0] as JSONObject).getString("value")
+        //val player = (socketResponse[0] as JSONObject).getString("player")
+
+        val cardItem = CardItem(value, Suit.valueOf(suit))
+
+        if(lastPlayedCard != null && cardItem == lastPlayedCard) {
+            Log.d("Socket", "No card must be played")
+            return
+        }
+        countPlayedCards += 1
+
+        if (cardPlayed){
+            val cardResourceId = resources.getIdentifier(
+                "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+            val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
+            when(countPlayedCards){
+                2 -> setPlayer2Card(player2CardImageView, cardResourceId)
+                3 ->{
+                    val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+                    switchCards(player2CardImageView, player3CardImageView)
+
+                    setPlayer2Card(player2CardImageView, cardResourceId)
+                }
+                else -> {}
+            }
+            return
+        }
+
+        val cardResourceId = resources.getIdentifier(
+            "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+        val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
+
+        when(countPlayedCards){
+            1 -> {
+                setPlayer2Card(player2CardImageView, cardResourceId)
+            }
+            2 ->{
+                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+                switchCards(player2CardImageView, player3CardImageView)
+
+                setPlayer2Card(player2CardImageView, cardResourceId)
+            }
+            3 ->{
+                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+                val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
+                switchCards(player3CardImageView, player4CardImageView)
+                switchCards(player2CardImageView, player3CardImageView)
+
+                setPlayer2Card(player2CardImageView, cardResourceId)
+            }
+            4 ->{
+                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+                val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
+                val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
+                switchCards(player4CardImageView, player5CardImageView)
+                switchCards(player3CardImageView, player4CardImageView)
+                switchCards(player2CardImageView, player3CardImageView)
+
+                setPlayer2Card(player2CardImageView, cardResourceId)
+            }
+            5 ->{
+                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+                val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
+                val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
+                val player6CardImageView = findViewById<ImageView>(R.id.ivPlayer6Card)
+                switchCards(player5CardImageView, player6CardImageView)
+                switchCards(player4CardImageView, player5CardImageView)
+                switchCards(player3CardImageView, player4CardImageView)
+                switchCards(player2CardImageView, player3CardImageView)
+
+                setPlayer2Card(player2CardImageView, cardResourceId)
+            }
+            else -> {}
+        }
+    }
+
+    private fun switchCards(ivFrom: ImageView, ivTo: ImageView){
+        val resource = ivFrom.tag.toString().toInt()
+        runOnUiThread{
+            ivTo.setImageResource(resource)
+            ivTo.tag = ivFrom.tag
+        }
+    }
+
+    private fun setPlayer2Card(player2CardImageView: ImageView, cardResourceId: Int){
+        runOnUiThread {
+            player2CardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+            player2CardImageView.tag = cardResourceId
+        }
     }
 
     private fun trickPrediction(socketResponse: Array<Any>) {
