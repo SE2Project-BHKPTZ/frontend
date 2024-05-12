@@ -166,49 +166,38 @@ class GameScreenActivity : AppCompatActivity() {
         val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
 
         when(countPlayedCards){
-            2 ->  if (cardPlayed.not())  switchCardsWith3CardsPlayed(player2CardImageView)
-            3 -> if(cardPlayed) switchCardsWith3CardsPlayed(player2CardImageView) else switchCardsWith4CardsPlayed(player2CardImageView)
-            4 -> if(cardPlayed) switchCardsWith4CardsPlayed(player2CardImageView) else switchCardsWith5CardsPlayed(player2CardImageView)
-            5 -> if (cardPlayed) switchCardsWith5CardsPlayed(player2CardImageView) else switchCardsWith6CardsPlayed(player2CardImageView)
-            6 -> if(cardPlayed) switchCardsWith6CardsPlayed(player2CardImageView)
+            2 ->  if (cardPlayed.not())  moveCardPosition2To3()
+            3 -> if(cardPlayed) moveCardPosition2To3() else moveCardPosition3To4()
+            4 -> if(cardPlayed) moveCardPosition3To4() else moveCardPosition4To5()
+            5 -> if (cardPlayed) moveCardPosition4To5() else moveCardPosition5To6()
+            6 -> if(cardPlayed) moveCardPosition5To6()
             else -> {}
         }
         setPlayerCard(player2CardImageView, cardResourceId)
     }
 
-    private fun switchCardsWith3CardsPlayed(player2CardImageView: ImageView){
-        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-        switchCards(player2CardImageView, player3CardImageView)
+    private fun moveCardPosition2To3(){
+        switchCards(R.id.ivPlayer2Card, R.id.ivPlayer3Card)
     }
 
-    private fun switchCardsWith4CardsPlayed(player2CardImageView: ImageView){
-        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-        val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
-        switchCards(player3CardImageView, player4CardImageView)
-        switchCards(player2CardImageView, player3CardImageView)
+    private fun moveCardPosition3To4(){
+        switchCards(R.id.ivPlayer3Card, R.id.ivPlayer4Card)
+        moveCardPosition2To3()
     }
-    private fun switchCardsWith5CardsPlayed(player2CardImageView: ImageView){
-        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-        val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
-        val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
-        switchCards(player4CardImageView, player5CardImageView)
-        switchCards(player3CardImageView, player4CardImageView)
-        switchCards(player2CardImageView, player3CardImageView)
+    private fun moveCardPosition4To5(){
+        switchCards(R.id.ivPlayer4Card, R.id.ivPlayer5Card)
+        moveCardPosition3To4()
     }
 
-    private fun switchCardsWith6CardsPlayed(player2CardImageView: ImageView){
-        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-        val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
-        val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
-        val player6CardImageView = findViewById<ImageView>(R.id.ivPlayer6Card)
-        switchCards(player5CardImageView, player6CardImageView)
-        switchCards(player4CardImageView, player5CardImageView)
-        switchCards(player3CardImageView, player4CardImageView)
-        switchCards(player2CardImageView, player3CardImageView)
+    private fun moveCardPosition5To6(){
+        switchCards(R.id.ivPlayer5Card, R.id.ivPlayer6Card)
+        moveCardPosition4To5()
     }
 
 
-    private fun switchCards(ivFrom: ImageView, ivTo: ImageView){
+    private fun switchCards(ivFromId: Int, ivToId: Int){
+        val ivFrom = findViewById<ImageView>(ivFromId)
+        val ivTo = findViewById<ImageView>(ivToId)
         val resource = ivFrom.tag.toString().toInt()
         runOnUiThread{
             ivTo.setImageResource(resource)
