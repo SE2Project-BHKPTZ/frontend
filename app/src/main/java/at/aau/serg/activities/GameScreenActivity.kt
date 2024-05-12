@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,8 @@ import at.aau.serg.models.Suit
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.TrickPredictionViewModel
+import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.properties.Delegates
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
@@ -34,6 +35,9 @@ class GameScreenActivity : AppCompatActivity() {
     private var countPlayedCards = 0
     private lateinit var trumpCard: CardItem
     private var playerCount = 0
+    private var allowedToPlayCard = false
+
+    private var myPlayerIndex: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +61,11 @@ class GameScreenActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
             initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
+            myPlayerIndex = intent.getSerializableExtra("me", Int::class.java)!!
         } else {
             initialCards = intent.getSerializableExtra("cards") as? Array<CardItem>
             initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
+            myPlayerIndex = (intent.getSerializableExtra("me") as? Int)!!
         }
         playerCount = intent.getIntExtra("playerCount", 3)
 
@@ -80,12 +86,13 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("trickPrediction", ::trickPrediction)
         SocketHandler.on("nextSubround", ::nextSubRound)
         SocketHandler.on("startRound", ::startRound)
+        SocketHandler.on("nextPlayer", ::nextPlayer)
     }
 
     // only for showing the different GameScreens now
-    fun getGameScreen(): Fragment? {
-        val randomInt = (3..6).random()
-        return when (randomInt){
+    fun getGameScreen(playerCount: Int? = null): Fragment? {
+        if(playerCount == null) this.playerCount = (3..6).random()
+        return when (playerCount){
             3 -> GameScreenThreePlayersFragment()
             4 -> GameScreenFourPlayersFragment()
             5 -> GameScreenFivePlayersFragment()
@@ -125,7 +132,7 @@ class GameScreenActivity : AppCompatActivity() {
 
     fun onCardClicked(cardItem: CardItem): Boolean {
         val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
-        if(cardPlayed) return false
+        if(cardPlayed || allowedToPlayCard.not()) return false
 
         val cardResourceId = resources.getIdentifier(
             "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
@@ -135,6 +142,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         cardPlayed = true
+        allowedToPlayCard = false
 
         lastPlayedCard = cardItem
         countPlayedCards += 1
@@ -246,7 +254,7 @@ class GameScreenActivity : AppCompatActivity() {
     private fun nextSubRound(socketResponse: Array<Any>){
         Log.d("Socket", "Received nextSubRound event")
 
-        val gameScreenFragment = getGameScreen()
+        val gameScreenFragment = getGameScreen(playerCount)
         if(gameScreenFragment != null){
             // TODO: throws error
             runOnUiThread {
@@ -259,11 +267,83 @@ class GameScreenActivity : AppCompatActivity() {
         cardPlayed = false
         lastPlayedCard = null
         countPlayedCards = 0
+        val nextPlayerIdx = (socketResponse[0] as Int)
+        if (nextPlayerIdx == myPlayerIndex) {
+            allowedToPlayCard = true
+            runOnUiThread {
+                Toast.makeText(this, "You are now!", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun startRound(socketResponse: Array<Any>) {
         // TODO: Implement starting round or subround
-        Log.d("startRound", "")
+        Log.d("Socket", "Received startRound event")
+        val gameData = (socketResponse[0] as JSONObject)
+        val cards = gameData.getJSONArray("hands").getJSONArray(myPlayerIndex)
+        val trumpCard = convertCard(gameData.getJSONObject("trump"))
+
+        if (cards != null) {
+            runOnUiThread {
+                cardsViewModel.setCards(convertCards(cards))
+            }
+        }
+
+        val trumpImageView: ImageView = findViewById<ImageView>(R.id.ivTrumpCard)
+        val cardResourceId = trumpImageView.context.resources.getIdentifier(
+            "card_${trumpCard?.suit.toString().lowercase()}_${trumpCard?.value}", "drawable", trumpImageView.context.packageName)
+        runOnUiThread {
+            trumpImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+        }
+
+        val newFragment = TrickPredictionFragment()
+        cardPlayed = false
+        lastPlayedCard = null
+        countPlayedCards = 0
+        runOnUiThread {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerViewGame, newFragment)
+                .commit()
+        }
+    }
+
+    private fun nextPlayer(socketResponse: Array<Any>){
+        Log.d("Socket", "Received nextPlayer event ")
+        val nextPlayerIdx = (socketResponse[0] as Int)
+        if (nextPlayerIdx == myPlayerIndex) {
+            allowedToPlayCard = true
+            runOnUiThread {
+                Toast.makeText(this, "You are now!", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun convertCards(cardsJsonArray: JSONArray): Array<CardItem> {
+        val cardsList = mutableListOf<CardItem>()
+        for (i in 0 until cardsJsonArray.length()) {
+            val cardJson = cardsJsonArray.getJSONObject(i)
+            val card = convertCard(cardJson)
+            cardsList.add(card)
+        }
+
+        return cardsList.toTypedArray()
+    }
+
+    private fun convertCard(cardJson: JSONObject): CardItem {
+        return CardItem(
+            cardJson.getString("value"),
+            stringToSuit(cardJson.getString("suit"))
+        )
+    }
+
+    private fun stringToSuit(suitString: String): Suit {
+        return when (suitString.uppercase()) {
+            "HEARTS" -> Suit.HEARTS
+            "DIAMONDS" -> Suit.DIAMONDS
+            "CLUBS" -> Suit.CLUBS
+            "SPADES" -> Suit.SPADES
+            else -> throw IllegalArgumentException("Unknown suit: $suitString")
+        }
     }
 
     fun setPlayerGameScreen() {
