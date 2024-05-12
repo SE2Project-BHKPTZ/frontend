@@ -24,6 +24,7 @@ import at.aau.serg.network.SocketHandler
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.TrickPredictionViewModel
 import org.json.JSONObject
+import kotlin.properties.Delegates
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
@@ -32,6 +33,7 @@ class GameScreenActivity : AppCompatActivity() {
     private var lastPlayedCard: CardItem? = null
     private var countPlayedCards = 0
     private lateinit var trumpCard: CardItem
+    private var playerCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,14 +45,10 @@ class GameScreenActivity : AppCompatActivity() {
             insets
         }
 
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame)
-        if (fragment is TrickPredictionFragment) {
-            trickViewModel.setRound(10)
-        }
-
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragmentContainerViewGame, TrickPredictionFragment())
         transaction.commit()
+        trickViewModel.setRound(1)
 
         val initialCards: Array<CardItem>?
         val initialTrumpCard: CardItem?
@@ -63,6 +61,7 @@ class GameScreenActivity : AppCompatActivity() {
             initialCards = intent.getSerializableExtra("cards") as? Array<CardItem>
             initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
         }
+        playerCount = intent.getIntExtra("playerCount", 3)
 
         if (initialCards != null) {
             cardsViewModel.setCards(initialCards)
@@ -79,13 +78,24 @@ class GameScreenActivity : AppCompatActivity() {
 
         SocketHandler.on("cardPlayed", ::cardPlayed)
         SocketHandler.on("trickPrediction", ::trickPrediction)
-        SocketHandler.on("nextSubround", :: nextSubRound)
+        SocketHandler.on("nextSubround", ::nextSubRound)
+        SocketHandler.on("startRound", ::startRound)
     }
 
     // only for showing the different GameScreens now
     fun getGameScreen(): Fragment? {
         val randomInt = (3..6).random()
         return when (randomInt){
+            3 -> GameScreenThreePlayersFragment()
+            4 -> GameScreenFourPlayersFragment()
+            5 -> GameScreenFivePlayersFragment()
+            6 -> GameScreenSixPlayersFragment()
+            else -> null
+        }
+    }
+
+    fun getPlayerGameScreen(playerCount: Int): Fragment? {
+        return when (playerCount){
             3 -> GameScreenThreePlayersFragment()
             4 -> GameScreenFourPlayersFragment()
             5 -> GameScreenFivePlayersFragment()
@@ -244,11 +254,26 @@ class GameScreenActivity : AppCompatActivity() {
                 transaction.replace(R.id.fragmentContainerViewGame, gameScreenFragment)
                 transaction.commitAllowingStateLoss()
             }
-
         }
 
         cardPlayed = false
         lastPlayedCard = null
         countPlayedCards = 0
+    }
+
+    private fun startRound(socketResponse: Array<Any>) {
+        // TODO: Implement starting round or subround
+        Log.d("startRound", "")
+    }
+
+    fun setPlayerGameScreen() {
+        val gameScreenFragment = getPlayerGameScreen(playerCount)
+        if(gameScreenFragment != null){
+            runOnUiThread {
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.fragmentContainerViewGame, gameScreenFragment)
+                transaction.commitAllowingStateLoss()
+            }
+        }
     }
 }

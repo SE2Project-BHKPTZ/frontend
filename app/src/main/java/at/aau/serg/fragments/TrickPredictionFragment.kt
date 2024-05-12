@@ -1,15 +1,20 @@
 package at.aau.serg.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
+import at.aau.serg.activities.GameScreenActivity
+import at.aau.serg.network.SocketHandler
 import at.aau.serg.viewmodels.TrickPredictionViewModel
 import com.google.android.material.slider.Slider
+
 
 class TrickPredictionFragment : Fragment() {
     private val viewModel: TrickPredictionViewModel by activityViewModels()
@@ -26,10 +31,18 @@ class TrickPredictionFragment : Fragment() {
 
         val trickPredictionSlider: Slider =  view.findViewById(R.id.sliderTrickPrediction)
         val scoreTextView: TextView = view.findViewById(R.id.tvPredictionScore)
+        val confirmPredictionButton: Button = view.findViewById(R.id.btnConfirmPrediction)
 
         trickPredictionSlider.addOnChangeListener { _, value, _ ->
             val predictionPoints = "${calculateReachablePoints(value.toInt())} Points"
             scoreTextView.text = predictionPoints
+        }
+
+        confirmPredictionButton.setOnClickListener {
+            Log.d("Prediction", "Sending prediction")
+            val predictionPoints =  calculateReachablePoints(trickPredictionSlider.value.toInt())
+            (activity as GameScreenActivity).setPlayerGameScreen()
+            SocketHandler.emit("trickPrediction", predictionPoints)
         }
 
         viewModel.round.observe(viewLifecycleOwner) {round ->
@@ -46,5 +59,4 @@ class TrickPredictionFragment : Fragment() {
     private fun calculateReachablePoints(prediction: Int): Int {
         return prediction * 10 + 20;
     }
-
 }

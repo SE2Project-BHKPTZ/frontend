@@ -16,7 +16,6 @@ import at.aau.serg.adapters.CardsRecyclerViewAdapter
 import at.aau.serg.models.CardItem
 import at.aau.serg.placeholder.CardContent
 import at.aau.serg.viewmodels.CardsViewModel
-import at.aau.serg.viewmodels.TrickPredictionViewModel
 
 class CardsFragment : Fragment() {
     private val viewModel: CardsViewModel by activityViewModels()

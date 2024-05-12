@@ -176,6 +176,8 @@ class LobbyActivity : AppCompatActivity() {
         )
         intent.putExtra("cards", convertCards(cards))
         intent.putExtra("trump", convertCard(trumpCard))
+        intent.putExtra("playerCount", gameData.getJSONArray("hands").length())
+
 
         startActivity(intent)
     }
