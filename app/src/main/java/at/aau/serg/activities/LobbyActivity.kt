@@ -23,6 +23,7 @@ import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
+import at.aau.serg.utils.CardsConverter
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
@@ -174,8 +175,8 @@ class LobbyActivity : AppCompatActivity() {
             baseContext,
             GameScreenActivity::class.java
         )
-        intent.putExtra("cards", convertCards(cards))
-        intent.putExtra("trump", convertCard(trumpCard))
+        intent.putExtra("cards", CardsConverter.convertCards(cards))
+        intent.putExtra("trump", CardsConverter.convertCard(trumpCard))
         intent.putExtra("playerCount", gameData.getJSONArray("hands").length())
         intent.putExtra("me", getPlayerIndex())
 
@@ -190,33 +191,5 @@ class LobbyActivity : AppCompatActivity() {
     private fun getPlayerIndex(): Int {
         val uuid: String = StoreToken(this).getUUID().toString()
         return lobbyPlayers.indexOfFirst { player -> player.uuid == uuid}
-    }
-
-    private fun convertCards(cardsJsonArray: JSONArray): Array<CardItem> {
-        val cardsList = mutableListOf<CardItem>()
-        for (i in 0 until cardsJsonArray.length()) {
-            val cardJson = cardsJsonArray.getJSONObject(i)
-            val card = convertCard(cardJson)
-            cardsList.add(card)
-        }
-
-        return cardsList.toTypedArray()
-    }
-
-    private fun convertCard(cardJson: JSONObject): CardItem {
-        return CardItem(
-            cardJson.getString("value"),
-            stringToSuit(cardJson.getString("suit"))
-        )
-    }
-
-    private fun stringToSuit(suitString: String): Suit {
-        return when (suitString.uppercase()) {
-            "HEARTS" -> Suit.HEARTS
-            "DIAMONDS" -> Suit.DIAMONDS
-            "CLUBS" -> Suit.CLUBS
-            "SPADES" -> Suit.SPADES
-            else -> throw IllegalArgumentException("Unknown suit: $suitString")
-        }
     }
 }

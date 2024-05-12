@@ -22,6 +22,7 @@ import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.models.CardItem
 import at.aau.serg.models.Suit
 import at.aau.serg.network.SocketHandler
+import at.aau.serg.utils.CardsConverter
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.TrickPredictionViewModel
 import org.json.JSONArray
@@ -59,12 +60,11 @@ class GameScreenActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
             initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
-            myPlayerIndex = intent.getSerializableExtra("me", Int::class.java)!!
         } else {
             initialCards = intent.getSerializableExtra("cards") as? Array<CardItem>
             initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
-            myPlayerIndex = (intent.getSerializableExtra("me") as? Int)!!
         }
+        myPlayerIndex = intent.getIntExtra("me", 0)
         playerCount = intent.getIntExtra("playerCount", 3)
 
         if (initialCards != null) {
@@ -239,10 +239,10 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Socket", "Received startRound event")
         val gameData = (socketResponse[0] as JSONObject)
         val cards = gameData.getJSONArray("hands").getJSONArray(myPlayerIndex)
-        val trumpCard = convertCard(gameData.getJSONObject("trump"))
+        val trumpCard = CardsConverter.convertCard(gameData.getJSONObject("trump"))
 
         if (cards != null) {
-            setCards(convertCards(cards))
+            setCards(CardsConverter.convertCards(cards))
         }
 
         val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
@@ -269,34 +269,6 @@ class GameScreenActivity : AppCompatActivity() {
         cardPlayed = false
         lastPlayedCard = null
         countPlayedCards = 0
-    }
-
-    private fun convertCards(cardsJsonArray: JSONArray): Array<CardItem> {
-        val cardsList = mutableListOf<CardItem>()
-        for (i in 0 until cardsJsonArray.length()) {
-            val cardJson = cardsJsonArray.getJSONObject(i)
-            val card = convertCard(cardJson)
-            cardsList.add(card)
-        }
-
-        return cardsList.toTypedArray()
-    }
-
-    private fun convertCard(cardJson: JSONObject): CardItem {
-        return CardItem(
-            cardJson.getString("value"),
-            stringToSuit(cardJson.getString("suit"))
-        )
-    }
-
-    private fun stringToSuit(suitString: String): Suit {
-        return when (suitString.uppercase()) {
-            "HEARTS" -> Suit.HEARTS
-            "DIAMONDS" -> Suit.DIAMONDS
-            "CLUBS" -> Suit.CLUBS
-            "SPADES" -> Suit.SPADES
-            else -> throw IllegalArgumentException("Unknown suit: $suitString")
-        }
     }
 
     fun setPlayerGameScreen() {
