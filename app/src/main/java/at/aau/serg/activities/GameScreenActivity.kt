@@ -89,18 +89,6 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("nextPlayer", ::nextPlayer)
     }
 
-    // only for showing the different GameScreens now
-    fun getGameScreen(playerCount: Int? = null): Fragment? {
-        if(playerCount == null) this.playerCount = (3..6).random()
-        return when (playerCount){
-            3 -> GameScreenThreePlayersFragment()
-            4 -> GameScreenFourPlayersFragment()
-            5 -> GameScreenFivePlayersFragment()
-            6 -> GameScreenSixPlayersFragment()
-            else -> null
-        }
-    }
-
     fun getPlayerGameScreen(playerCount: Int): Fragment? {
         return when (playerCount){
             3 -> GameScreenThreePlayersFragment()
@@ -118,7 +106,7 @@ class GameScreenActivity : AppCompatActivity() {
     fun btnChangeFragmentClicked(view: View) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame)
         val newFragment = when (fragment) {
-            is TrickPredictionFragment -> getGameScreen()
+            is TrickPredictionFragment -> getPlayerGameScreen(3)
             else -> TrickPredictionFragment()
         }
 
@@ -146,14 +134,14 @@ class GameScreenActivity : AppCompatActivity() {
 
         lastPlayedCard = cardItem
         countPlayedCards += 1
-        val json: JSONObject = cardItemoJson(cardItem)
+        val json: JSONObject = cardItemtoJson(cardItem)
         json.put("trump", trumpCard.suit)
 
         SocketHandler.emit("cardPlayed", json)
         return true
     }
 
-    fun cardItemoJson(cardItem: CardItem): JSONObject{
+    private fun cardItemtoJson(cardItem: CardItem): JSONObject{
         val jsonObject = JSONObject()
         jsonObject.put("value", cardItem.value)
         jsonObject.put("suit", cardItem.suit.toString())
@@ -258,7 +246,7 @@ class GameScreenActivity : AppCompatActivity() {
     private fun nextSubRound(socketResponse: Array<Any>){
         Log.d("Socket", "Received nextSubRound event")
 
-        val gameScreenFragment = getGameScreen(playerCount)
+        val gameScreenFragment = getPlayerGameScreen(playerCount)
         if(gameScreenFragment != null){
             // TODO: throws error
             runOnUiThread {
@@ -269,7 +257,11 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         clearCardPlayedEvents()
-        val nextPlayerIdx = (socketResponse[0] as Int)
+        isNextPlayer(socketResponse[0] as Int)
+
+    }
+
+    private fun isNextPlayer(nextPlayerIdx: Int){
         if (nextPlayerIdx == myPlayerIndex) {
             allowedToPlayCard = true
             runOnUiThread {
@@ -309,13 +301,7 @@ class GameScreenActivity : AppCompatActivity() {
 
     private fun nextPlayer(socketResponse: Array<Any>){
         Log.d("Socket", "Received nextPlayer event ")
-        val nextPlayerIdx = (socketResponse[0] as Int)
-        if (nextPlayerIdx == myPlayerIndex) {
-            allowedToPlayCard = true
-            runOnUiThread {
-                Toast.makeText(this, "You are now!", Toast.LENGTH_LONG).show()
-            }
-        }
+        isNextPlayer(socketResponse[0] as Int)
     }
 
     private fun clearCardPlayedEvents(){
