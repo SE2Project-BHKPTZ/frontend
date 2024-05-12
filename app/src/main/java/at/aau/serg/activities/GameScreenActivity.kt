@@ -174,10 +174,11 @@ class GameScreenActivity : AppCompatActivity() {
         }
         countPlayedCards += 1
 
+        val cardResourceId = resources.getIdentifier(
+            "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+        val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
+
         if (cardPlayed){
-            val cardResourceId = resources.getIdentifier(
-                "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
-            val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
             when(countPlayedCards){
                 2 -> setPlayerCard(player2CardImageView, cardResourceId)
                 3 ->{
@@ -190,10 +191,6 @@ class GameScreenActivity : AppCompatActivity() {
             }
             return
         }
-
-        val cardResourceId = resources.getIdentifier(
-            "card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
-        val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
 
         when(countPlayedCards){
             1 -> {
@@ -271,9 +268,7 @@ class GameScreenActivity : AppCompatActivity() {
             }
         }
 
-        cardPlayed = false
-        lastPlayedCard = null
-        countPlayedCards = 0
+        clearCardPlayedEvents()
         val nextPlayerIdx = (socketResponse[0] as Int)
         if (nextPlayerIdx == myPlayerIndex) {
             allowedToPlayCard = true
@@ -298,15 +293,13 @@ class GameScreenActivity : AppCompatActivity() {
 
         val trumpImageView: ImageView = findViewById<ImageView>(R.id.ivTrumpCard)
         val cardResourceId = trumpImageView.context.resources.getIdentifier(
-            "card_${trumpCard?.suit.toString().lowercase()}_${trumpCard?.value}", "drawable", trumpImageView.context.packageName)
+            "card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}", "drawable", trumpImageView.context.packageName)
         runOnUiThread {
             trumpImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
         }
 
         val newFragment = TrickPredictionFragment()
-        cardPlayed = false
-        lastPlayedCard = null
-        countPlayedCards = 0
+        clearCardPlayedEvents()
         runOnUiThread {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerViewGame, newFragment)
@@ -323,6 +316,12 @@ class GameScreenActivity : AppCompatActivity() {
                 Toast.makeText(this, "You are now!", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun clearCardPlayedEvents(){
+        cardPlayed = false
+        lastPlayedCard = null
+        countPlayedCards = 0
     }
 
     private fun convertCards(cardsJsonArray: JSONArray): Array<CardItem> {
