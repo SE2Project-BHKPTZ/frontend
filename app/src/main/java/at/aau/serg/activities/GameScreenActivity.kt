@@ -146,11 +146,18 @@ class GameScreenActivity : AppCompatActivity() {
 
         lastPlayedCard = cardItem
         countPlayedCards += 1
-        val json: JSONObject = cardItem.toJson()
+        val json: JSONObject = cardItemoJson(cardItem)
         json.put("trump", trumpCard.suit)
 
         SocketHandler.emit("cardPlayed", json)
         return true
+    }
+
+    fun cardItemoJson(cardItem: CardItem): JSONObject{
+        val jsonObject = JSONObject()
+        jsonObject.put("value", cardItem.value)
+        jsonObject.put("suit", cardItem.suit.toString())
+        return jsonObject
     }
 
     private fun cardPlayed(socketResponse: Array<Any>) {
