@@ -131,17 +131,17 @@ class GameScreenActivity : AppCompatActivity() {
 
         cardPlayed = true
         allowedToPlayCard = false
-
         lastPlayedCard = cardItem
         countPlayedCards += 1
-        val json: JSONObject = cardItemtoJson(cardItem)
+
+        val json: JSONObject = cardItemToJson(cardItem)
         json.put("trump", trumpCard.suit)
 
         SocketHandler.emit("cardPlayed", json)
         return true
     }
 
-    private fun cardItemtoJson(cardItem: CardItem): JSONObject{
+    private fun cardItemToJson(cardItem: CardItem): JSONObject{
         val jsonObject = JSONObject()
         jsonObject.put("value", cardItem.value)
         jsonObject.put("suit", cardItem.suit.toString())
@@ -167,61 +167,57 @@ class GameScreenActivity : AppCompatActivity() {
 
         if (cardPlayed){
             when(countPlayedCards){
-                2 -> setPlayerCard(player2CardImageView, cardResourceId)
-                3 ->{
-                    val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-                    switchCards(player2CardImageView, player3CardImageView)
-
-                    setPlayerCard(player2CardImageView, cardResourceId)
-                }
+                3 -> switchCardsWith3CardsPlayed(player2CardImageView)
+                4 -> switchCardsWith4CardsPlayed(player2CardImageView)
+                5 -> switchCardsWith5CardsPlayed(player2CardImageView)
+                6 -> switchCardsWith6CardsPlayed(player2CardImageView)
                 else -> {}
             }
+            setPlayerCard(player2CardImageView, cardResourceId)
             return
         }
 
         when(countPlayedCards){
-            1 -> {
-                setPlayerCard(player2CardImageView, cardResourceId)
-            }
-            2 ->{
-                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-                switchCards(player2CardImageView, player3CardImageView)
-
-                setPlayerCard(player2CardImageView, cardResourceId)
-            }
-            3 ->{
-                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-                val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
-                switchCards(player3CardImageView, player4CardImageView)
-                switchCards(player2CardImageView, player3CardImageView)
-
-                setPlayerCard(player2CardImageView, cardResourceId)
-            }
-            4 ->{
-                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-                val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
-                val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
-                switchCards(player4CardImageView, player5CardImageView)
-                switchCards(player3CardImageView, player4CardImageView)
-                switchCards(player2CardImageView, player3CardImageView)
-
-                setPlayerCard(player2CardImageView, cardResourceId)
-            }
-            5 ->{
-                val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
-                val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
-                val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
-                val player6CardImageView = findViewById<ImageView>(R.id.ivPlayer6Card)
-                switchCards(player5CardImageView, player6CardImageView)
-                switchCards(player4CardImageView, player5CardImageView)
-                switchCards(player3CardImageView, player4CardImageView)
-                switchCards(player2CardImageView, player3CardImageView)
-
-                setPlayerCard(player2CardImageView, cardResourceId)
-            }
+            2 -> switchCardsWith3CardsPlayed(player2CardImageView)
+            3 -> switchCardsWith4CardsPlayed(player2CardImageView)
+            4 -> switchCardsWith5CardsPlayed(player2CardImageView)
+            5 -> switchCardsWith6CardsPlayed(player2CardImageView)
             else -> {}
         }
+        setPlayerCard(player2CardImageView, cardResourceId)
     }
+
+    private fun switchCardsWith3CardsPlayed(player2CardImageView: ImageView){
+        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+        switchCards(player2CardImageView, player3CardImageView)
+    }
+
+    private fun switchCardsWith4CardsPlayed(player2CardImageView: ImageView){
+        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+        val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
+        switchCards(player3CardImageView, player4CardImageView)
+        switchCards(player2CardImageView, player3CardImageView)
+    }
+    private fun switchCardsWith5CardsPlayed(player2CardImageView: ImageView){
+        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+        val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
+        val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
+        switchCards(player4CardImageView, player5CardImageView)
+        switchCards(player3CardImageView, player4CardImageView)
+        switchCards(player2CardImageView, player3CardImageView)
+    }
+
+    private fun switchCardsWith6CardsPlayed(player2CardImageView: ImageView){
+        val player3CardImageView = findViewById<ImageView>(R.id.ivPlayer3Card)
+        val player4CardImageView = findViewById<ImageView>(R.id.ivPlayer4Card)
+        val player5CardImageView = findViewById<ImageView>(R.id.ivPlayer5Card)
+        val player6CardImageView = findViewById<ImageView>(R.id.ivPlayer6Card)
+        switchCards(player5CardImageView, player6CardImageView)
+        switchCards(player4CardImageView, player5CardImageView)
+        switchCards(player3CardImageView, player4CardImageView)
+        switchCards(player2CardImageView, player3CardImageView)
+    }
+
 
     private fun switchCards(ivFrom: ImageView, ivTo: ImageView){
         val resource = ivFrom.tag.toString().toInt()
