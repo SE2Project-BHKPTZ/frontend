@@ -49,9 +49,7 @@ class GameScreenActivity : AppCompatActivity() {
             insets
         }
 
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragmentContainerViewGame, TrickPredictionFragment())
-        transaction.commit()
+        updateFragmentContainerView(TrickPredictionFragment())
         trickViewModel.setRound(1)
 
         val initialCards: Array<CardItem>?
@@ -112,6 +110,12 @@ class GameScreenActivity : AppCompatActivity() {
 
         if (newFragment != null) {
             cardPlayed = false
+            updateFragmentContainerView(newFragment)
+        }
+    }
+
+    private fun updateFragmentContainerView(newFragment: Fragment){
+        runOnUiThread {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerViewGame, newFragment)
                 .commit()
@@ -248,7 +252,6 @@ class GameScreenActivity : AppCompatActivity() {
 
         val gameScreenFragment = getPlayerGameScreen(playerCount)
         if(gameScreenFragment != null){
-            // TODO: throws error
             runOnUiThread {
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.fragmentContainerViewGame, gameScreenFragment)
@@ -292,11 +295,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         val newFragment = TrickPredictionFragment()
         clearCardPlayedEvents()
-        runOnUiThread {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerViewGame, newFragment)
-                .commit()
-        }
+        updateFragmentContainerView(newFragment)
     }
 
     private fun nextPlayer(socketResponse: Array<Any>){
