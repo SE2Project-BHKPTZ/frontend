@@ -165,23 +165,12 @@ class GameScreenActivity : AppCompatActivity() {
         val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
         val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
 
-        if (cardPlayed){
-            when(countPlayedCards){
-                3 -> switchCardsWith3CardsPlayed(player2CardImageView)
-                4 -> switchCardsWith4CardsPlayed(player2CardImageView)
-                5 -> switchCardsWith5CardsPlayed(player2CardImageView)
-                6 -> switchCardsWith6CardsPlayed(player2CardImageView)
-                else -> {}
-            }
-            setPlayerCard(player2CardImageView, cardResourceId)
-            return
-        }
-
         when(countPlayedCards){
-            2 -> switchCardsWith3CardsPlayed(player2CardImageView)
-            3 -> switchCardsWith4CardsPlayed(player2CardImageView)
-            4 -> switchCardsWith5CardsPlayed(player2CardImageView)
-            5 -> switchCardsWith6CardsPlayed(player2CardImageView)
+            2 ->  if (cardPlayed.not())  switchCardsWith3CardsPlayed(player2CardImageView)
+            3 -> if(cardPlayed) switchCardsWith3CardsPlayed(player2CardImageView) else switchCardsWith4CardsPlayed(player2CardImageView)
+            4 -> if(cardPlayed) switchCardsWith4CardsPlayed(player2CardImageView) else switchCardsWith5CardsPlayed(player2CardImageView)
+            5 -> if (cardPlayed) switchCardsWith5CardsPlayed(player2CardImageView) else switchCardsWith6CardsPlayed(player2CardImageView)
+            6 -> if(cardPlayed) switchCardsWith6CardsPlayed(player2CardImageView)
             else -> {}
         }
         setPlayerCard(player2CardImageView, cardResourceId)
