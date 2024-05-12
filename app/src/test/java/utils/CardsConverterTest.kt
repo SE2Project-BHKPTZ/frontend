@@ -46,7 +46,7 @@ class CardsConverterTest {
         // Mock data
         val jsonObject = mockk<JSONObject>()
         every { jsonObject.getString("value") } returns "10"
-        every { jsonObject.getString("suit") } returns "HEARTS"
+        every { jsonObject.getString("suit") } returns "SPADES"
 
         // Expected result
         val expected = CardItem("10", Suit.HEARTS)
