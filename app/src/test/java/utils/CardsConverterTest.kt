@@ -49,7 +49,7 @@ class CardsConverterTest {
         every { jsonObject.getString("suit") } returns "SPADES"
 
         // Expected result
-        val expected = CardItem("10", Suit.HEARTS)
+        val expected = CardItem("10", Suit.SPADES)
 
         // Call function
         val result = convertCard(jsonObject)
