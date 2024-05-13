@@ -132,6 +132,8 @@ class MainActivity : AppCompatActivity() {
         )
         intent.putExtra("cards", sampleCards)
         intent.putExtra("trump", CardItem("3", Suit.HEARTS))
+        intent.putExtra("playerCount", 4)
+        intent.putExtra("me", 0)
 
         startActivity(intent)
     }
