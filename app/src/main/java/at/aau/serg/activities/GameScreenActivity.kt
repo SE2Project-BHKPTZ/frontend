@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -252,6 +253,16 @@ class GameScreenActivity : AppCompatActivity() {
         val newFragment = TrickPredictionFragment()
         clearCardPlayedEvents()
         updateFragmentContainerView(newFragment)
+
+        // TODO: Increase round count
+        increaseRoundCount()
+    }
+
+    private fun increaseRoundCount() {
+        trickViewModel.increaseRound()
+
+        val roundCountTextView: TextView = findViewById(R.id.tvRoundCount)
+        roundCountTextView.text = trickViewModel.round.value.toString()
     }
 
     private fun nextPlayer(socketResponse: Array<Any>){
