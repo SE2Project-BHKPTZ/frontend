@@ -1,7 +1,7 @@
 <resources>
     <string name="appName">Wizard</string>
     <!--MainActivity-->
-    <string name="tmpCreateLobby">TMP Create Lobby</string>
+    <string name="tmpCreateLobby">Create Lobby</string>
     <string name="tmpJoinLobby">TMP Join Lobby</string>
     <string name="tmpGameActivity">Game Activity</string>
     <!--RegisterActivity-->
@@ -42,4 +42,10 @@
     <string name="gamePlayer5Card">Player 5 Card</string>
     <string name="gamePlayer6Card">Player 6 Card</string>
     <string name="gameNoPoints">00</string>
+    <!--CreateLobbyActivity-->
+    <string name="createLobbyText">Create Lobby</string>
+    <string name="createLobbyMenu" >Back</string>
+    <string name="createLobbyCreate">Create</string>
+    <string name="createLobbyIsPublic">Public?</string>
+    <string name="createLobbyMaxPlayerText">Maximum number of players:</string>
 </resources>

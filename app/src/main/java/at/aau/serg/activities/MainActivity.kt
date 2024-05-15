@@ -138,27 +138,11 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    //START OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9
-    fun tmpBtnCLobbyClicked(view: View) {
-        cLobby(null);
+    fun btnCLobbyClicked(view: View) {
+        startActivity(Intent(this, CreateLobbyActivity::class.java))
     }
 
-    private fun cLobby(response: Response?) {
-        val lobbyToCreate = LobbyCreate("testlobby", 1, 3)
-        HttpClient.post(
-            "/lobbys",
-            Gson().toJson(lobbyToCreate),
-            StoreToken(this).getAccessToken(),
-            CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCreateOrJoinLobby)
-        )
-    }
-
-    private fun onFailureLobby() {
-        this.runOnUiThread {
-            Toast.makeText(this, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-
+    /*START OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9
     fun tmpBtnJLobbyClicked(view: View) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Enter LobbyID")
@@ -199,5 +183,5 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
-    //END OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9
+    //END OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9 */
 }
