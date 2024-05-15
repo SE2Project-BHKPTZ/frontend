@@ -1,5 +1,6 @@
 package at.aau.serg.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -258,11 +259,14 @@ class GameScreenActivity : AppCompatActivity() {
         increaseRoundCount()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun increaseRoundCount() {
-        trickViewModel.increaseRound()
+        this.runOnUiThread {
+            trickViewModel.increaseRound()
 
-        val roundCountTextView: TextView = findViewById(R.id.tvRoundCount)
-        roundCountTextView.text = trickViewModel.round.value.toString()
+            val roundCountTextView: TextView = findViewById(R.id.tvRoundCount)
+            roundCountTextView.text = "Round: ${trickViewModel.round.value.toString()} of ${getMaxRoundCount()}"
+        }
     }
 
     private fun nextPlayer(socketResponse: Array<Any>){
@@ -280,6 +284,16 @@ class GameScreenActivity : AppCompatActivity() {
         cardPlayed = false
         lastPlayedCard = null
         countPlayedCards = 0
+    }
+
+    private fun getMaxRoundCount(): Int {
+        return when(playerCount) {
+            3 -> 20
+            4 -> 15
+            5 -> 12
+            6 -> 10
+            else -> 20
+        }
     }
 
     fun setPlayerGameScreen() {

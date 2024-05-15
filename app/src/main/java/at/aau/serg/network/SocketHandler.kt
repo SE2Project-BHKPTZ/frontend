@@ -35,6 +35,10 @@ object SocketHandler {
         }
     }
 
+    fun off(eventName: String) {
+        socket.off(eventName)
+    }
+
     fun setupBasicListeners() {
         on(Socket.EVENT_CONNECT) {
             Log.i("socket", "Connected")

@@ -180,6 +180,11 @@ class LobbyActivity : AppCompatActivity() {
         intent.putExtra("playerCount", gameData.getJSONArray("hands").length())
         intent.putExtra("me", getPlayerIndex())
 
+        SocketHandler.off("lobby:userJoined")
+        SocketHandler.off("lobby:userLeft")
+        SocketHandler.off("lobby:userKick")
+        SocketHandler.off("startGame")
+
         startActivity(intent)
     }
 
