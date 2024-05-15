@@ -142,46 +142,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, CreateLobbyActivity::class.java))
     }
 
-    /*START OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9
-    fun tmpBtnJLobbyClicked(view: View) {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle("Enter LobbyID")
-        val input = EditText(this)
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT)
-        builder.setView(input)
-        builder.setPositiveButton("OK"
-        ) { _, _ ->
-            val lobbyToJoin = LobbyJoin(input.getText().toString())
-            HttpClient.post(
-                "/lobbys/join",
-                Gson().toJson(lobbyToJoin),
-                StoreToken(this).getAccessToken(),
-                CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCreateOrJoinLobby)
-            )
-        }
-        builder.setNegativeButton("Cancel"
-        ) { dialog, _ -> dialog.cancel() }
-        builder.show()
+    fun btnJLobbyClicked(view: View) {
+        startActivity(Intent(this, JoinLobbyActivity::class.java))
     }
 
-    private fun onSuccessCreateOrJoinLobby(response: Response) {
-        Log.d("Lobby", response.toString())
-
-        if (response.isSuccessful) {
-            response.body?.string()?.let {
-                Log.d("Lobby", it)
-                val intent = Intent(this, LobbyActivity::class.java)
-                intent.putExtra("lobbyCode", it)
-                startActivity(intent)
-            }
-        } else {
-            HttpClient.get(
-                "/lobbys/leave",
-                StoreToken(this).getAccessToken(),
-                CallbackCreator().createCallback(::onFailureLobby, ::cLobby)
-            )
-        }
-    }
-    //END OF Temporary code to init lobby should be replaced with actual lobby creation see issue #9 */
 }

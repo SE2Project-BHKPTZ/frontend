@@ -1,10 +1,11 @@
 package at.aau.serg.activities
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,19 +14,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.logic.StoreToken
-import at.aau.serg.models.LobbyCreate
+import at.aau.serg.models.LobbyJoin
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
-import com.google.android.material.slider.Slider
 import com.google.gson.Gson
 import okhttp3.Response
 
-class CreateLobbyActivity : AppCompatActivity() {
+class JoinLobbyActivity : AppCompatActivity() {
+
+    private var lobbyToJoin = LobbyJoin("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_create_lobby)
+        setContentView(R.layout.activity_join_lobby)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -33,24 +35,37 @@ class CreateLobbyActivity : AppCompatActivity() {
         }
     }
 
-    fun btnMainActivity(view: View) {
-        startActivity(Intent(this, MainActivity::class.java))
+    fun btnJoinCode(view: View) {
+        jLobbyWithCode(null)
     }
 
-    fun btnCreateLobby(view: View) {
-        cLobby(null)
+    private fun jLobbyWithCode(response: Response?) {
+        if(lobbyToJoin.lobbyID!="") {
+            joinLobby(lobbyToJoin)
+            return
+        }
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle("Enter LobbyID")
+        val input = EditText(this)
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT)
+        builder.setView(input)
+        builder.setPositiveButton("OK"
+        ) { _, _ ->
+            lobbyToJoin = LobbyJoin(input.getText().toString())
+            joinLobby(lobbyToJoin)
+        }
+        builder.setNegativeButton("Cancel"
+        ) { dialog, _ -> dialog.cancel() }
+        builder.show()
     }
 
-    private fun cLobby(response: Response?) {
-        val lobbyName = findViewById<EditText>(R.id.inputName)
-        val lobbyIsPublic = findViewById<CheckBox>(R.id.checkBoxIsPublic)
-        val lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers)
-        val lobbyToCreate = LobbyCreate(lobbyName.text.toString(), if (lobbyIsPublic.isChecked) 1 else 0 , lobbyMaxPlayers.value.toInt())
+    private fun joinLobby(lobbyToJoin: LobbyJoin){
         HttpClient.post(
-            "/lobbys",
-            Gson().toJson(lobbyToCreate),
+            "/lobbys/join",
+            Gson().toJson(lobbyToJoin),
             StoreToken(this).getAccessToken(),
-            CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCreateLobby)
+            CallbackCreator().createCallback(::onFailureLobby, ::onSuccessJoinLobby)
         )
     }
 
@@ -60,7 +75,7 @@ class CreateLobbyActivity : AppCompatActivity() {
         }
     }
 
-    private fun onSuccessCreateLobby(response: Response) {
+    private fun onSuccessJoinLobby(response: Response) {
         Log.d("Lobby", response.toString())
 
         if (response.isSuccessful) {
@@ -74,7 +89,7 @@ class CreateLobbyActivity : AppCompatActivity() {
             HttpClient.get(
                 "/lobbys/leave",
                 StoreToken(this).getAccessToken(),
-                CallbackCreator().createCallback(::onFailureLobby, ::cLobby)
+                CallbackCreator().createCallback(::onFailureLobby, ::jLobbyWithCode)
             )
         }
     }
