@@ -95,4 +95,14 @@ class SocketHandlerTest {
         verify(exactly = 1) { Log.i("socket", "Connected") }
         verify(exactly = 1) { Log.i("socket", "Disconnected") }
     }
+
+    @Test
+    fun `off removes the correct event listener`() {
+        SocketHandler.connect("uuid")
+
+        val eventName = "testEvent"
+        SocketHandler.off(eventName)
+
+        verify { mockSocket.off(eventName) }
+    }
 }
