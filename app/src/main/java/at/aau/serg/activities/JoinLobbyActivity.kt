@@ -17,11 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.adapters.JoinLobbyLobbiesAdapter
-import at.aau.serg.adapters.LobbyPlayerAdapter
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.JoinLobbyLobby
 import at.aau.serg.models.LobbyJoin
-import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
@@ -66,7 +64,7 @@ class JoinLobbyActivity : AppCompatActivity() {
             val responseBody = response.body?.string()
             if (responseBody != null) {
                 val openLobbies = Array(JSONArray(responseBody).length()) {
-                    JSONArray(responseBody).get(it)
+                    JSONArray(responseBody)[it]
                 }
                 for ((index, lobby) in openLobbies.withIndex()) {
                     Log.d("LO", lobby.toString())
@@ -149,5 +147,9 @@ class JoinLobbyActivity : AppCompatActivity() {
                 CallbackCreator().createCallback(::onFailureLobby, ::jLobbyWithCode)
             )
         }
+    }
+
+    fun btnBack(view: View) {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

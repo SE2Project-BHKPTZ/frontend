@@ -11,7 +11,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.activities.LobbyActivity
@@ -48,7 +47,7 @@ class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<Joi
         val lobby: JoinLobbyLobby = listdata[position]
         holder.txtLobbyName.text = lobby.name
         holder.txtPlayerCount.text = context.getString(R.string.joinlobbyLobbyPlayerCountPlaceholder, lobby.currentPlayers,lobby.maxPlayers);
-        holder.btnJoin.setOnClickListener { view ->
+        holder.btnJoin.setOnClickListener {
             lobbyID = lobby.lobbyID
             joinLobby(null)
         }
