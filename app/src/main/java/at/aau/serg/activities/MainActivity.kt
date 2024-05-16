@@ -1,13 +1,8 @@
 package at.aau.serg.activities
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputType
-import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,13 +11,9 @@ import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
-import at.aau.serg.models.LobbyCreate
-import at.aau.serg.models.LobbyJoin
 import at.aau.serg.models.Suit
 import at.aau.serg.network.CallbackCreator
-import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
-import com.google.gson.Gson
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
