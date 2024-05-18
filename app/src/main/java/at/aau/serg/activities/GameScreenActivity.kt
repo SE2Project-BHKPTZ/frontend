@@ -53,7 +53,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         updateFragmentContainerView(TrickPredictionFragment())
-        trickViewModel.setRound(1)
+        initializeRoundCount()
 
         val initialCards: Array<CardItem>?
         val initialTrumpCard: CardItem?
@@ -255,17 +255,20 @@ class GameScreenActivity : AppCompatActivity() {
         clearCardPlayedEvents()
         updateFragmentContainerView(newFragment)
 
-        // TODO: Increase round count
         increaseRoundCount()
     }
 
-    @SuppressLint("SetTextI18n")
+    private fun initializeRoundCount() {
+        this.runOnUiThread {
+            trickViewModel.setRound(1)
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, 1, getMaxRoundCount())
+        }
+    }
+
     private fun increaseRoundCount() {
         this.runOnUiThread {
             trickViewModel.increaseRound()
-
-            val roundCountTextView: TextView = findViewById(R.id.tvRoundCount)
-            roundCountTextView.text = "Round: ${trickViewModel.round.value.toString()} of ${getMaxRoundCount()}"
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, trickViewModel.round.value ?: 0, getMaxRoundCount())
         }
     }
 
