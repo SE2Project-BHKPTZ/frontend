@@ -42,4 +42,5 @@
     <string name="gamePlayer5Card">Player 5 Card</string>
     <string name="gamePlayer6Card">Player 6 Card</string>
     <string name="gameNoPoints">00</string>
+    <string name="defaultPredictionScore">20 Points</string>
 </resources>
