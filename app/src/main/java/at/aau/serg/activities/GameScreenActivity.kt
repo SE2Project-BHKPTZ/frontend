@@ -214,7 +214,7 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Socket", "Received startRound event")
         val gameData = (socketResponse[0] as JSONObject)
         val cards = gameData.getJSONArray("hands").getJSONArray(myPlayerIndex)
-        val trumpCard = CardsConverter.convertCard(gameData.getJSONObject("trump"))
+        trumpCard = CardsConverter.convertCard(gameData.getJSONObject("trump"))
 
         if (cards != null) {
             setCards(CardsConverter.convertCards(cards))
