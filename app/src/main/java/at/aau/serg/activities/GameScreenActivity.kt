@@ -25,7 +25,6 @@ import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.TrickPredictionViewModel
-import org.json.JSONArray
 import org.json.JSONObject
 
 class GameScreenActivity : AppCompatActivity() {
@@ -85,6 +84,7 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("nextSubround", ::nextSubRound)
         SocketHandler.on("startRound", ::startRound)
         SocketHandler.on("nextPlayer", ::nextPlayer)
+        SocketHandler.on("score", ::updateScores)
     }
 
     fun getPlayerGameScreen(playerCount: Int): Fragment? {
@@ -276,5 +276,13 @@ class GameScreenActivity : AppCompatActivity() {
         if(gameScreenFragment != null){
             updateFragmentContainerView(gameScreenFragment)
         }
+    }
+
+    private fun updateScores(socketResponse: Array<Any>){
+        Log.d("Socket", "Received scores event")
+        Log.d("Socket", socketResponse[0].toString())
+
+
+
     }
 }

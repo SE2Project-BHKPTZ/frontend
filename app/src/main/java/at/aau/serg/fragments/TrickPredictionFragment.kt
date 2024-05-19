@@ -40,9 +40,8 @@ class TrickPredictionFragment : Fragment() {
 
         confirmPredictionButton.setOnClickListener {
             Log.d("Prediction", "Sending prediction")
-            val predictionPoints =  calculateReachablePoints(trickPredictionSlider.value.toInt())
             (activity as GameScreenActivity).setPlayerGameScreen()
-            SocketHandler.emit("trickPrediction", predictionPoints)
+            SocketHandler.emit("trickPrediction", trickPredictionSlider.value.toInt())
         }
 
         viewModel.round.observe(viewLifecycleOwner) {round ->
