@@ -46,6 +46,14 @@ class CreateLobbyActivity : AppCompatActivity() {
         val lobbyIsPublic = findViewById<CheckBox>(R.id.checkBoxIsPublic)
         val lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers)
         val lobbyToCreate = LobbyCreate(lobbyName.text.toString(), if (lobbyIsPublic.isChecked) 1 else 0 , lobbyMaxPlayers.value.toInt())
+
+       if(lobbyName.text.toString() == ""){
+           this.runOnUiThread {
+               Toast.makeText(this, "Name can not be empty", Toast.LENGTH_SHORT).show()
+           }
+           return
+       }
+
         HttpClient.post(
             "/lobbys",
             Gson().toJson(lobbyToCreate),

@@ -69,6 +69,7 @@ class JoinLobbyActivity : AppCompatActivity() {
                 for ((index, lobby) in openLobbies.withIndex()) {
                     Log.d("LO", lobby.toString())
                     val jsonLobby = JSONObject(lobby.toString())
+                    if(jsonLobby.getJSONArray("players").length() == jsonLobby.getInt("maxPlayers") ) continue
                     lobbies.add(
                         index, JoinLobbyLobby(
                             jsonLobby.getString("name"),
