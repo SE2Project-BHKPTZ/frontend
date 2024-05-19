@@ -32,7 +32,7 @@
     <string name="gamePredictTrickNumber">Predict the number of tricks for this round!</string>
     <string name="gamePredictionScore">Highest score with your Prediction:</string>
     <string name="gameConfirm">Confirm</string>
-    <string name="gameRoundPlaceholder">Round: 1 of 15</string>
+    <string name="gameRoundPlaceholder">Round: %1$d of %2$d</string>
     <string name="tmpMenu">Menu</string>
     <string name="tmpChangeFragment">Change fragment</string>
     <string name="gamePlayer1Card">Player 1 Card</string>

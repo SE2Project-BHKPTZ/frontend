@@ -11,4 +11,8 @@ class TrickPredictionViewModel: ViewModel() {
     fun setRound(data: Int) {
         _round.value = data
     }
+
+    fun increaseRound() {
+        _round.value = _round.value?.plus(1)
+    }
 }

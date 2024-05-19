@@ -1,11 +1,13 @@
 package at.aau.serg.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -51,7 +53,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         updateFragmentContainerView(TrickPredictionFragment())
-        trickViewModel.setRound(1)
+        initializeRoundCount()
 
         val initialCards: Array<CardItem>?
         val initialTrumpCard: CardItem?
@@ -252,6 +254,22 @@ class GameScreenActivity : AppCompatActivity() {
         val newFragment = TrickPredictionFragment()
         clearCardPlayedEvents()
         updateFragmentContainerView(newFragment)
+
+        increaseRoundCount()
+    }
+
+    private fun initializeRoundCount() {
+        this.runOnUiThread {
+            trickViewModel.setRound(1)
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, 1, getMaxRoundCount())
+        }
+    }
+
+    private fun increaseRoundCount() {
+        this.runOnUiThread {
+            trickViewModel.increaseRound()
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, trickViewModel.round.value ?: 0, getMaxRoundCount())
+        }
     }
 
     private fun nextPlayer(socketResponse: Array<Any>){
@@ -269,6 +287,16 @@ class GameScreenActivity : AppCompatActivity() {
         cardPlayed = false
         lastPlayedCard = null
         countPlayedCards = 0
+    }
+
+    private fun getMaxRoundCount(): Int {
+        return when(playerCount) {
+            3 -> 20
+            4 -> 15
+            5 -> 12
+            6 -> 10
+            else -> 20
+        }
     }
 
     fun setPlayerGameScreen() {
