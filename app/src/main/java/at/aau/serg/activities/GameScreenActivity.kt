@@ -154,7 +154,7 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Socket", "Received cardPlayed event")
         val suit = (socketResponse[0] as JSONObject).getString("suit")
         val value = (socketResponse[0] as JSONObject).getString("value")
-        //val player = (socketResponse[0] as JSONObject).getString("player")
+        val playerIdx = (socketResponse[0] as JSONObject).getInt("playerIdx")
 
         val cardItem = CardItem(value, Suit.valueOf(suit))
 
@@ -165,45 +165,20 @@ class GameScreenActivity : AppCompatActivity() {
         countPlayedCards += 1
 
         val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
-        val player2CardImageView = findViewById<ImageView>(R.id.ivPlayer2Card)
 
-        when(countPlayedCards){
-            2 ->  if (cardPlayed.not())  moveCardPosition2To3()
-            3 -> if(cardPlayed) moveCardPosition2To3() else moveCardPosition3To4()
-            4 -> if(cardPlayed) moveCardPosition3To4() else moveCardPosition4To5()
-            5 -> if (cardPlayed) moveCardPosition4To5() else moveCardPosition5To6()
-            6 -> if(cardPlayed) moveCardPosition5To6()
-            else -> {}
-        }
-        setPlayerCard(player2CardImageView, cardResourceId)
+        val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx)
+        val playerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${positionOfPlayedCard}Card", "id", packageName))
+        setPlayerCard(playerCardImageView, cardResourceId)
     }
-
-    private fun moveCardPosition2To3(){
-        switchCards(R.id.ivPlayer2Card, R.id.ivPlayer3Card)
-    }
-
-    private fun moveCardPosition3To4(){
-        switchCards(R.id.ivPlayer3Card, R.id.ivPlayer4Card)
-        moveCardPosition2To3()
-    }
-    private fun moveCardPosition4To5(){
-        switchCards(R.id.ivPlayer4Card, R.id.ivPlayer5Card)
-        moveCardPosition3To4()
-    }
-
-    private fun moveCardPosition5To6(){
-        switchCards(R.id.ivPlayer5Card, R.id.ivPlayer6Card)
-        moveCardPosition4To5()
-    }
-
-
-    private fun switchCards(ivFromId: Int, ivToId: Int){
-        val ivFrom = findViewById<ImageView>(ivFromId)
-        val ivTo = findViewById<ImageView>(ivToId)
-        val resource = ivFrom.tag.toString().toInt()
-        runOnUiThread{
-            ivTo.setImageResource(resource)
-            ivTo.tag = ivFrom.tag
+    private fun calculatePositionOfPlayer(serverIdx: Int): Int{
+        return when(myPlayerIndex - serverIdx){
+            0 -> 1
+            1 -> playerCount
+            2 -> playerCount - 1
+            3 -> playerCount - 2
+            4 -> playerCount - 3
+            5 -> playerCount - 4
+            else -> 1 + ((myPlayerIndex - serverIdx) * -1)
         }
     }
 
@@ -241,7 +216,7 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Socket", "Received startRound event")
         val gameData = (socketResponse[0] as JSONObject)
         val cards = gameData.getJSONArray("hands").getJSONArray(myPlayerIndex)
-        val trumpCard = CardsConverter.convertCard(gameData.getJSONObject("trump"))
+        trumpCard = CardsConverter.convertCard(gameData.getJSONObject("trump"))
 
         if (cards != null) {
             setCards(CardsConverter.convertCards(cards))
