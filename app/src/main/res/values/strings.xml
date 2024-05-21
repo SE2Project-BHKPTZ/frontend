@@ -1,8 +1,8 @@
 <resources>
     <string name="appName">Wizard</string>
     <!--MainActivity-->
-    <string name="tmpCreateLobby">TMP Create Lobby</string>
-    <string name="tmpJoinLobby">TMP Join Lobby</string>
+    <string name="createLobby">Create Lobby</string>
+    <string name="joinLobby">Join Lobby</string>
     <string name="tmpGameActivity">Game Activity</string>
     <!--RegisterActivity-->
     <string name="register">Register</string>
@@ -32,7 +32,7 @@
     <string name="gamePredictTrickNumber">Predict the number of tricks for this round!</string>
     <string name="gamePredictionScore">Highest score with your Prediction:</string>
     <string name="gameConfirm">Confirm</string>
-    <string name="gameRoundPlaceholder">Round: 1 of 15</string>
+    <string name="gameRoundPlaceholder">Round: %1$d of %2$d</string>
     <string name="tmpMenu">Menu</string>
     <string name="tmpChangeFragment">Change fragment</string>
     <string name="gamePlayer1Card">Player 1 Card</string>
@@ -42,4 +42,19 @@
     <string name="gamePlayer5Card">Player 5 Card</string>
     <string name="gamePlayer6Card">Player 6 Card</string>
     <string name="gameNoPoints">00</string>
+    <string name="defaultPredictionScore">20 Points</string>
+    <!--CreateLobbyActivity-->
+    <string name="createLobbyText">Create Lobby</string>
+    <string name="createLobbyMenu">Back</string>
+    <string name="createLobbyCreate">Create</string>
+    <string name="createLobbyIsPublic">Public?</string>
+    <string name="createLobbyMaxPlayerText">Maximum number of players:</string>
+    <!--JoinLobbyActivity-->
+    <string name="joinLobbyText">Join Lobby</string>
+    <string name="joinLobbyLobbyCode">Join Lobby with code</string>
+    <string name="joinLobbyMenu">Back</string>
+    <string name="joinlobbyLobbyLobbyNamePlaceholder">LobbyName</string>
+    <string name="joinlobbyLobbyJoinBtn">Join</string>
+    <string name="joinlobbyLobbyPlayerCountPlaceholder">%1$d/%2$d</string>
+    <string name="createLobbyName">Name</string>
 </resources>
