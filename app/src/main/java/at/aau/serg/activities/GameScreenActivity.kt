@@ -41,6 +41,7 @@ class GameScreenActivity : AppCompatActivity() {
     private var allowedToPlayCard = false
 
     private var myPlayerIndex: Int = 0
+    private var winnerPlayerIndex: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -155,11 +156,13 @@ class GameScreenActivity : AppCompatActivity() {
         val suit = (socketResponse[0] as JSONObject).getString("suit")
         val value = (socketResponse[0] as JSONObject).getString("value")
         val playerIdx = (socketResponse[0] as JSONObject).getInt("playerIdx")
+        val winnerIdx = (socketResponse[0] as JSONObject).getInt("winnerIdx")
 
         val cardItem = CardItem(value, Suit.valueOf(suit))
 
         if(lastPlayedCard != null && cardItem == lastPlayedCard) {
             Log.d("Socket", "No card must be played")
+            checkNewWinner(winnerIdx)
             return
         }
         countPlayedCards += 1
@@ -169,6 +172,8 @@ class GameScreenActivity : AppCompatActivity() {
         val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx)
         val playerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${positionOfPlayedCard}Card", "id", packageName))
         setPlayerCard(playerCardImageView, cardResourceId)
+
+        checkNewWinner(winnerIdx)
     }
     private fun calculatePositionOfPlayer(serverIdx: Int): Int{
         return when(myPlayerIndex - serverIdx){
@@ -186,6 +191,29 @@ class GameScreenActivity : AppCompatActivity() {
         runOnUiThread {
             cardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
             cardImageView.tag = cardResourceId
+        }
+    }
+
+    private fun checkNewWinner(winnerIdx: Int){
+        if(winnerIdx == winnerPlayerIndex)
+            return
+
+        highlightCard(calculatePositionOfPlayer(winnerIdx))
+        winnerPlayerIndex = winnerIdx
+    }
+
+    private fun highlightCard(newWinnerPosition: Int){
+        val newWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${newWinnerPosition}Card", "id", packageName))
+        runOnUiThread{
+            newWinnerCardImageView.setBackgroundResource(R.drawable.card_border_selected)
+        }
+        if(winnerPlayerIndex != null){
+            val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
+                winnerPlayerIndex!!
+            )}Card", "id", packageName))
+            runOnUiThread {
+                oldWinnerCardImageView.setBackgroundResource(R.drawable.card_border_default)
+            }
         }
     }
 
@@ -262,6 +290,7 @@ class GameScreenActivity : AppCompatActivity() {
         cardPlayed = false
         lastPlayedCard = null
         countPlayedCards = 0
+        winnerPlayerIndex = null
     }
 
     private fun getMaxRoundCount(): Int {
