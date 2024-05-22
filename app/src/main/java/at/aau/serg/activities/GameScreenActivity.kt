@@ -184,12 +184,6 @@ class GameScreenActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPlayerScore(scoreTextView: TextView, score: String){
-        runOnUiThread {
-            scoreTextView.text = score
-        }
-    }
-
     private fun trickPrediction(socketResponse: Array<Any>) {
         Log.d("Socket", "Received trickPrediction event")
     }

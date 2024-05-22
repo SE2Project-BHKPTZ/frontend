@@ -5,12 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
 import at.aau.serg.androidutils.GameUtils.updateScores
-import at.aau.serg.models.Score
-import at.aau.serg.utils.GameUtils
 import at.aau.serg.viewmodels.GameScreenViewModel
 import kotlin.properties.Delegates
 

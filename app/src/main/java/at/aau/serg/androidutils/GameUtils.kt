@@ -1,11 +1,9 @@
 package at.aau.serg.androidutils
 
 import android.content.Context
-import android.content.res.Resources
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
 import at.aau.serg.models.Score
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
 import at.aau.serg.viewmodels.GameScreenViewModel
