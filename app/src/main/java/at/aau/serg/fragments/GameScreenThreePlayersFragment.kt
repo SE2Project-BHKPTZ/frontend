@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
+import at.aau.serg.androidutils.GameUtils
+import at.aau.serg.androidutils.GameUtils.updateScores
 import at.aau.serg.models.Score
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
 import at.aau.serg.viewmodels.GameScreenViewModel
@@ -34,19 +36,9 @@ class GameScreenThreePlayersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.position.observe(viewLifecycleOwner) {
-            position = it
-        }
-
-        viewModel.scores.observe(viewLifecycleOwner) { scores ->
-            scores.forEach { score: Score ->
-                val scorePosition = calculatePositionOfPlayer(score.position, position, playerCount)
-                val packageName = requireContext().packageName
-                val scoreTextView = view.findViewById<TextView>(resources.getIdentifier("tvPlayer${scorePosition}Points", "id", packageName))
-                if (scoreTextView != null) {
-                    scoreTextView.text = score.score
-                }
-            }
+        viewModel.position.observe(viewLifecycleOwner) { newPosition ->
+            position = newPosition
+            updateScores(view, requireContext(), viewModel, viewLifecycleOwner, { position }, playerCount)
         }
     }
 }
