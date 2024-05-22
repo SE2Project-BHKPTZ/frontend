@@ -9,12 +9,12 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
 import at.aau.serg.models.Score
+import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
 import at.aau.serg.viewmodels.GameScreenViewModel
 import kotlin.properties.Delegates
 
 class GameScreenThreePlayersFragment : Fragment() {
     private val viewModel: GameScreenViewModel by activityViewModels()
-
     private var position by Delegates.notNull<Int>()
     private val playerCount = 3
 
@@ -40,25 +40,13 @@ class GameScreenThreePlayersFragment : Fragment() {
 
         viewModel.scores.observe(viewLifecycleOwner) { scores ->
             scores.forEach { score: Score ->
-                val scorePosition = calculatePositionOfPlayer(score.position, position)
+                val scorePosition = calculatePositionOfPlayer(score.position, position, playerCount)
                 val packageName = requireContext().packageName
                 val scoreTextView = view.findViewById<TextView>(resources.getIdentifier("tvPlayer${scorePosition}Points", "id", packageName))
                 if (scoreTextView != null) {
                     scoreTextView.text = score.score
                 }
             }
-        }
-    }
-
-    private fun calculatePositionOfPlayer(serverIdx: Int, localIdx: Int): Int{
-        return when(localIdx - serverIdx){
-            0 -> 1
-            1 -> playerCount
-            2 -> playerCount - 1
-            3 -> playerCount - 2
-            4 -> playerCount - 3
-            5 -> playerCount - 4
-            else -> 1 + ((localIdx - serverIdx) * -1)
         }
     }
 }

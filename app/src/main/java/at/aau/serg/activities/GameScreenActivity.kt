@@ -25,6 +25,7 @@ import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
+import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.GameScreenViewModel
 import at.aau.serg.viewmodels.TrickPredictionViewModel
@@ -171,20 +172,9 @@ class GameScreenActivity : AppCompatActivity() {
 
         val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
 
-        val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx)
+        val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx, myPlayerIndex, playerCount)
         val playerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${positionOfPlayedCard}Card", "id", packageName))
         setPlayerCard(playerCardImageView, cardResourceId)
-    }
-    private fun calculatePositionOfPlayer(serverIdx: Int): Int{
-        return when(myPlayerIndex - serverIdx){
-            0 -> 1
-            1 -> playerCount
-            2 -> playerCount - 1
-            3 -> playerCount - 2
-            4 -> playerCount - 3
-            5 -> playerCount - 4
-            else -> 1 + ((myPlayerIndex - serverIdx) * -1)
-        }
     }
 
     private fun setPlayerCard(cardImageView: ImageView, cardResourceId: Int){
