@@ -175,8 +175,16 @@ class GameScreenActivity : AppCompatActivity() {
 
         val cardItem = CardItem(value, Suit.valueOf(suit))
 
-        if (firstPlayedCard == null && cardItem.value != "0") {
+        if (firstPlayedCard == null && cardItem.isJester()) {
             firstPlayedCard = cardItem
+            runOnUiThread{
+                gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
+            }
+        }else if(firstPlayedCard != null && firstPlayedCard!!.isWizard().not() && cardItem.isWizard()){ // first wizard is played, now all cards can be played
+            firstPlayedCard = cardItem
+            runOnUiThread{
+                gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
+            }
         }
 
         if(lastPlayedCard != null && cardItem == lastPlayedCard) {
@@ -300,6 +308,9 @@ class GameScreenActivity : AppCompatActivity() {
         lastPlayedCard = null
         countPlayedCards = 0
         winnerPlayerIndex = null
+        runOnUiThread {
+            gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
+        }
     }
 
     private fun getMaxRoundCount(): Int {
