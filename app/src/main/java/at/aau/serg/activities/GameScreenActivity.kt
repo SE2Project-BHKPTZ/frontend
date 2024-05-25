@@ -137,7 +137,9 @@ class GameScreenActivity : AppCompatActivity() {
         if(cardPlayed || allowedToPlayCard.not()) return false
 
         if (firstPlayedCard != null && !isCardPlayable(cardItem)){
-            Toast.makeText(this, "You cannot play this card.", Toast.LENGTH_SHORT).show()
+            runOnUiThread{
+                Toast.makeText(this, "You cannot play this card.", Toast.LENGTH_SHORT).show()
+            }
             return false
         }
 
@@ -204,7 +206,7 @@ class GameScreenActivity : AppCompatActivity() {
         if(winnerIdx == winnerPlayerIndex)
             return
 
-        highlightCard(calculatePositionOfPlayer(winnerIdx))
+        highlightCard(calculatePositionOfPlayer(winnerIdx, myPlayerIndex, playerCount))
         winnerPlayerIndex = winnerIdx
     }
 
@@ -215,7 +217,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
         if(winnerPlayerIndex != null){
             val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
-                winnerPlayerIndex!!
+                winnerPlayerIndex!!, myPlayerIndex, playerCount
             )}Card", "id", packageName))
             runOnUiThread {
                 oldWinnerCardImageView.setBackgroundResource(R.drawable.card_border_default)
@@ -294,6 +296,7 @@ class GameScreenActivity : AppCompatActivity() {
 
     private fun clearCardPlayedEvents(){
         cardPlayed = false
+        firstPlayedCard = null
         lastPlayedCard = null
         countPlayedCards = 0
         winnerPlayerIndex = null
