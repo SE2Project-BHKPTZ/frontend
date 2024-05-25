@@ -10,7 +10,6 @@ data class CardItem(val value: String, val suit: Suit): Serializable{
     }
 
     fun isWizard(): Boolean {
-        Log.i("tempLog", "card has value: $value")
         return value === "14"
     }
 }
