@@ -176,15 +176,9 @@ class GameScreenActivity : AppCompatActivity() {
         val cardItem = CardItem(value, Suit.valueOf(suit))
 
         if (firstPlayedCard == null && cardItem.isJester()) {
-            firstPlayedCard = cardItem
-            runOnUiThread{
-                gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
-            }
+            updatePlayableCards(cardItem)
         }else if(firstPlayedCard != null && firstPlayedCard!!.isWizard().not() && cardItem.isWizard()){ // first wizard is played, now all cards can be played
-            firstPlayedCard = cardItem
-            runOnUiThread{
-                gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
-            }
+            updatePlayableCards(cardItem)
         }
 
         if(lastPlayedCard != null && cardItem == lastPlayedCard) {
@@ -356,6 +350,13 @@ class GameScreenActivity : AppCompatActivity() {
 
         if(firstPlayedCard!!.isWizard()) return true
         return cardItem.suit == firstPlayedCard!!.suit || !hasCardOfSuit(cardsViewModel.cards.value, firstPlayedCard!!.suit)
+    }
+
+    private fun updatePlayableCards(card: CardItem){
+        firstPlayedCard = card
+        runOnUiThread {
+            gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
+        }
     }
 
     // Check if the player has any card of the required suit
