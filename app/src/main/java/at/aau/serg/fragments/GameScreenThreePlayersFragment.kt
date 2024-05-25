@@ -5,9 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import at.aau.serg.R
+import at.aau.serg.androidutils.GameUtils.updateScores
+import at.aau.serg.viewmodels.GameScreenViewModel
+import kotlin.properties.Delegates
 
 class GameScreenThreePlayersFragment : Fragment() {
+    private val viewModel: GameScreenViewModel by activityViewModels()
+    private var position by Delegates.notNull<Int>()
+    private val playerCount = 3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +26,15 @@ class GameScreenThreePlayersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_gamescreen_three_players, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.position.observe(viewLifecycleOwner) { newPosition ->
+            position = newPosition
+            updateScores(view, requireContext(), viewModel, viewLifecycleOwner, { position }, playerCount)
+        }
     }
 }

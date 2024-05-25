@@ -1,6 +1,5 @@
 package at.aau.serg.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -22,17 +21,20 @@ import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
+import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
 import at.aau.serg.viewmodels.CardsViewModel
+import at.aau.serg.viewmodels.GameScreenViewModel
 import at.aau.serg.viewmodels.TrickPredictionViewModel
-import org.json.JSONArray
 import org.json.JSONObject
 
 class GameScreenActivity : AppCompatActivity() {
     private val trickViewModel: TrickPredictionViewModel by viewModels()
     private val cardsViewModel: CardsViewModel by viewModels()
+    private val gameScreenViewModel: GameScreenViewModel by viewModels()
     private var cardPlayed: Boolean = false
     private var lastPlayedCard: CardItem? = null
     private var countPlayedCards = 0
@@ -58,6 +60,8 @@ class GameScreenActivity : AppCompatActivity() {
         val initialCards: Array<CardItem>?
         val initialTrumpCard: CardItem?
 
+
+
         // Check version as getSerializableExtra changed for API version > 33
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
@@ -68,6 +72,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
         myPlayerIndex = intent.getIntExtra("me", 0)
         playerCount = intent.getIntExtra("playerCount", 3)
+        gameScreenViewModel.setPosition(myPlayerIndex)
 
         if (initialCards != null) {
             setCards(initialCards)
@@ -87,6 +92,7 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("nextSubround", ::nextSubRound)
         SocketHandler.on("startRound", ::startRound)
         SocketHandler.on("nextPlayer", ::nextPlayer)
+        SocketHandler.on("score", ::updateScores)
     }
 
     fun getPlayerGameScreen(playerCount: Int): Fragment? {
@@ -166,20 +172,9 @@ class GameScreenActivity : AppCompatActivity() {
 
         val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
 
-        val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx)
+        val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx, myPlayerIndex, playerCount)
         val playerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${positionOfPlayedCard}Card", "id", packageName))
         setPlayerCard(playerCardImageView, cardResourceId)
-    }
-    private fun calculatePositionOfPlayer(serverIdx: Int): Int{
-        return when(myPlayerIndex - serverIdx){
-            0 -> 1
-            1 -> playerCount
-            2 -> playerCount - 1
-            3 -> playerCount - 2
-            4 -> playerCount - 3
-            5 -> playerCount - 4
-            else -> 1 + ((myPlayerIndex - serverIdx) * -1)
-        }
     }
 
     private fun setPlayerCard(cardImageView: ImageView, cardResourceId: Int){
@@ -278,6 +273,25 @@ class GameScreenActivity : AppCompatActivity() {
         val gameScreenFragment = getPlayerGameScreen(playerCount)
         if(gameScreenFragment != null){
             updateFragmentContainerView(gameScreenFragment)
+        }
+    }
+
+    private fun updateScores(socketResponse: Array<Any>){
+        Log.d("Socket", "Received scores event")
+
+        val scores = socketResponse[0] as JSONObject
+        val keys = scores.keys()
+        val scoresList = mutableListOf<Score>()
+
+        while (keys.hasNext()) {
+            val key = keys.next()
+            val value = scores.getJSONObject(key)
+            val score = Score(value.getString("score"), value.getInt("index"))
+            scoresList.add(score)
+        }
+
+        this.runOnUiThread {
+            gameScreenViewModel.setScores(scoresList.toTypedArray())
         }
     }
 }
