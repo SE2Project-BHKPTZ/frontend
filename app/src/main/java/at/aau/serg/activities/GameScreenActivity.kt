@@ -36,6 +36,7 @@ class GameScreenActivity : AppCompatActivity() {
     private val cardsViewModel: CardsViewModel by viewModels()
     private val gameScreenViewModel: GameScreenViewModel by viewModels()
     private var cardPlayed: Boolean = false
+    private var firstPlayedCard: CardItem? = null
     private var lastPlayedCard: CardItem? = null
     private var countPlayedCards = 0
     private lateinit var trumpCard: CardItem
@@ -135,6 +136,11 @@ class GameScreenActivity : AppCompatActivity() {
         val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
         if(cardPlayed || allowedToPlayCard.not()) return false
 
+        if (firstPlayedCard != null && !isCardPlayable(cardItem)){
+            Toast.makeText(this, "You cannot play this card.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
         val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
         setPlayerCard(player1CardImageView, cardResourceId)
 
@@ -165,6 +171,10 @@ class GameScreenActivity : AppCompatActivity() {
         val winnerIdx = (socketResponse[0] as JSONObject).getInt("winnerIdx")
 
         val cardItem = CardItem(value, Suit.valueOf(suit))
+
+        if (firstPlayedCard == null && cardItem.value != "0") {
+            firstPlayedCard = cardItem
+        }
 
         if(lastPlayedCard != null && cardItem == lastPlayedCard) {
             Log.d("Socket", "No card must be played")
@@ -322,5 +332,19 @@ class GameScreenActivity : AppCompatActivity() {
         this.runOnUiThread {
             gameScreenViewModel.setScores(scoresList.toTypedArray())
         }
+    }
+
+    private fun isCardPlayable(cardItem: CardItem): Boolean {
+        if(firstPlayedCard == null) return true
+
+        if(cardItem.isJester() || cardItem.isWizard()) return true
+
+        if(firstPlayedCard!!.isWizard()) return true
+        return cardItem.suit == firstPlayedCard!!.suit || !hasCardOfSuit(cardsViewModel.cards.value, firstPlayedCard!!.suit)
+    }
+
+    // Check if the player has any card of the required suit
+    private fun hasCardOfSuit(cards: Array<CardItem>?, suit: Suit): Boolean {
+        return cards?.any { it.suit == suit } ?: false
     }
 }
