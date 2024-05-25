@@ -153,10 +153,11 @@ class GameScreenActivity : AppCompatActivity() {
 
     private fun cardPlayed(socketResponse: Array<Any>) {
         Log.d("Socket", "Received cardPlayed event")
-        val suit = (socketResponse[0] as JSONObject).getString("suit")
-        val value = (socketResponse[0] as JSONObject).getString("value")
-        val playerIdx = (socketResponse[0] as JSONObject).getInt("playerIdx")
-        val winnerIdx = (socketResponse[0] as JSONObject).getInt("winnerIdx")
+        val cardPlayedResponse = socketResponse[0] as JSONObject
+        val suit = cardPlayedResponse.getString("suit")
+        val value = cardPlayedResponse.getString("value")
+        val playerIdx = cardPlayedResponse.getInt("playerIdx")
+        val winnerIdx = cardPlayedResponse.getInt("winnerIdx")
 
         val cardItem = CardItem(value, Suit.valueOf(suit))
 
