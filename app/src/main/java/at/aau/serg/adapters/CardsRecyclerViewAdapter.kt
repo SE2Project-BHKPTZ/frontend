@@ -55,7 +55,7 @@ class CardsRecyclerViewAdapter(
 
     private fun setCardBackground(holder: ViewHolder, card: CardItem) {
         val backgroundResource = if (playableCards.contains(card)){
-            R.drawable.card_border_selected
+            R.drawable.card_border_playable
         } else{
             R.drawable.card_border_default
         }
