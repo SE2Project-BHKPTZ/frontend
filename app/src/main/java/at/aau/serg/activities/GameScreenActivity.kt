@@ -175,7 +175,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         val cardItem = CardItem(value, Suit.valueOf(suit))
 
-        if (firstPlayedCard == null && cardItem.isJester()) {
+        if (firstPlayedCard == null && cardItem.isJester().not()) {
             updatePlayableCards(cardItem)
         }else if(firstPlayedCard != null && firstPlayedCard!!.isWizard().not() && cardItem.isWizard()){ // first wizard is played, now all cards can be played
             updatePlayableCards(cardItem)
