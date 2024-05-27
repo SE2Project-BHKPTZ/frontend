@@ -11,12 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
+import at.aau.serg.androidutils.ErrorUtils.getErrorMessageFromJSONResponse
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,17 +42,27 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun onFailureRegister(){
-        runOnUiThread{
-            Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
+    private fun onFailureRegister(e: IOException){
+        when (e) {
+            is java.net.ConnectException -> {
+                runOnUiThread{
+                    Toast.makeText(this@RegisterActivity, "Could not connect to the server", Toast.LENGTH_SHORT).show()
+                }
+            }
+            else -> {
+                runOnUiThread{
+                    Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
     private fun onResponseRegister( response: Response){
         if (!response.isSuccessful) {
+            val errorMessage = getErrorMessageFromJSONResponse(response, getString(R.string.registerFailed))
 
             runOnUiThread{
-                Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RegisterActivity, errorMessage, Toast.LENGTH_SHORT).show()
             }
             return
         }

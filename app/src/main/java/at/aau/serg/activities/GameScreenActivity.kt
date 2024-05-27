@@ -194,7 +194,7 @@ class GameScreenActivity : AppCompatActivity() {
         if(winnerIdx == winnerPlayerIndex)
             return
 
-        highlightCard(calculatePositionOfPlayer(winnerIdx))
+        highlightCard(calculatePositionOfPlayer(winnerIdx, myPlayerIndex, playerCount))
         winnerPlayerIndex = winnerIdx
     }
 
@@ -205,7 +205,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
         if(winnerPlayerIndex != null){
             val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
-                winnerPlayerIndex!!
+                winnerPlayerIndex!!, myPlayerIndex, playerCount
             )}Card", "id", packageName))
             runOnUiThread {
                 oldWinnerCardImageView.setBackgroundResource(R.drawable.card_border_default)

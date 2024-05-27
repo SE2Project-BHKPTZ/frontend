@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.adapters.JoinLobbyLobbiesAdapter
+import at.aau.serg.androidutils.ErrorUtils
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.JoinLobbyLobby
 import at.aau.serg.models.LobbyJoin
@@ -26,6 +27,7 @@ import com.google.gson.Gson
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 
 class JoinLobbyActivity : AppCompatActivity() {
 
@@ -49,7 +51,6 @@ class JoinLobbyActivity : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setAdapter(adapter)
-
 
         HttpClient.get(
             "lobbys",
@@ -125,7 +126,7 @@ class JoinLobbyActivity : AppCompatActivity() {
         )
     }
 
-    private fun onFailureLobby() {
+    private fun onFailureLobby(e: IOException) {
         this.runOnUiThread {
             Toast.makeText(this, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
         }
@@ -142,6 +143,19 @@ class JoinLobbyActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
+            val errorMessage = ErrorUtils.getErrorMessageFromJSONResponse(
+                response,
+                getString(R.string.loginFailed)
+            )
+
+            if (errorMessage == "Lobby not found" || errorMessage == "Lobby is full") {
+                runOnUiThread {
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+                lobbyToJoin = LobbyJoin("")
+                return
+            }
+
             HttpClient.get(
                 "/lobbys/leave",
                 StoreToken(this).getAccessToken(),

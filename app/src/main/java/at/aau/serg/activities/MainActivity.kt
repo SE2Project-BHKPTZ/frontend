@@ -17,6 +17,7 @@ import at.aau.serg.network.SocketHandler
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!Authentication.getCurrentUser(
                 CallbackCreator().createCallback(
-                    ::startLoginActivity,
+                    ::startLoginOnFailure,
                     ::checkIfUserIsAuthenticated
                 ), StoreToken(this)
             )
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Authentication.getCurrentUser(
                 CallbackCreator().createCallback(
-                    ::startLoginActivity,
+                    ::startLoginOnFailure,
                     ::connectSocket
                 ), StoreToken(this)
             )
@@ -60,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         startLoginActivity()
     }
 
+    private fun startLoginOnFailure(e: IOException) {
+        startLoginActivity()
+    }
+
     private fun startLoginActivity() {
         this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
     }
@@ -75,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!Authentication.updateToken(
                 CallbackCreator().createCallback(
-                    ::startLoginActivity,
+                    ::startLoginOnFailure,
                     ::checkIfUpdateAccessTokenWorked
                 ), StoreToken(this@MainActivity)
             )

@@ -19,6 +19,7 @@ import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
 import okhttp3.Response
+import java.io.IOException
 
 
 class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
@@ -69,7 +70,7 @@ class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
         Log.d("LobbyPlayerAdapter",responseBody)
     }
 
-    private fun onKickFailure() {
+    private fun onKickFailure(e: IOException) {
         Toast.makeText(
             context,
             "Error kicking player",

@@ -7,10 +7,10 @@ import java.io.IOException
 
 class CallbackCreator {
 
-    fun createCallback(onFailure: () -> Unit, onResponse: (response: Response) -> Unit):Callback {
+    fun createCallback(onFailure: (e: IOException) -> Unit, onResponse: (response: Response) -> Unit):Callback {
         return object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                onFailure()
+                onFailure(e)
             }
 
             override fun onResponse(call: Call, response: Response) {
