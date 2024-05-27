@@ -10,15 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import at.aau.serg.R
 import at.aau.serg.activities.GameScreenActivity
 import at.aau.serg.adapters.CardsRecyclerViewAdapter
 import at.aau.serg.models.CardItem
 import at.aau.serg.placeholder.CardContent
 import at.aau.serg.viewmodels.CardsViewModel
+import at.aau.serg.viewmodels.GameScreenViewModel
 
 class CardsFragment : Fragment() {
     private val viewModel: CardsViewModel by activityViewModels()
+    private val gameScreenViewModel: GameScreenViewModel by activityViewModels()
+    private lateinit var adapter: CardsRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +39,16 @@ class CardsFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = CardsRecyclerViewAdapter(viewModel, viewLifecycleOwner) {
-                    cardItem ->  onCardClicked(cardItem)
-                }
+                adapter = CardsRecyclerViewAdapter(viewModel, viewLifecycleOwner, ::onCardClicked, null)
+                this@CardsFragment.adapter = adapter as CardsRecyclerViewAdapter
                 val overlapWidth = resources.getDimensionPixelSize(R.dimen.overlapWidth)
                 addItemDecoration(OverlapDecoration(overlapWidth))
             }
         }
+
+        gameScreenViewModel.firstPlayedCard.observe(viewLifecycleOwner, Observer { card ->
+            adapter.updateFirstPlayedCard(card)
+        })
 
         return view
     }

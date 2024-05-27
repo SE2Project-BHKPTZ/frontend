@@ -15,14 +15,17 @@ import at.aau.serg.viewmodels.CardsViewModel
 class CardsRecyclerViewAdapter(
     private val viewModel: CardsViewModel,
     private val lifecycleOwner: LifecycleOwner,
-    private val onCardClick: (CardItem) -> Unit
+    private val onCardClick: (CardItem) -> Unit,
+    private var firstPlayedCard: CardItem?,
 ) : RecyclerView.Adapter<CardsRecyclerViewAdapter.ViewHolder>() {
     private var selectedPosition = RecyclerView.NO_POSITION
     private var cards: Array<CardItem> = arrayOf()
+    private var playableCards: Set<CardItem> = emptySet()
 
     init {
         viewModel.cards.observe(lifecycleOwner, Observer { data ->
             cards = data
+            updatePlayableCards()
             notifyDataSetChanged()
         })
     }
@@ -40,7 +43,7 @@ class CardsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val card = cards[position]
         setCardImage(holder, card)
-        setCardBackground(holder)
+        setCardBackground(holder, card)
         setupClickListener(holder, card, position)
     }
 
@@ -50,8 +53,13 @@ class CardsRecyclerViewAdapter(
         holder.imageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
     }
 
-    private fun setCardBackground(holder: ViewHolder) {
-        holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.card_border_default)
+    private fun setCardBackground(holder: ViewHolder, card: CardItem) {
+        val backgroundResource = if (playableCards.contains(card)){
+            R.drawable.card_border_playable
+        } else{
+            R.drawable.card_border_default
+        }
+        holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, backgroundResource)
     }
 
     private fun setupClickListener(holder: ViewHolder, card: CardItem, position: Int) {
@@ -78,6 +86,26 @@ class CardsRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int = cards.size
+
+    fun updateFirstPlayedCard(card: CardItem?) {
+        firstPlayedCard = card
+        updatePlayableCards()
+        notifyDataSetChanged()
+    }
+
+    private fun updatePlayableCards() {
+        playableCards = if (firstPlayedCard == null || firstPlayedCard!!.isJester() || firstPlayedCard!!.isWizard()) {
+            cards.toSet()
+        } else {
+            val requiredSuit = firstPlayedCard!!.suit
+            val hasRequiredSuit = cards.any { it.suit == requiredSuit }
+            if (hasRequiredSuit) {
+                cards.filter { (it.suit == requiredSuit) || it.isWizard() || it.isJester() }.toSet()
+            } else {
+                cards.toSet()
+            }
+        }
+    }
 
     inner class ViewHolder(binding: FragmentCardBinding) : RecyclerView.ViewHolder(binding.root) {
         val imageView: ImageView = binding.ivCard

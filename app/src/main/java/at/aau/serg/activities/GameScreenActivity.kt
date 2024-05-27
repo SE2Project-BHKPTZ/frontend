@@ -36,6 +36,7 @@ class GameScreenActivity : AppCompatActivity() {
     private val cardsViewModel: CardsViewModel by viewModels()
     private val gameScreenViewModel: GameScreenViewModel by viewModels()
     private var cardPlayed: Boolean = false
+    private var firstPlayedCard: CardItem? = null
     private var lastPlayedCard: CardItem? = null
     private var countPlayedCards = 0
     private lateinit var trumpCard: CardItem
@@ -135,6 +136,13 @@ class GameScreenActivity : AppCompatActivity() {
         val player1CardImageView = findViewById<ImageView>(R.id.ivPlayer1Card)
         if(cardPlayed || allowedToPlayCard.not()) return false
 
+        if (firstPlayedCard != null && !isCardPlayable(cardItem)){
+            runOnUiThread{
+                Toast.makeText(this, "You cannot play this card.", Toast.LENGTH_SHORT).show()
+            }
+            return false
+        }
+
         val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
         setPlayerCard(player1CardImageView, cardResourceId)
 
@@ -167,6 +175,12 @@ class GameScreenActivity : AppCompatActivity() {
 
         val cardItem = CardItem(value, Suit.valueOf(suit))
 
+        if (firstPlayedCard == null && cardItem.isJester().not()) {
+            updatePlayableCards(cardItem)
+        }else if(firstPlayedCard != null && firstPlayedCard!!.isWizard().not() && cardItem.isWizard()){ // first wizard is played, now all cards can be played
+            updatePlayableCards(cardItem)
+        }
+
         if(lastPlayedCard != null && cardItem == lastPlayedCard) {
             Log.d("Socket", "No card must be played")
             checkNewWinner(winnerIdx)
@@ -194,7 +208,7 @@ class GameScreenActivity : AppCompatActivity() {
         if(winnerIdx == winnerPlayerIndex)
             return
 
-        highlightCard(calculatePositionOfPlayer(winnerIdx))
+        highlightCard(calculatePositionOfPlayer(winnerIdx, myPlayerIndex, playerCount))
         winnerPlayerIndex = winnerIdx
     }
 
@@ -205,7 +219,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
         if(winnerPlayerIndex != null){
             val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
-                winnerPlayerIndex!!
+                winnerPlayerIndex!!, myPlayerIndex, playerCount
             )}Card", "id", packageName))
             runOnUiThread {
                 oldWinnerCardImageView.setBackgroundResource(R.drawable.card_border_default)
@@ -284,9 +298,13 @@ class GameScreenActivity : AppCompatActivity() {
 
     private fun clearCardPlayedEvents(){
         cardPlayed = false
+        firstPlayedCard = null
         lastPlayedCard = null
         countPlayedCards = 0
         winnerPlayerIndex = null
+        runOnUiThread {
+            gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
+        }
     }
 
     private fun getMaxRoundCount(): Int {
@@ -323,5 +341,26 @@ class GameScreenActivity : AppCompatActivity() {
         this.runOnUiThread {
             gameScreenViewModel.setScores(scoresList.toTypedArray())
         }
+    }
+
+    private fun isCardPlayable(cardItem: CardItem): Boolean {
+        if(firstPlayedCard == null) return true
+
+        if(cardItem.isJester() || cardItem.isWizard()) return true
+
+        if(firstPlayedCard!!.isWizard()) return true
+        return cardItem.suit == firstPlayedCard!!.suit || !hasCardOfSuit(cardsViewModel.cards.value, firstPlayedCard!!.suit)
+    }
+
+    private fun updatePlayableCards(card: CardItem){
+        firstPlayedCard = card
+        runOnUiThread {
+            gameScreenViewModel.setFirstPlayedCard(firstPlayedCard)
+        }
+    }
+
+    // Check if the player has any card of the required suit
+    private fun hasCardOfSuit(cards: Array<CardItem>?, suit: Suit): Boolean {
+        return cards?.any { it.suit == suit } ?: false
     }
 }
