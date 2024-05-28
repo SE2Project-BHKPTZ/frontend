@@ -21,6 +21,7 @@ import at.aau.serg.androidutils.ErrorUtils
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.JoinLobbyLobby
 import at.aau.serg.models.LobbyJoin
+import at.aau.serg.models.LobbyStatus
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
@@ -71,6 +72,7 @@ class JoinLobbyActivity : AppCompatActivity() {
                     Log.d("LO", lobby.toString())
                     val jsonLobby = JSONObject(lobby.toString())
                     if(jsonLobby.getJSONArray("players").length() == jsonLobby.getInt("maxPlayers") ) continue
+                    if (jsonLobby.getString("status") != LobbyStatus.CREATED.status) continue
                     lobbies.add(
                         index, JoinLobbyLobby(
                             jsonLobby.getString("name"),
