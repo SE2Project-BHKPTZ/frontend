@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.LobbyCreate
 import at.aau.serg.network.CallbackCreator
@@ -43,29 +44,33 @@ class CreateLobbyActivity : AppCompatActivity() {
     }
 
     private fun cLobby(response: Response?) {
-        val lobbyName = findViewById<EditText>(R.id.inputName)
-        val lobbyIsPublic = findViewById<CheckBox>(R.id.checkBoxIsPublic)
-        val lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers)
-        val lobbyToCreate = LobbyCreate(lobbyName.text.toString(), if (lobbyIsPublic.isChecked) 1 else 0 , lobbyMaxPlayers.value.toInt())
+        val lobbyName = findViewById<EditText>(R.id.inputName).text.toString()
+        val lobbyIsPublic = findViewById<CheckBox>(R.id.checkBoxIsPublic).isChecked
+        val lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers).value.toInt()
 
-       if(lobbyName.text.toString() == ""){
-           this.runOnUiThread {
-               Toast.makeText(this, "Name can not be empty", Toast.LENGTH_SHORT).show()
-           }
-           return
-       }
+        if (lobbyName.isEmpty()) {
+            showToast(this, "Name cannot be empty")
+            return
+        }
+
+        val lobbyToCreate = LobbyCreate(lobbyName, if (lobbyIsPublic) 1 else 0, lobbyMaxPlayers)
+        val jsonLobby = Gson().toJson(lobbyToCreate)
 
         HttpClient.post(
             "/lobbys",
-            Gson().toJson(lobbyToCreate),
+            jsonLobby,
             StoreToken(this).getAccessToken(),
             CallbackCreator().createCallback(::onFailureLobby, ::onSuccessCreateLobby)
         )
     }
 
     private fun onFailureLobby(e: IOException) {
-        this.runOnUiThread {
-            Toast.makeText(this, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
+        val message = when (e) {
+            is java.net.ConnectException -> "Could not connect to the server"
+            else -> "Lobby functionality failed"
+        }
+        runOnUiThread {
+            showToast(this, message)
         }
     }
 

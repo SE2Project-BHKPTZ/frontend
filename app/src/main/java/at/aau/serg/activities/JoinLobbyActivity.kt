@@ -32,7 +32,6 @@ import java.io.IOException
 class JoinLobbyActivity : AppCompatActivity() {
 
     private val lobbies: MutableList<JoinLobbyLobby> = mutableListOf()
-
     private lateinit var adapter: JoinLobbyLobbiesAdapter
     private var lobbyToJoin = LobbyJoin("")
 
@@ -91,10 +90,10 @@ class JoinLobbyActivity : AppCompatActivity() {
 
 
     fun btnJoinCode(view: View) {
-        jLobbyWithCode(null)
+        createJoinLobbyPrompt(null)
     }
 
-    private fun jLobbyWithCode(response: Response?) {
+    private fun createJoinLobbyPrompt(response: Response?) {
         if (lobbyToJoin.lobbyID != "") {
             joinLobby(lobbyToJoin)
             return
@@ -143,23 +142,22 @@ class JoinLobbyActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
-            val errorMessage = ErrorUtils.getErrorMessageFromJSONResponse(
-                response,
-                getString(R.string.loginFailed)
-            )
+            handleJoinLobbyError(response)
+        }
+    }
 
-            if (errorMessage == "Lobby not found" || errorMessage == "Lobby is full") {
-                runOnUiThread {
-                    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-                }
-                lobbyToJoin = LobbyJoin("")
-                return
+    private fun handleJoinLobbyError(response: Response) {
+        val errorMessage = ErrorUtils.getErrorMessageFromJSONResponse(response, getString(R.string.loginFailed))
+        if (errorMessage == "Lobby not found" || errorMessage == "Lobby is full") {
+            runOnUiThread {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
-
+            lobbyToJoin = LobbyJoin("")
+        } else {
             HttpClient.get(
                 "/lobbys/leave",
                 StoreToken(this).getAccessToken(),
-                CallbackCreator().createCallback(::onFailureLobby, ::jLobbyWithCode)
+                CallbackCreator().createCallback(::onFailureLobby, ::createJoinLobbyPrompt)
             )
         }
     }

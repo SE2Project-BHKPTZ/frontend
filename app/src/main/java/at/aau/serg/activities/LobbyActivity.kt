@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.adapters.LobbyPlayerAdapter
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
 import at.aau.serg.models.LobbyPlayer
@@ -72,23 +73,17 @@ class LobbyActivity : AppCompatActivity() {
 
     private fun onSuccessGetLobby(response: Response) {
         if (response.isSuccessful) {
-            val responseBody = response.body?.string()
-            if (responseBody != null) {
-                val players = Array(JSONObject(responseBody).getJSONArray("players").length()) {
-                    JSONObject(responseBody).getJSONArray("players").getString(it)
-                }
-                for ((index, player) in players.withIndex()) {
-                    lobbyPlayers[index].uuid = JSONObject(player).getString("uuid")
-                    lobbyPlayers[index].name = JSONObject(player).getString("username")
-                    runOnUiThread { // fixes a bug that can occur
-                        adapter.notifyItemChanged(index)
+            response.body?.string()?.let { responseBody ->
+                val players = JSONArray(JSONObject(responseBody).getString("players"))
+                for (i in 0 until players.length()) {
+                    val player = players.getJSONObject(i)
+                    lobbyPlayers[i].apply {
+                        uuid = player.getString("uuid")
+                        name = player.getString("username")
                     }
+                    runOnUiThread { adapter.notifyItemChanged(i) }
                 }
-                val adminUUID: String = JSONObject(players[0]).getString("uuid")
-                val uuid: String = StoreToken(this).getUUID().toString()
-                if (adminUUID == uuid) {
-                    isAdmin = true
-                }
+                isAdmin = players.getJSONObject(0).getString("uuid") == StoreToken(this).getUUID().toString()
             }
         }
     }
@@ -102,22 +97,19 @@ class LobbyActivity : AppCompatActivity() {
         Log.d("Lobby", "$playerData joined")
 
         for ((index, player) in lobbyPlayers.withIndex()) {
-            if (player.uuid == "") {
-                player.uuid = playerData.getString("playerUUID")
-                player.name = playerData.getString("playerName")
-                if (isAdmin) {
-                    player.isVisible = Visibilities.VISIBLE
+            if (player.uuid.isEmpty()) {
+                player.apply {
+                    uuid = playerData.getString("playerUUID")
+                    name = playerData.getString("playerName")
+                    if (isAdmin) isVisible = Visibilities.VISIBLE
                 }
-                adapter.notifyItemChanged(index)
+                runOnUiThread { adapter.notifyItemChanged(index) }
                 break
             }
         }
 
         if (playerCount() >= 3 && isAdmin) {
-            this.runOnUiThread {
-                val startBtn: Button = findViewById(R.id.btnStartGame)
-                startBtn.isEnabled = true
-            }
+            runOnUiThread { findViewById<Button>(R.id.btnStartGame).isEnabled = true }
         }
     }
 
@@ -125,22 +117,23 @@ class LobbyActivity : AppCompatActivity() {
         val playerData = (socketResponse[0] as JSONObject).getString("playerUUID")
         Log.d("Lobby", "$playerData left")
         val playerToRemove = lobbyPlayers.indexOfFirst { it.uuid == playerData }
-        lobbyPlayers[playerToRemove].uuid = ""
-        lobbyPlayers[playerToRemove].name = ""
-        lobbyPlayers[playerToRemove].isVisible = Visibilities.INVISIBLE
-        adapter.notifyItemChanged(playerToRemove)
+        if (playerToRemove != -1) {
+            lobbyPlayers[playerToRemove].apply {
+                uuid = ""
+                name = ""
+                isVisible = Visibilities.INVISIBLE
+            }
+            runOnUiThread { adapter.notifyItemChanged(playerToRemove) }
+        }
 
         if (playerCount() < 3 && isAdmin) {
-            this.runOnUiThread {
-                val startBtn: Button = findViewById(R.id.btnStartGame)
-                startBtn.isEnabled = false
-            }
+            runOnUiThread { findViewById<Button>(R.id.btnStartGame).isEnabled = false }
         }
     }
 
     private fun userKick(socketResponse: Array<Any>) {
         this.runOnUiThread {
-            Toast.makeText(this, "You are kicked from the lobby", Toast.LENGTH_SHORT).show()
+            showToast(this, "You are kicked from the lobby")
         }
         startActivity(Intent(this, MainActivity::class.java))
     }
@@ -163,7 +156,7 @@ class LobbyActivity : AppCompatActivity() {
 
     private fun onFailureLeaveLobby(e: IOException) {
         this.runOnUiThread {
-            Toast.makeText(this, "Error leaving lobby", Toast.LENGTH_SHORT).show()
+            showToast(this, "Error leaving lobby")
         }
     }
 
@@ -172,14 +165,12 @@ class LobbyActivity : AppCompatActivity() {
         val cards = gameData.getJSONArray("hands").getJSONArray(getPlayerIndex())
         val trumpCard = gameData.getJSONObject("trump")
 
-        val intent = Intent(
-            baseContext,
-            GameScreenActivity::class.java
-        )
-        intent.putExtra("cards", CardsConverter.convertCards(cards))
-        intent.putExtra("trump", CardsConverter.convertCard(trumpCard))
-        intent.putExtra("playerCount", gameData.getJSONArray("hands").length())
-        intent.putExtra("me", getPlayerIndex())
+        val intent = Intent(baseContext, GameScreenActivity::class.java).apply {
+            putExtra("cards", CardsConverter.convertCards(cards))
+            putExtra("trump", CardsConverter.convertCard(trumpCard))
+            putExtra("playerCount", gameData.getJSONArray("hands").length())
+            putExtra("me", getPlayerIndex())
+        }
 
         SocketHandler.off("lobby:userJoined")
         SocketHandler.off("lobby:userLeft")

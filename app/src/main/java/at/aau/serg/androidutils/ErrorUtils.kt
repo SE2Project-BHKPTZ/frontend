@@ -1,5 +1,7 @@
 package at.aau.serg.androidutils
 
+import android.content.Context
+import android.widget.Toast
 import at.aau.serg.R
 import okhttp3.Response
 import org.json.JSONObject
@@ -13,5 +15,9 @@ object ErrorUtils {
         } else {
             defaultMessage ?: ""
         }
+    }
+
+    fun showToast(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }
