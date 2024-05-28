@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import at.aau.serg.R
 import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
+import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
 import at.aau.serg.androidutils.GameUtils.getMaxRoundCount
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
 import at.aau.serg.fragments.TrickPredictionFragment
@@ -68,7 +69,7 @@ class GameScreenActivity : AppCompatActivity() {
             initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
             initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
         } else {
-            initialCards = intent.getSerializableExtra("cards") as? Array<CardItem>
+            initialCards = convertSerializableToArray(intent.getSerializableExtra("cards"))
             initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
         }
 

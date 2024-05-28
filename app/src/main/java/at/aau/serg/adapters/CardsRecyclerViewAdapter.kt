@@ -72,7 +72,7 @@ class CardsRecyclerViewAdapter(
         }
     }
 
-    fun removeCard(cardItem: CardItem, position: Int) {
+    fun removeCard(cardItem: CardItem) {
         viewModel.removeCard(cardItem)
         notifyDataSetChanged()
     }

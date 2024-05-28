@@ -61,4 +61,17 @@ object GameUtils {
             else -> 20
         }
     }
+
+    inline fun <reified T> convertSerializableToArray(serializable: Any?): Array<T>? {
+        return when (serializable) {
+            is Array<*> -> {
+                if (serializable.all { it is T }) {
+                    serializable.filterIsInstance<T>().toTypedArray()
+                } else {
+                    null
+                }
+            }
+            else -> null
+        }
+    }
 }

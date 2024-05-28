@@ -21,7 +21,6 @@
     <string name="lobby">Lobby</string>
     <string name="lobbyPlayersPlayerNamePlaceholder">Player</string>
     <string name="lobbyPlayersKick">Kick</string>
-    <string name="lobbyPlayers">Players:</string>
     <!--GameActivity-->
     <string name="cardImageDescription">Wizard card</string>
     <string name="triangleIconDescription">Triangle icon</string>
