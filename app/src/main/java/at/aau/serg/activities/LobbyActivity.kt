@@ -27,6 +27,7 @@ import at.aau.serg.utils.CardsConverter
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.Arrays
 
 class LobbyActivity : AppCompatActivity() {
@@ -92,7 +93,7 @@ class LobbyActivity : AppCompatActivity() {
         }
     }
 
-    private fun onFailure() {
+    private fun onFailure(e: IOException) {
         this.startActivity(Intent(this, MainActivity::class.java))
     }
 
@@ -160,7 +161,7 @@ class LobbyActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
     }
 
-    private fun onFailureLeaveLobby() {
+    private fun onFailureLeaveLobby(e: IOException) {
         this.runOnUiThread {
             Toast.makeText(this, "Error leaving lobby", Toast.LENGTH_SHORT).show()
         }

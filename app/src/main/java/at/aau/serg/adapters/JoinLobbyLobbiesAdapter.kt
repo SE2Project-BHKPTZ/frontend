@@ -21,6 +21,7 @@ import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
 import com.google.gson.Gson
 import okhttp3.Response
+import java.io.IOException
 
 
 class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<JoinLobbyLobby>) :
@@ -62,7 +63,7 @@ class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<Joi
         )
     }
 
-    private fun onFailureLobby() {
+    private fun onFailureLobby(e: IOException) {
             Toast.makeText(context, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
     }
 

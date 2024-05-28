@@ -19,6 +19,7 @@ import at.aau.serg.network.HttpClient
 import com.google.android.material.slider.Slider
 import com.google.gson.Gson
 import okhttp3.Response
+import java.io.IOException
 
 class CreateLobbyActivity : AppCompatActivity() {
 
@@ -62,7 +63,7 @@ class CreateLobbyActivity : AppCompatActivity() {
         )
     }
 
-    private fun onFailureLobby() {
+    private fun onFailureLobby(e: IOException) {
         this.runOnUiThread {
             Toast.makeText(this, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
         }
