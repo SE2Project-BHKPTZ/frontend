@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,10 +18,6 @@ import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
 import at.aau.serg.androidutils.GameUtils.getMaxRoundCount
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
-import at.aau.serg.fragments.GameScreenFivePlayersFragment
-import at.aau.serg.fragments.GameScreenFourPlayersFragment
-import at.aau.serg.fragments.GameScreenSixPlayersFragment
-import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.models.CardItem
 import at.aau.serg.models.Score
@@ -206,9 +201,7 @@ class GameScreenActivity : AppCompatActivity() {
     private fun isNextPlayer(nextPlayerIdx: Int){
         if (nextPlayerIdx == myPlayerIndex) {
             allowedToPlayCard = true
-            runOnUiThread {
-                showToast(this, "You are now!")
-            }
+            showToast(this, "You are now!")
         }
     }
 

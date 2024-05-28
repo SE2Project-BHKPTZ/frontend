@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -48,25 +47,19 @@ class RegisterActivity : AppCompatActivity() {
             is java.net.ConnectException -> "Could not connect to the server"
             else -> getString(R.string.registerFailed)
         }
-        runOnUiThread {
-            showToast(this, message)
-        }
+        showToast(this, message)
     }
 
     private fun onResponseRegister(response: Response) {
         if (!response.isSuccessful) {
             val errorMessage = getErrorMessageFromJSONResponse(response, getString(R.string.registerFailed))
-            runOnUiThread {
-                showToast(this, errorMessage)
-            }
+            showToast(this, errorMessage)
             return
         }
 
         val responseBody = response.body?.string()
         if (responseBody == null) {
-            runOnUiThread {
-                showToast(this, getString(R.string.registerFailed))
-            }
+            showToast(this, getString(R.string.registerFailed))
             return
         }
 
@@ -75,9 +68,7 @@ class RegisterActivity : AppCompatActivity() {
             StoreToken(ContextWrapper(this)).storeTokenFromResponseBody(jsonObject)
         } catch (e: JSONException) {
             e.printStackTrace()
-            runOnUiThread {
-                showToast(this, getString(R.string.registerFailed))
-            }
+            showToast(this, getString(R.string.registerFailed))
             return
         }
 

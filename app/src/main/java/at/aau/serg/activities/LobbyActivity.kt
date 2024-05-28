@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,9 +16,7 @@ import at.aau.serg.R
 import at.aau.serg.adapters.LobbyPlayerAdapter
 import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.StoreToken
-import at.aau.serg.models.CardItem
 import at.aau.serg.models.LobbyPlayer
-import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.HttpClient
@@ -132,9 +129,7 @@ class LobbyActivity : AppCompatActivity() {
     }
 
     private fun userKick(socketResponse: Array<Any>) {
-        this.runOnUiThread {
-            showToast(this, "You are kicked from the lobby")
-        }
+        showToast(this, "You are kicked from the lobby")
         startActivity(Intent(this, MainActivity::class.java))
     }
 
@@ -155,9 +150,7 @@ class LobbyActivity : AppCompatActivity() {
     }
 
     private fun onFailureLeaveLobby(e: IOException) {
-        this.runOnUiThread {
-            showToast(this, "Error leaving lobby")
-        }
+        showToast(this, "Error leaving lobby")
     }
 
     private fun startGame(socketResponse: Array<Any>) {

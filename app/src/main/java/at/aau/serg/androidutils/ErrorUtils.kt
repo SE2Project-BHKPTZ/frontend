@@ -1,6 +1,8 @@
 package at.aau.serg.androidutils
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import at.aau.serg.R
 import okhttp3.Response
@@ -18,6 +20,9 @@ object ErrorUtils {
     }
 
     fun showToast(context: Context, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 }

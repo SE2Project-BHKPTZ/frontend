@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -69,9 +68,7 @@ class CreateLobbyActivity : AppCompatActivity() {
             is java.net.ConnectException -> "Could not connect to the server"
             else -> "Lobby functionality failed"
         }
-        runOnUiThread {
-            showToast(this, message)
-        }
+        showToast(this, message)
     }
 
     private fun onSuccessCreateLobby(response: Response) {

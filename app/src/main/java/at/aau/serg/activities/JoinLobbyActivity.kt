@@ -8,7 +8,6 @@ import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.adapters.JoinLobbyLobbiesAdapter
 import at.aau.serg.androidutils.ErrorUtils
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.JoinLobbyLobby
 import at.aau.serg.models.LobbyJoin
@@ -126,9 +126,7 @@ class JoinLobbyActivity : AppCompatActivity() {
     }
 
     private fun onFailureLobby(e: IOException) {
-        this.runOnUiThread {
-            Toast.makeText(this, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
-        }
+        showToast(this, "Lobby functionality failed")
     }
 
     private fun onSuccessJoinLobby(response: Response) {
@@ -149,9 +147,7 @@ class JoinLobbyActivity : AppCompatActivity() {
     private fun handleJoinLobbyError(response: Response) {
         val errorMessage = ErrorUtils.getErrorMessageFromJSONResponse(response, getString(R.string.loginFailed))
         if (errorMessage == "Lobby not found" || errorMessage == "Lobby is full") {
-            runOnUiThread {
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-            }
+            showToast(this, errorMessage)
             lobbyToJoin = LobbyJoin("")
         } else {
             HttpClient.get(

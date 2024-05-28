@@ -3,10 +3,8 @@ package at.aau.serg.activities
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -40,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
 
         val error = Authentication.loginUser(username, password, CallbackCreator().createCallback(::onFailureLogin, ::onResponseLogin))
         if(error != null){
-            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+            showToast(this, error)
         }
     }
 
@@ -49,25 +47,19 @@ class LoginActivity : AppCompatActivity() {
             is java.net.ConnectException -> "Could not connect to the server"
             else -> getString(R.string.loginFailed)
         }
-        runOnUiThread {
-            showToast(this, message)
-        }
+        showToast(this, message)
     }
 
     private fun onResponseLogin(response: Response){
         if (!response.isSuccessful) {
             val errorMessage = getErrorMessageFromJSONResponse(response, getString(R.string.loginFailed))
-            runOnUiThread {
-                showToast(this, errorMessage)
-            }
+            showToast(this, errorMessage)
             return
         }
 
         val responseBody = response.body?.string()
         if (responseBody == null) {
-            runOnUiThread {
-                showToast(this, getString(R.string.loginFailed))
-            }
+            showToast(this, getString(R.string.loginFailed))
             return
         }
 
@@ -76,9 +68,7 @@ class LoginActivity : AppCompatActivity() {
             StoreToken(ContextWrapper(this)).storeTokenFromResponseBody(jsonObject)
         } catch (e: JSONException) {
             e.printStackTrace()
-            runOnUiThread {
-                showToast(this, getString(R.string.loginFailed))
-            }
+            showToast(this, getString(R.string.loginFailed))
             return
         }
         this@LoginActivity.startActivity(Intent(this@LoginActivity, MainActivity::class.java))
