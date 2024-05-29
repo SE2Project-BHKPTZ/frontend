@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
+import at.aau.serg.androidutils.CardUtils.getResourceId
 import at.aau.serg.databinding.FragmentCardBinding
 import at.aau.serg.models.CardItem
 import at.aau.serg.viewmodels.CardsViewModel
@@ -48,9 +49,8 @@ class CardsRecyclerViewAdapter(
     }
 
     private fun setCardImage(holder: ViewHolder, card: CardItem) {
-        val cardResourceId = holder.itemView.context.resources.getIdentifier(
-            "card_${card.suit.toString().lowercase()}_${card.value}", "drawable", holder.itemView.context.packageName)
-        holder.imageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
+        val cardResourceId = getResourceId("card_${card.suit.toString().lowercase()}_${card.value}")
+        holder.imageView.setImageResource(cardResourceId)
     }
 
     private fun setCardBackground(holder: ViewHolder, card: CardItem) {

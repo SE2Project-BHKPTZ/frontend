@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import at.aau.serg.R
+import at.aau.serg.androidutils.CardUtils.getResourceId
 import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
 import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
@@ -85,7 +86,7 @@ class GameScreenActivity : AppCompatActivity() {
     private fun setupTrumpCard(card: CardItem) {
         trumpCard = card
         val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
-        val cardResourceId = resources.getIdentifier("card_${card.suit.toString().lowercase()}_${card.value}", "drawable", packageName)
+        val cardResourceId = getResourceId("card_${card.suit.toString().lowercase()}_${card.value}")
         setPlayerCard(trumpImageView, cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
     }
 
@@ -131,7 +132,8 @@ class GameScreenActivity : AppCompatActivity() {
             return false
         }
 
-        val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+
+        val cardResourceId = getResourceId("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}")
         setPlayerCard(player1CardImageView, cardResourceId)
 
         cardPlayed = true
@@ -169,7 +171,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
         countPlayedCards++
 
-        val cardResourceId = resources.getIdentifier("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}", "drawable", packageName)
+        val cardResourceId = getResourceId("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}")
         val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx, myPlayerIndex, playerCount)
         val playerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${positionOfPlayedCard}Card", "id", packageName))
         setPlayerCard(playerCardImageView, cardResourceId)
@@ -231,7 +233,7 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
-        val cardResourceId = trumpImageView.context.resources.getIdentifier("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}", "drawable", trumpImageView.context.packageName)
+        val cardResourceId = getResourceId("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}")
         setPlayerCard(trumpImageView, cardResourceId)
 
         clearCardPlayedEvents()
