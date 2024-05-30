@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.androidutils.ErrorUtils.getErrorMessageFromJSONResponse
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
@@ -33,51 +33,47 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun btnRegisterClicked(view: View) {
-        val username = findViewById<EditText>(R.id.editTextUsername).text
-        val password = findViewById<EditText>(R.id.editTextPassword).text
+        val username = findViewById<EditText>(R.id.editTextUsername).text.toString()
+        val password = findViewById<EditText>(R.id.editTextPassword).text.toString()
 
-        val error = Authentication.registerUser(username.toString(), password.toString(), CallbackCreator().createCallback(::onFailureRegister, ::onResponseRegister))
-        if(error != null){
-            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        val error = Authentication.registerUser(username, password, CallbackCreator().createCallback(::onFailureRegister, ::onResponseRegister))
+        if (error != null) {
+            showToast(this, error)
         }
     }
 
-    private fun onFailureRegister(e: IOException){
-        when (e) {
-            is java.net.ConnectException -> {
-                runOnUiThread{
-                    Toast.makeText(this@RegisterActivity, "Could not connect to the server", Toast.LENGTH_SHORT).show()
-                }
-            }
-            else -> {
-                runOnUiThread{
-                    Toast.makeText(this@RegisterActivity, R.string.registerFailed, Toast.LENGTH_SHORT).show()
-                }
-            }
+    private fun onFailureRegister(e: IOException) {
+        val message = when (e) {
+            is java.net.ConnectException -> "Could not connect to the server"
+            else -> getString(R.string.registerFailed)
         }
+        showToast(this, message)
     }
 
-    private fun onResponseRegister( response: Response){
+    private fun onResponseRegister(response: Response) {
         if (!response.isSuccessful) {
             val errorMessage = getErrorMessageFromJSONResponse(response, getString(R.string.registerFailed))
-
-            runOnUiThread{
-                Toast.makeText(this@RegisterActivity, errorMessage, Toast.LENGTH_SHORT).show()
-            }
+            showToast(this, errorMessage)
             return
         }
+
         val responseBody = response.body?.string()
-        try{
-            StoreToken(ContextWrapper(this@RegisterActivity)).storeTokenFromResponseBody(JSONObject(responseBody))
-        }catch (e: JSONException) {
-            e.printStackTrace()
-            Toast.makeText(this@RegisterActivity, "Registration success", Toast.LENGTH_SHORT).show()
-            this@RegisterActivity.startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+        if (responseBody == null) {
+            showToast(this, getString(R.string.registerFailed))
             return
         }
-        this@RegisterActivity.startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
-    }
 
+        try {
+            val jsonObject = JSONObject(responseBody)
+            StoreToken(ContextWrapper(this)).storeTokenFromResponseBody(jsonObject)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            showToast(this, getString(R.string.registerFailed))
+            return
+        }
+
+        startActivity(Intent(this, MainActivity::class.java))
+    }
     fun tvAlreadyHaveAnAccountClicked(view: View){
         startActivity(Intent(this, LoginActivity::class.java))
     }

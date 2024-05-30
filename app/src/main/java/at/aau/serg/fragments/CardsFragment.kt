@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import at.aau.serg.R
 import at.aau.serg.activities.GameScreenActivity
 import at.aau.serg.adapters.CardsRecyclerViewAdapter
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.models.CardItem
 import at.aau.serg.placeholder.CardContent
 import at.aau.serg.viewmodels.CardsViewModel
@@ -55,14 +55,14 @@ class CardsFragment : Fragment() {
 
     private fun onCardClicked(cardItem: CardItem) {
         val activity = activity
-        Toast.makeText(context, "Card clicked: ${cardItem.value} of ${cardItem.suit}", Toast.LENGTH_SHORT).show()
+        context?.let { showToast(it, "Card clicked: ${cardItem.value} of ${cardItem.suit}") }
         if (activity is GameScreenActivity && activity.supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame) !is TrickPredictionFragment) {
             val cardIsPlayed = activity.onCardClicked(cardItem)
             if (cardIsPlayed.not()) return
 
             (requireView() as RecyclerView).adapter?.let { adapter ->
                 if (adapter is CardsRecyclerViewAdapter) {
-                    adapter.removeCard(cardItem, CardContent.ITEMS.indexOf(cardItem))
+                    adapter.removeCard(cardItem)
                 }
             }
         }

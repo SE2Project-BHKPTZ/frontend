@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.LobbyKick
 import at.aau.serg.models.LobbyPlayer
@@ -45,14 +45,8 @@ class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
         holder.txtPlayerName.text = player.name
         holder.btnKick.visibility = player.isVisible.value
         holder.btnKick.setOnClickListener { view ->
-
             kickPlayer(player)
-
-            Toast.makeText(
-                view.context,
-                "click on item: " + player.uuid,
-                Toast.LENGTH_LONG
-            ).show()
+            showToast(view.context,"click on item: " + player.uuid)
         }
     }
 
@@ -71,11 +65,7 @@ class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
     }
 
     private fun onKickFailure(e: IOException) {
-        Toast.makeText(
-            context,
-            "Error kicking player",
-            Toast.LENGTH_LONG
-        ).show()
+        showToast(context, "Error kicking player")
     }
 
     override fun getItemCount(): Int {
