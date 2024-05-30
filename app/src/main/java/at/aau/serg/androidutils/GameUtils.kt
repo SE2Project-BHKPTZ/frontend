@@ -52,16 +52,6 @@ object GameUtils {
         return jsonObject
     }
 
-    fun getMaxRoundCount(playerCount: Int): Int {
-        return when(playerCount) {
-            3 -> 20
-            4 -> 15
-            5 -> 12
-            6 -> 10
-            else -> 20
-        }
-    }
-
     inline fun <reified T> convertSerializableToArray(serializable: Any?): Array<T>? {
         return when (serializable) {
             is Array<*> -> {

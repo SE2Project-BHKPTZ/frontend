@@ -18,7 +18,6 @@ import at.aau.serg.androidutils.CardUtils.getResourceId
 import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
 import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
-import at.aau.serg.androidutils.GameUtils.getMaxRoundCount
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.models.CardItem
@@ -43,6 +42,7 @@ class GameScreenActivity : AppCompatActivity() {
     private var countPlayedCards = 0
     private lateinit var trumpCard: CardItem
     private var playerCount = 0
+    private var maxRounds = 0
     private var allowedToPlayCard = false
     private var myPlayerIndex: Int = 0
     private var winnerPlayerIndex: Int? = null
@@ -58,8 +58,8 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         updateFragmentContainerView(TrickPredictionFragment())
-        initializeRoundCount()
         handleIntentData()
+        initializeRoundCount()
         setupSocketHandlers()
     }
 
@@ -77,8 +77,8 @@ class GameScreenActivity : AppCompatActivity() {
 
         myPlayerIndex = intent.getIntExtra("me", 0)
         playerCount = intent.getIntExtra("playerCount", 3)
+        maxRounds = intent.getIntExtra("maxRounds",20)
         gameScreenViewModel.setPosition(myPlayerIndex)
-
         initialCards?.let { setCards(it) }
         initialTrumpCard?.let { setupTrumpCard(it) }
     }
@@ -244,14 +244,14 @@ class GameScreenActivity : AppCompatActivity() {
     private fun initializeRoundCount() {
         this.runOnUiThread {
             trickViewModel.setRound(1)
-            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, 1, getMaxRoundCount(playerCount))
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, 1, maxRounds)
         }
     }
 
     private fun increaseRoundCount() {
         this.runOnUiThread {
             trickViewModel.increaseRound()
-            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, trickViewModel.round.value ?: 0, getMaxRoundCount(playerCount))
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, trickViewModel.round.value ?: 0, maxRounds)
         }
     }
 

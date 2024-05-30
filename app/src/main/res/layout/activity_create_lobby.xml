@@ -33,11 +33,12 @@
         android:id="@+id/btnCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="156dp"
+        android:layout_marginBottom="52dp"
         android:onClick="btnCreateLobby"
         android:text="@string/createLobbyCreate"
         app:layout_constraintBottom_toTopOf="@+id/btnMenu"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
@@ -86,5 +87,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxIsPublic" />
+
+    <TextView
+        android:id="@+id/txtMaxRounds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/createLobbyMaxRoundsText"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sliderMaxPlayers" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderMaxRounds"
+        android:layout_width="273dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="32dp"
+        android:stepSize="1"
+        android:valueFrom="1"
+        android:valueTo="20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtMaxRounds" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

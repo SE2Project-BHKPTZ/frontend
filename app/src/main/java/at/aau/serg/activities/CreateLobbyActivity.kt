@@ -23,6 +23,9 @@ import java.io.IOException
 
 class CreateLobbyActivity : AppCompatActivity() {
 
+
+    lateinit var lobbyMaxPlayers : Slider
+    lateinit var lobbyMaxRounds : Slider
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,6 +34,22 @@ class CreateLobbyActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers)
+        lobbyMaxRounds = findViewById<Slider>(R.id.sliderMaxRounds)
+        lobbyMaxPlayers.addOnChangeListener { _, value, _ ->
+            when (value.toInt()) {
+                3 -> lobbyMaxRounds.valueTo = 20F
+                4 -> lobbyMaxRounds.valueTo = 15F
+                5 -> lobbyMaxRounds.valueTo = 12F
+                6 -> lobbyMaxRounds.valueTo = 10F
+                else -> {
+                    lobbyMaxRounds.valueTo = 1F
+                }
+            }
+            if(lobbyMaxRounds.value.toInt() > lobbyMaxRounds.valueTo.toInt()){
+                lobbyMaxRounds.value = lobbyMaxRounds.valueTo
+            }
         }
     }
 
@@ -45,14 +64,14 @@ class CreateLobbyActivity : AppCompatActivity() {
     private fun cLobby(response: Response?) {
         val lobbyName = findViewById<EditText>(R.id.inputName).text.toString()
         val lobbyIsPublic = findViewById<CheckBox>(R.id.checkBoxIsPublic).isChecked
-        val lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers).value.toInt()
+
 
         if (lobbyName.isEmpty()) {
             showToast(this, "Name cannot be empty")
             return
         }
 
-        val lobbyToCreate = LobbyCreate(lobbyName, if (lobbyIsPublic) 1 else 0, lobbyMaxPlayers)
+        val lobbyToCreate = LobbyCreate(lobbyName, if (lobbyIsPublic) 1 else 0, lobbyMaxPlayers.value.toInt(),lobbyMaxRounds.value.toInt())
         val jsonLobby = Gson().toJson(lobbyToCreate)
 
         HttpClient.post(
