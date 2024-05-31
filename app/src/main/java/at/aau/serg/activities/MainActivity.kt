@@ -11,6 +11,7 @@ import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.SocketHandler
@@ -140,6 +141,14 @@ class MainActivity : AppCompatActivity() {
 
     fun btnJLobbyClicked(view: View) {
         startActivity(Intent(this, JoinLobbyActivity::class.java))
+    }
+
+    fun openResultActivity(view: View) {
+        val scores = arrayOf(Score("100", 1), Score("40", 2), Score("60", 3))
+        val intent = Intent(this, ResultActivity::class.java).apply {
+            putExtra("scores", scores)
+        }
+        startActivity(intent)
     }
 
 }

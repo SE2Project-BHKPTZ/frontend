@@ -96,6 +96,16 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("startRound", ::startRound)
         SocketHandler.on("nextPlayer", ::nextPlayer)
         SocketHandler.on("score", ::updateScores)
+        SocketHandler.on("endGame", ::endGame)
+    }
+
+    private fun removeSocketHandlers() {
+        SocketHandler.off("cardPlayed")
+        SocketHandler.off("nextSubround")
+        SocketHandler.off("startRound")
+        SocketHandler.off("nextPlayer")
+        SocketHandler.off("score")
+        SocketHandler.off("endGame")
     }
 
     fun btnMenuClicked(view: View){
@@ -142,7 +152,7 @@ class GameScreenActivity : AppCompatActivity() {
         countPlayedCards++
 
         val json: JSONObject = cardItemToJson(cardItem)
-        json.put("trump", trumpCard.suit)
+        json.put("trump", if (::trumpCard.isInitialized) trumpCard.suit else null)
 
         SocketHandler.emit("cardPlayed", json)
         return true
@@ -226,15 +236,20 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Socket", "Received startRound event")
         val gameData = (socketResponse[0] as JSONObject)
         val cards = gameData.getJSONArray("hands").getJSONArray(myPlayerIndex)
-        trumpCard = CardsConverter.convertCard(gameData.getJSONObject("trump"))
+        val trumpCard = gameData.optJSONObject("trump")?.let { CardsConverter.convertCard(it) }
 
         if (cards != null) {
             setCards(CardsConverter.convertCards(cards))
         }
 
-        val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
-        val cardResourceId = getResourceId("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}")
-        setPlayerCard(trumpImageView, cardResourceId)
+        if (trumpCard != null) {
+            val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
+            val cardResourceId = getResourceId("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}")
+            setPlayerCard(trumpImageView, cardResourceId)
+        } else {
+            // TODO: Set empty placeholder
+        }
+
 
         clearCardPlayedEvents()
         updateFragmentContainerView(TrickPredictionFragment())
@@ -297,6 +312,24 @@ class GameScreenActivity : AppCompatActivity() {
         this.runOnUiThread {
             gameScreenViewModel.setScores(scoresList.toTypedArray())
         }
+    }
+
+    private fun endGame(socketResponse: Array<Any>){
+        Log.d("Socket", "Received end game event")
+        val scores = socketResponse[0] as JSONObject
+        val scoresList = mutableListOf<Score>()
+
+        scores.keys().forEach {
+            val value = scores.getJSONObject(it)
+            scoresList.add(Score(value.getString("score"), value.getInt("index")))
+        }
+
+        removeSocketHandlers()
+
+        val intent = Intent(this, ResultActivity::class.java).apply {
+            putExtra("scores", scoresList.toTypedArray())
+        }
+        startActivity(intent)
     }
 
     private fun isCardPlayable(cardItem: CardItem): Boolean {
