@@ -167,6 +167,7 @@ class LobbyActivity : AppCompatActivity() {
             putExtra("playerCount", gameData.getJSONArray("hands").length())
             putExtra("maxRounds",maxRounds)
             putExtra("me", getPlayerIndex())
+            putExtra("players", lobbyPlayers)
         }
 
         SocketHandler.off("lobby:userJoined")

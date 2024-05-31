@@ -21,6 +21,7 @@ import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
 import at.aau.serg.network.SocketHandler
@@ -46,6 +47,7 @@ class GameScreenActivity : AppCompatActivity() {
     private var allowedToPlayCard = false
     private var myPlayerIndex: Int = 0
     private var winnerPlayerIndex: Int? = null
+    private lateinit var players: Array<LobbyPlayer>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,9 +72,11 @@ class GameScreenActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
             initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
+            players = intent.getSerializableExtra("players", Array<LobbyPlayer>::class.java) ?: emptyArray()
         } else {
             initialCards = convertSerializableToArray(intent.getSerializableExtra("cards"))
             initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
+            players = convertSerializableToArray(intent.getSerializableExtra("players")) ?: emptyArray()
         }
 
         myPlayerIndex = intent.getIntExtra("me", 0)
@@ -317,17 +321,18 @@ class GameScreenActivity : AppCompatActivity() {
     private fun endGame(socketResponse: Array<Any>){
         Log.d("Socket", "Received end game event")
         val scores = socketResponse[0] as JSONObject
-        val scoresList = mutableListOf<Score>()
+        val scoresMap = HashMap<String, Score>()
 
         scores.keys().forEach {
             val value = scores.getJSONObject(it)
-            scoresList.add(Score(value.getString("score"), value.getInt("index")))
+            scoresMap[it] = Score(value.getString("player"), value.getInt("score"))
         }
 
         removeSocketHandlers()
 
         val intent = Intent(this, ResultActivity::class.java).apply {
-            putExtra("scores", scoresList.toTypedArray())
+            putExtra("scores", scoresMap)
+            putExtra("players", players)
         }
         startActivity(intent)
     }
