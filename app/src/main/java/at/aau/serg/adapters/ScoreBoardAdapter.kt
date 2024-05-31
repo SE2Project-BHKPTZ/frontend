@@ -31,7 +31,8 @@ class ScoreBoardAdapter (private val scores: Map<String, Score>, private val pla
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         Log.d("Adapter", position.toString())
         val (key, score) = sortedScoresList[position]
-        viewHolder.placeTextView.text = (position + 1).toString()
+        val positionVal = (position+1).toString()
+        viewHolder.placeTextView.text = positionVal
         viewHolder.playerNameTextView.text = findPlayerName(key)?.name ?: ""
         viewHolder.scoreTextView.text = score.score
     }
