@@ -24,6 +24,7 @@ import at.aau.serg.models.CardItem
 import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
+import at.aau.serg.models.Visibilities
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
@@ -84,7 +85,13 @@ class GameScreenActivity : AppCompatActivity() {
         maxRounds = intent.getIntExtra("maxRounds",20)
         gameScreenViewModel.setPosition(myPlayerIndex)
         initialCards?.let { setCards(it) }
-        initialTrumpCard?.let { setupTrumpCard(it) }
+
+        if (initialTrumpCard != null) {
+            setupTrumpCard(initialTrumpCard)
+        } else {
+            val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
+            trumpImageView.visibility = Visibilities.INVISIBLE.value
+        }
     }
 
     private fun setupTrumpCard(card: CardItem) {
@@ -197,6 +204,7 @@ class GameScreenActivity : AppCompatActivity() {
         runOnUiThread {
             cardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
             cardImageView.tag = cardResourceId
+            cardImageView.visibility = Visibilities.VISIBLE.value
         }
     }
 
@@ -246,14 +254,13 @@ class GameScreenActivity : AppCompatActivity() {
             setCards(CardsConverter.convertCards(cards))
         }
 
+        val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
         if (trumpCard != null) {
-            val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
             val cardResourceId = getResourceId("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}")
             setPlayerCard(trumpImageView, cardResourceId)
         } else {
-            // TODO: Set empty placeholder
+            trumpImageView.visibility = Visibilities.INVISIBLE.value
         }
-
 
         clearCardPlayedEvents()
         updateFragmentContainerView(TrickPredictionFragment())
