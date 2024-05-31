@@ -325,7 +325,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         scores.keys().forEach {
             val value = scores.getJSONObject(it)
-            scoresMap[it] = Score(value.getString("player"), value.getInt("score"))
+            scoresMap[it] = Score(value.getString("score"), value.getInt("index"))
         }
 
         removeSocketHandlers()
