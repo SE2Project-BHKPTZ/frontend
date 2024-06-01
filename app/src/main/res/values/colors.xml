@@ -11,5 +11,6 @@
     <color name="emeraldGreen">#50C878</color>
     <color name="rubyRed">#9B111E</color>
     <color name="charcoalGrey">#36454F</color>
-    <color name="darkSlateBlue">#483D8B</color>
+
+    <color name="darkSlateBlue">#3C2F89</color>
 </resources>

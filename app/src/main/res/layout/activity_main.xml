@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/darkSlateBlue"
+
     tools:context=".activities.MainActivity">
 
     <TextView
@@ -13,7 +14,7 @@
         style="@style/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:text="@string/appName"
         android:textColor="@color/gold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,9 +47,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:backgroundTint="#C0C0C0"
+        android:backgroundTint="@color/silver"
         android:drawableLeft="@drawable/staff"
-        android:textColor="#191970"
+        android:textColor="@color/midnightBlue"
         android:onClick="btnJLobbyClicked"
         android:text="@string/joinLobby"
         app:layout_constraintBottom_toBottomOf="parent"
