@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.activities.LobbyActivity
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.JoinLobbyLobby
 import at.aau.serg.models.LobbyJoin
@@ -64,7 +64,7 @@ class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<Joi
     }
 
     private fun onFailureLobby(e: IOException) {
-            Toast.makeText(context, "Lobby functionality failed", Toast.LENGTH_SHORT).show()
+            showToast(context, "Lobby functionality failed")
     }
 
     private fun onSuccessJoinLobby(response: Response) {

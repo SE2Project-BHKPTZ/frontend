@@ -3,16 +3,15 @@ package at.aau.serg.activities
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.androidutils.ErrorUtils.getErrorMessageFromJSONResponse
+import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.network.CallbackCreator
@@ -34,49 +33,44 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun btnLoginClicked(view: View) {
-        val username = findViewById<EditText>(R.id.editTextUsername).text
-        val password = findViewById<EditText>(R.id.editTextPassword).text
+        val username = findViewById<EditText>(R.id.editTextUsername).text.toString()
+        val password = findViewById<EditText>(R.id.editTextPassword).text.toString()
 
-        val error = Authentication.loginUser(username.toString(), password.toString(), CallbackCreator().createCallback(::onFailureLogin, ::onResponseLogin))
+        val error = Authentication.loginUser(username, password, CallbackCreator().createCallback(::onFailureLogin, ::onResponseLogin))
         if(error != null){
-            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+            showToast(this, error)
         }
     }
 
-    private fun onFailureLogin(e: IOException){
-        when (e) {
-            is java.net.ConnectException -> {
-                runOnUiThread{
-                    Toast.makeText(this@LoginActivity, "Could not connect to the server", Toast.LENGTH_SHORT).show()
-                }
-            }
-            else -> {
-                runOnUiThread{
-                    Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
-                }
-            }
+    private fun onFailureLogin(e: IOException) {
+        val message = when (e) {
+            is java.net.ConnectException -> "Could not connect to the server"
+            else -> getString(R.string.loginFailed)
         }
+        showToast(this, message)
     }
 
     private fun onResponseLogin(response: Response){
         if (!response.isSuccessful) {
             val errorMessage = getErrorMessageFromJSONResponse(response, getString(R.string.loginFailed))
-
-            runOnUiThread{
-                Toast.makeText(this@LoginActivity, errorMessage, Toast.LENGTH_SHORT).show()
-            }
+            showToast(this, errorMessage)
             return
         }
 
         val responseBody = response.body?.string()
-        try{
-            StoreToken(ContextWrapper(this@LoginActivity)).storeTokenFromResponseBody(JSONObject(responseBody))
-        }catch (e: JSONException) {
-            e.printStackTrace()
-            Toast.makeText(this@LoginActivity, R.string.loginFailed, Toast.LENGTH_SHORT).show()
+        if (responseBody == null) {
+            showToast(this, getString(R.string.loginFailed))
             return
         }
 
+        try {
+            val jsonObject = JSONObject(responseBody)
+            StoreToken(ContextWrapper(this)).storeTokenFromResponseBody(jsonObject)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            showToast(this, getString(R.string.loginFailed))
+            return
+        }
         this@LoginActivity.startActivity(Intent(this@LoginActivity, MainActivity::class.java))
     }
 
