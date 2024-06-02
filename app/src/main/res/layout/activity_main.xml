@@ -5,8 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/darkSlateBlue"
-
+    android:background="@drawable/violet_background"
     tools:context=".activities.MainActivity">
 
     <TextView
@@ -36,10 +35,10 @@
         app:layout_constraintBottom_toTopOf="@+id/btnJLobby"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvWizard"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintHorizontal_weight="1"/>
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/btnJLobby"
@@ -49,14 +48,14 @@
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/silver"
         android:drawableLeft="@drawable/staff"
-        android:textColor="@color/midnightBlue"
         android:onClick="btnJLobbyClicked"
         android:text="@string/joinLobby"
+        android:textColor="@color/midnightBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCLobby"
-        app:layout_constraintHorizontal_weight="1"/>
+        app:layout_constraintTop_toBottomOf="@+id/btnCLobby" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
