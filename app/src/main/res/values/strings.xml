@@ -57,4 +57,7 @@
     <string name="joinlobbyLobbyJoinBtn">Join</string>
     <string name="joinlobbyLobbyPlayerCountPlaceholder">%1$d/%2$d</string>
     <string name="createLobbyName">Name</string>
+    <string name="tmp_result_activity">Result Activity</string>
+    <string name="back_to_home">Back to home</string>
+    <string name="resulting_score">Resulting score</string>
 </resources>

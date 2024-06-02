@@ -11,7 +11,10 @@ import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.LobbyPlayer
+import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
+import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.SocketHandler
 import okhttp3.Response
@@ -140,6 +143,22 @@ class MainActivity : AppCompatActivity() {
 
     fun btnJLobbyClicked(view: View) {
         startActivity(Intent(this, JoinLobbyActivity::class.java))
+    }
+
+    fun openResultActivity(view: View) {
+        val scores = hashMapOf(
+            "1" to Score("60", 1),
+            "2" to Score("100", 2),
+            "3" to Score("20", 3)
+        )
+
+        val players = arrayOf(LobbyPlayer("1", "Player 1", Visibilities.VISIBLE), LobbyPlayer("2", "Player 2", Visibilities.VISIBLE), LobbyPlayer("3", "Player 3", Visibilities.VISIBLE))
+
+        val intent = Intent(this, ResultActivity::class.java).apply {
+            putExtra("scores", scores)
+            putExtra("players", players)
+        }
+        startActivity(intent)
     }
 
 }

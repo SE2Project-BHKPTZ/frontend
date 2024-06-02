@@ -159,14 +159,15 @@ class LobbyActivity : AppCompatActivity() {
     private fun startGame(socketResponse: Array<Any>) {
         val gameData = (socketResponse[0] as JSONObject)
         val cards = gameData.getJSONArray("hands").getJSONArray(getPlayerIndex())
-        val trumpCard = gameData.getJSONObject("trump")
+        val trumpCard = gameData.optJSONObject("trump")
 
         val intent = Intent(baseContext, GameScreenActivity::class.java).apply {
             putExtra("cards", CardsConverter.convertCards(cards))
-            putExtra("trump", CardsConverter.convertCard(trumpCard))
+            putExtra("trump", trumpCard?.let { CardsConverter.convertCard(it) })
             putExtra("playerCount", gameData.getJSONArray("hands").length())
             putExtra("maxRounds",maxRounds)
             putExtra("me", getPlayerIndex())
+            putExtra("players", lobbyPlayers)
         }
 
         SocketHandler.off("lobby:userJoined")

@@ -21,8 +21,10 @@ import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
+import at.aau.serg.models.Visibilities
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
@@ -46,6 +48,7 @@ class GameScreenActivity : AppCompatActivity() {
     private var allowedToPlayCard = false
     private var myPlayerIndex: Int = 0
     private var winnerPlayerIndex: Int? = null
+    private lateinit var players: Array<LobbyPlayer>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,9 +73,11 @@ class GameScreenActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
             initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
+            players = intent.getSerializableExtra("players", Array<LobbyPlayer>::class.java) ?: emptyArray()
         } else {
             initialCards = convertSerializableToArray(intent.getSerializableExtra("cards"))
             initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
+            players = convertSerializableToArray(intent.getSerializableExtra("players")) ?: emptyArray()
         }
 
         myPlayerIndex = intent.getIntExtra("me", 0)
@@ -80,7 +85,13 @@ class GameScreenActivity : AppCompatActivity() {
         maxRounds = intent.getIntExtra("maxRounds",20)
         gameScreenViewModel.setPosition(myPlayerIndex)
         initialCards?.let { setCards(it) }
-        initialTrumpCard?.let { setupTrumpCard(it) }
+
+        if (initialTrumpCard != null) {
+            setupTrumpCard(initialTrumpCard)
+        } else {
+            val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
+            trumpImageView.visibility = Visibilities.INVISIBLE.value
+        }
     }
 
     private fun setupTrumpCard(card: CardItem) {
@@ -96,6 +107,16 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("startRound", ::startRound)
         SocketHandler.on("nextPlayer", ::nextPlayer)
         SocketHandler.on("score", ::updateScores)
+        SocketHandler.on("endGame", ::endGame)
+    }
+
+    private fun removeSocketHandlers() {
+        SocketHandler.off("cardPlayed")
+        SocketHandler.off("nextSubround")
+        SocketHandler.off("startRound")
+        SocketHandler.off("nextPlayer")
+        SocketHandler.off("score")
+        SocketHandler.off("endGame")
     }
 
     fun btnMenuClicked(view: View){
@@ -142,7 +163,7 @@ class GameScreenActivity : AppCompatActivity() {
         countPlayedCards++
 
         val json: JSONObject = cardItemToJson(cardItem)
-        json.put("trump", trumpCard.suit)
+        json.put("trump", if (::trumpCard.isInitialized) trumpCard.suit else null)
 
         SocketHandler.emit("cardPlayed", json)
         return true
@@ -183,6 +204,7 @@ class GameScreenActivity : AppCompatActivity() {
         runOnUiThread {
             cardImageView.setImageResource(cardResourceId.takeIf { it != 0 } ?: R.drawable.card_diamonds_1)
             cardImageView.tag = cardResourceId
+            cardImageView.visibility = Visibilities.VISIBLE.value
         }
     }
 
@@ -226,15 +248,19 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Socket", "Received startRound event")
         val gameData = (socketResponse[0] as JSONObject)
         val cards = gameData.getJSONArray("hands").getJSONArray(myPlayerIndex)
-        trumpCard = CardsConverter.convertCard(gameData.getJSONObject("trump"))
+        val trumpCard = gameData.optJSONObject("trump")?.let { CardsConverter.convertCard(it) }
 
         if (cards != null) {
             setCards(CardsConverter.convertCards(cards))
         }
 
         val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
-        val cardResourceId = getResourceId("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}")
-        setPlayerCard(trumpImageView, cardResourceId)
+        if (trumpCard != null) {
+            val cardResourceId = getResourceId("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}")
+            setPlayerCard(trumpImageView, cardResourceId)
+        } else {
+            trumpImageView.visibility = Visibilities.INVISIBLE.value
+        }
 
         clearCardPlayedEvents()
         updateFragmentContainerView(TrickPredictionFragment())
@@ -297,6 +323,25 @@ class GameScreenActivity : AppCompatActivity() {
         this.runOnUiThread {
             gameScreenViewModel.setScores(scoresList.toTypedArray())
         }
+    }
+
+    private fun endGame(socketResponse: Array<Any>){
+        Log.d("Socket", "Received end game event")
+        val scores = socketResponse[0] as JSONObject
+        val scoresMap = HashMap<String, Score>()
+
+        scores.keys().forEach {
+            val value = scores.getJSONObject(it)
+            scoresMap[it] = Score(value.getString("score"), value.getInt("index"))
+        }
+
+        removeSocketHandlers()
+
+        val intent = Intent(this, ResultActivity::class.java).apply {
+            putExtra("scores", scoresMap)
+            putExtra("players", players)
+        }
+        startActivity(intent)
     }
 
     private fun isCardPlayable(cardItem: CardItem): Boolean {
