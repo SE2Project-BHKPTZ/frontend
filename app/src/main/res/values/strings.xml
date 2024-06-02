@@ -3,7 +3,6 @@
     <!--MainActivity-->
     <string name="createLobby">Create Lobby</string>
     <string name="joinLobby">Join Lobby</string>
-    <string name="tmpGameActivity">Game Activity</string>
     <string name="theCardGame">The Card Game</string>
     <!--RegisterActivity-->
     <string name="register">Register</string>
