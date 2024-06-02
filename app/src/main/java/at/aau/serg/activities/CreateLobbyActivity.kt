@@ -1,11 +1,13 @@
 package at.aau.serg.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,6 +28,9 @@ class CreateLobbyActivity : AppCompatActivity() {
 
     lateinit var lobbyMaxPlayers : Slider
     lateinit var lobbyMaxRounds : Slider
+    lateinit var lobbyMaxPlayersText : TextView
+    lateinit var lobbyMaxRoundsText : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,7 +42,18 @@ class CreateLobbyActivity : AppCompatActivity() {
         }
         lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers)
         lobbyMaxRounds = findViewById<Slider>(R.id.sliderMaxRounds)
+
+        lobbyMaxPlayersText = findViewById<TextView>(R.id.txtMaxPlayers)
+        lobbyMaxRoundsText = findViewById<TextView>(R.id.txtMaxRounds)
+
+
+        lobbyMaxPlayersText.text = this.getString(R.string.createLobbyMaxPlayerText, 3);
+        lobbyMaxRoundsText.text = this.getString(R.string.createLobbyMaxRoundsText, 5);
+
         lobbyMaxPlayers.addOnChangeListener { _, value, _ ->
+
+            lobbyMaxPlayersText.text = this.getString(R.string.createLobbyMaxPlayerText, value.toInt());
+
             when (value.toInt()) {
                 3 -> lobbyMaxRounds.valueTo = 20F
                 4 -> lobbyMaxRounds.valueTo = 15F
@@ -50,6 +66,10 @@ class CreateLobbyActivity : AppCompatActivity() {
             if(lobbyMaxRounds.value.toInt() > lobbyMaxRounds.valueTo.toInt()){
                 lobbyMaxRounds.value = lobbyMaxRounds.valueTo
             }
+
+        }
+        lobbyMaxRounds.addOnChangeListener { _, value, _ ->
+            lobbyMaxRoundsText.text = this.getString(R.string.createLobbyMaxRoundsText, value.toInt());
         }
     }
 
