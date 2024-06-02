@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.androidutils.ErrorUtils.showToast
+import at.aau.serg.androidutils.ErrorUtils.getErrorMessageFromJSONResponse
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.LobbyCreate
 import at.aau.serg.network.CallbackCreator
@@ -121,6 +122,16 @@ class CreateLobbyActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
+            val errorMessage = getErrorMessageFromJSONResponse(
+                response,
+                getString(R.string.loginFailed)
+            )
+
+            if (errorMessage == "Lobby with name already exists") {
+                showToast(this, errorMessage)
+                return
+            }
+
             HttpClient.get(
                 "/lobbys/leave",
                 StoreToken(this).getAccessToken(),
