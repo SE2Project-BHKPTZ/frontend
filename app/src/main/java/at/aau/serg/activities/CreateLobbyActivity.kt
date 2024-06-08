@@ -1,17 +1,20 @@
 package at.aau.serg.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
 import at.aau.serg.androidutils.ErrorUtils.showToast
+import at.aau.serg.androidutils.ErrorUtils.getErrorMessageFromJSONResponse
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.LobbyCreate
 import at.aau.serg.network.CallbackCreator
@@ -23,6 +26,12 @@ import java.io.IOException
 
 class CreateLobbyActivity : AppCompatActivity() {
 
+
+    lateinit var lobbyMaxPlayers : Slider
+    lateinit var lobbyMaxRounds : Slider
+    lateinit var lobbyMaxPlayersText : TextView
+    lateinit var lobbyMaxRoundsText : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,6 +40,37 @@ class CreateLobbyActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers)
+        lobbyMaxRounds = findViewById<Slider>(R.id.sliderMaxRounds)
+
+        lobbyMaxPlayersText = findViewById<TextView>(R.id.txtMaxPlayers)
+        lobbyMaxRoundsText = findViewById<TextView>(R.id.txtMaxRounds)
+
+
+        lobbyMaxPlayersText.text = this.getString(R.string.createLobbyMaxPlayerText, 3);
+        lobbyMaxRoundsText.text = this.getString(R.string.createLobbyMaxRoundsText, 5);
+
+        lobbyMaxPlayers.addOnChangeListener { _, value, _ ->
+
+            lobbyMaxPlayersText.text = this.getString(R.string.createLobbyMaxPlayerText, value.toInt());
+
+            when (value.toInt()) {
+                3 -> lobbyMaxRounds.valueTo = 20F
+                4 -> lobbyMaxRounds.valueTo = 15F
+                5 -> lobbyMaxRounds.valueTo = 12F
+                6 -> lobbyMaxRounds.valueTo = 10F
+                else -> {
+                    lobbyMaxRounds.valueTo = 1F
+                }
+            }
+            if(lobbyMaxRounds.value.toInt() > lobbyMaxRounds.valueTo.toInt()){
+                lobbyMaxRounds.value = lobbyMaxRounds.valueTo
+            }
+
+        }
+        lobbyMaxRounds.addOnChangeListener { _, value, _ ->
+            lobbyMaxRoundsText.text = this.getString(R.string.createLobbyMaxRoundsText, value.toInt());
         }
     }
 
@@ -45,14 +85,14 @@ class CreateLobbyActivity : AppCompatActivity() {
     private fun cLobby(response: Response?) {
         val lobbyName = findViewById<EditText>(R.id.inputName).text.toString()
         val lobbyIsPublic = findViewById<CheckBox>(R.id.checkBoxIsPublic).isChecked
-        val lobbyMaxPlayers = findViewById<Slider>(R.id.sliderMaxPlayers).value.toInt()
+
 
         if (lobbyName.isEmpty()) {
             showToast(this, "Name cannot be empty")
             return
         }
 
-        val lobbyToCreate = LobbyCreate(lobbyName, if (lobbyIsPublic) 1 else 0, lobbyMaxPlayers)
+        val lobbyToCreate = LobbyCreate(lobbyName, if (lobbyIsPublic) 1 else 0, lobbyMaxPlayers.value.toInt(),lobbyMaxRounds.value.toInt())
         val jsonLobby = Gson().toJson(lobbyToCreate)
 
         HttpClient.post(
@@ -82,6 +122,16 @@ class CreateLobbyActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
+            val errorMessage = getErrorMessageFromJSONResponse(
+                response,
+                getString(R.string.loginFailed)
+            )
+
+            if (errorMessage == "Lobby with name already exists") {
+                showToast(this, errorMessage)
+                return
+            }
+
             HttpClient.get(
                 "/lobbys/leave",
                 StoreToken(this).getAccessToken(),

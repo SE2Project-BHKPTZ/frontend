@@ -47,7 +47,8 @@
     <string name="createLobbyMenu">Back</string>
     <string name="createLobbyCreate">Create</string>
     <string name="createLobbyIsPublic">Public?</string>
-    <string name="createLobbyMaxPlayerText">Maximum number of players:</string>
+    <string name="createLobbyMaxPlayerText">Maximum number of players: %d</string>
+    <string name="createLobbyMaxRoundsText">Maximum number of rounds: %d</string>
     <!--JoinLobbyActivity-->
     <string name="joinLobbyText">Join Lobby</string>
     <string name="joinLobbyLobbyCode">Join Lobby with code</string>
@@ -56,4 +57,7 @@
     <string name="joinlobbyLobbyJoinBtn">Join</string>
     <string name="joinlobbyLobbyPlayerCountPlaceholder">%1$d/%2$d</string>
     <string name="createLobbyName">Name</string>
+    <string name="tmp_result_activity">Result Activity</string>
+    <string name="back_to_home">Back to home</string>
+    <string name="resulting_score">Resulting score</string>
 </resources>

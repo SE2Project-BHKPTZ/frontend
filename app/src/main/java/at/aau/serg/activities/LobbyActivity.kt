@@ -35,6 +35,7 @@ class LobbyActivity : AppCompatActivity() {
     }
     private lateinit var adapter: LobbyPlayerAdapter
     private var isAdmin: Boolean = false
+    private var maxRounds : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +72,8 @@ class LobbyActivity : AppCompatActivity() {
     private fun onSuccessGetLobby(response: Response) {
         if (response.isSuccessful) {
             response.body?.string()?.let { responseBody ->
+                maxRounds = JSONObject(responseBody).getInt("maxRounds")
+
                 val players = JSONArray(JSONObject(responseBody).getString("players"))
                 for (i in 0 until players.length()) {
                     val player = players.getJSONObject(i)
@@ -156,13 +159,15 @@ class LobbyActivity : AppCompatActivity() {
     private fun startGame(socketResponse: Array<Any>) {
         val gameData = (socketResponse[0] as JSONObject)
         val cards = gameData.getJSONArray("hands").getJSONArray(getPlayerIndex())
-        val trumpCard = gameData.getJSONObject("trump")
+        val trumpCard = gameData.optJSONObject("trump")
 
         val intent = Intent(baseContext, GameScreenActivity::class.java).apply {
             putExtra("cards", CardsConverter.convertCards(cards))
-            putExtra("trump", CardsConverter.convertCard(trumpCard))
+            putExtra("trump", trumpCard?.let { CardsConverter.convertCard(it) })
             putExtra("playerCount", gameData.getJSONArray("hands").length())
+            putExtra("maxRounds",maxRounds)
             putExtra("me", getPlayerIndex())
+            putExtra("players", lobbyPlayers)
         }
 
         SocketHandler.off("lobby:userJoined")

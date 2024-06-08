@@ -63,4 +63,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCLobby" />
 
+    <Button
+        android:id="@+id/tmpBtnGoToResultScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openResultActivity"
+        android:text="@string/tmp_result_activity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tmpBtnGoToGameScreen" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

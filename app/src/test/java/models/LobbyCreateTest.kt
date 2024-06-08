@@ -8,9 +8,10 @@ import org.junit.jupiter.api.Test
 class LobbyCreateTest {
     @Test
     fun `LobbyCreate instantiation`() {
-        val lobbyCreate = LobbyCreate("TestLobby", 1,3)
+        val lobbyCreate = LobbyCreate("TestLobby", 1,3,20)
         assertEquals("TestLobby", lobbyCreate.name)
         assertEquals(1, lobbyCreate.isPublic)
         assertEquals(3, lobbyCreate.maxPlayers)
+        assertEquals(20,lobbyCreate.maxRounds)
     }
 }
