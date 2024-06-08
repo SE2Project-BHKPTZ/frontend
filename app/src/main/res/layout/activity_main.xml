@@ -35,7 +35,7 @@
 
     <Button
         android:id="@+id/btnCLobby"
-        style="@style/btnCreateWithHat"
+        style="@style/btnPrimaryWithHat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="btnCLobbyClicked"
@@ -50,7 +50,7 @@
 
     <Button
         android:id="@+id/btnJLobby"
-        style="@style/btnJoinWithStaff"
+        style="@style/btnSecondaryWithStaff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -71,8 +71,7 @@
         android:text="@string/tmp_result_activity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tmpBtnGoToGameScreen" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

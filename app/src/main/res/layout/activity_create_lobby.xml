@@ -12,7 +12,6 @@
         style="@style/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
         android:layout_marginTop="16dp"
         android:text="@string/createLobbyText"
         android:textSize="40sp"
@@ -35,7 +34,7 @@
 
     <Button
         android:id="@+id/btnCreate"
-        style="@style/btnCreate"
+        style="@style/btnPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="52dp"
@@ -84,13 +83,10 @@
         android:stepSize="1"
         android:valueFrom="3"
         android:valueTo="6"
-        app:haloColor="@color/midnightBlue"
+        style="@style/slider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtMaxPlayers"
-        app:thumbColor="@color/deepPurple"
-        app:tickColor="@color/deepPurple"
-        app:trackColor="@color/silver" />
+        app:layout_constraintTop_toBottomOf="@+id/txtMaxPlayers" />
 
     <TextView
         android:id="@+id/txtMaxPlayers"
@@ -109,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/createLobbyMaxRoundsText"
-        android:textSize="20sp"
+        android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sliderMaxPlayers" />

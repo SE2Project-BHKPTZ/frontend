@@ -38,7 +38,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/joinLobbyLobbyCode"
         android:onClick="btnJoinCode"
-        style="@style/btnCreate"
+        style="@style/btnPrimary"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
