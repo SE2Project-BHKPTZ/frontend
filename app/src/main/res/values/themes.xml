@@ -5,5 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Wizard" parent="Base.Theme.Wizard" />
+    <style name="Theme.Wizard" parent="Base.Theme.Wizard">
+        <item name="android:windowBackground">@drawable/violet_background</item>
+        <item name="android:textColor">@color/gold</item>
+    </style>
 </resources>

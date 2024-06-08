@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/violet_background"
     tools:context=".activities.MainActivity">
 
     <TextView
@@ -36,14 +35,11 @@
 
     <Button
         android:id="@+id/btnCLobby"
-        style="@style/btnDefaultMainActivity"
+        style="@style/btnCreateWithHat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/charcoalGrey"
-        android:drawableLeft="@drawable/witch_hat"
         android:onClick="btnCLobbyClicked"
         android:text="@string/createLobby"
-        android:textColor="@color/emeraldGreen"
         app:layout_constraintBottom_toTopOf="@+id/btnJLobby"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -54,15 +50,12 @@
 
     <Button
         android:id="@+id/btnJLobby"
-        style="@style/btnDefaultMainActivity"
+        style="@style/btnJoinWithStaff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:backgroundTint="@color/silver"
-        android:drawableLeft="@drawable/staff"
         android:onClick="btnJLobbyClicked"
         android:text="@string/joinLobby"
-        android:textColor="@color/midnightBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

@@ -9,20 +9,23 @@
 
     <TextView
         android:id="@+id/textView"
+        style="@style/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
         android:layout_marginTop="16dp"
         android:text="@string/createLobbyText"
-        android:textSize="30sp"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnMenu"
+        style="@style/btnGoBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="50dp"
         android:onClick="btnMainActivity"
         android:text="@string/createLobbyMenu"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,27 +34,35 @@
 
     <Button
         android:id="@+id/btnCreate"
+        style="@style/btnCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="156dp"
+        android:layout_marginBottom="24dp"
         android:onClick="btnCreateLobby"
         android:text="@string/createLobbyCreate"
         app:layout_constraintBottom_toTopOf="@+id/btnMenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sliderMaxPlayers"
+        app:layout_constraintVertical_bias="0.5" />
 
     <CheckBox
         android:id="@+id/checkBoxIsPublic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:scaleX="1.50"
+        android:scaleY="1.50"
         android:text="@string/createLobbyIsPublic"
+        android:textColor="@color/gold"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputName" />
 
     <EditText
         android:id="@+id/inputName"
+        style="@style/EditTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
@@ -60,21 +71,26 @@
         android:hint="@string/createLobbyName"
         android:inputType="text"
         android:text="@string/createLobbyName"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/sliderMaxPlayers"
-        android:layout_width="273dp"
-        android:layout_height="47dp"
+        android:layout_width="275dp"
+        android:layout_height="50dp"
         android:layout_marginTop="32dp"
         android:stepSize="1"
         android:valueFrom="3"
         android:valueTo="6"
+        app:haloColor="@color/midnightBlue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtMaxPlayers" />
+        app:layout_constraintTop_toBottomOf="@+id/txtMaxPlayers"
+        app:thumbColor="@color/deepPurple"
+        app:tickColor="@color/deepPurple"
+        app:trackColor="@color/silver" />
 
     <TextView
         android:id="@+id/txtMaxPlayers"
@@ -82,7 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/createLobbyMaxPlayerText"
-        android:textSize="20sp"
+        android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxIsPublic" />

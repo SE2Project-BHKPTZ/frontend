@@ -5,9 +5,47 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="btnRegisterLoginActivity">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/emeraldGreen</item>
+        <item name="textOutlineColor">#ffffff</item>
+        <item name="android:backgroundTint">@color/charcoalGrey</item>
+    </style>
+
+    <style name="EditTextView">
+        <item name="android:textColor">@color/gold</item>
+        <item name="android:textColorHint">@color/silver</item>
+        <item name="android:backgroundTint">@color/deepPurple</item>
+    </style>
+
     <style name="btnDefaultMainActivity">
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">#ffffff</item>
         <item name="textOutlineColor">#ffffff</item>
+    </style>
+
+    <style name="btnCreate" parent="btnDefaultMainActivity">
+        <item name="android:backgroundTint">@color/charcoalGrey</item>
+        <item name="android:textColor">@color/emeraldGreen</item>
+    </style>
+    <style name="btnCreateWithHat" parent="btnCreate">
+        <item name="android:drawableLeft">@drawable/witch_hat</item>
+    </style>
+
+    <style name="btnJoin" parent="btnDefaultMainActivity">
+        <item name="android:backgroundTint">@color/silver</item>
+        <item name="android:textColor">@color/midnightBlue</item>
+    </style>
+    <style name="btnJoinWithStaff" parent="btnJoin">
+        <item name="android:backgroundTint">@color/silver</item>
+        <item name="android:drawableLeft">@drawable/staff</item>
+        <item name="android:textColor">@color/midnightBlue</item>
+    </style>
+
+
+    <style name="btnGoBack">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/silver</item>
+        <item name="android:backgroundTint">@color/rubyRed</item>
     </style>
 </resources>
