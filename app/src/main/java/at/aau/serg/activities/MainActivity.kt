@@ -2,6 +2,7 @@ package at.aau.serg.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,12 +12,15 @@ import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.Lobby
 import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.SocketHandler
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
@@ -58,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             if (responseBody != null) {
                 StoreToken(this).storeUUID(JSONObject(responseBody).getString("uuid"))
                 SocketHandler.connect(JSONObject(responseBody).getString("uuid"))
+                SocketHandler.on("recovery", ::recoverGameState)
                 return
             }
         }
@@ -161,4 +166,24 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun recoverGameState(socketResponse: Array<Any>) {
+        Log.d("Recovery", "Recovery called")
+        val data = (socketResponse[0] as JSONObject)
+        val status = data.getString("status")
+
+        if (status == "JOIN_LOBBY") {
+            val lobby = parseLobbyJson(data.getJSONObject("state"))
+
+            val intent = Intent(this, LobbyActivity::class.java)
+            intent.putExtra("lobbyCode", lobby.uuid)
+            startActivity(intent)
+        } else if (status == "PLAYING") {
+            // TODO: Recover playing state
+        }
+    }
+
+    fun parseLobbyJson(jsonObject: JSONObject): Lobby {
+        val gson = Gson()
+        return gson.fromJson(jsonObject.toString(), Lobby::class.java)
+    }
 }
