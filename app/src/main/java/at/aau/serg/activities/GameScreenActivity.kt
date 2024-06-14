@@ -19,13 +19,16 @@ import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
 import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
+import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
 import at.aau.serg.models.GameRecovery
 import at.aau.serg.models.LobbyPlayer
+import at.aau.serg.models.PlayedCard
 import at.aau.serg.models.Player
 import at.aau.serg.models.Score
+import at.aau.serg.models.SubRound
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
 import at.aau.serg.network.SocketHandler
@@ -77,20 +80,19 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         if (gameData != null) {
-            // Set cards
+            players = convertPlayersToLobbyPlayers(gameData.players.toTypedArray())
+
             myPlayerIndex = getPlayerIndex(gameData.players)
             gameScreenViewModel.setPosition(myPlayerIndex)
 
-            // TODO: Remove already played cards from deck
-            setCards(gameData.round.deck.hands[myPlayerIndex].toTypedArray())
+            val cards = removePlayedCard(gameData.round.deck.hands[myPlayerIndex], getAllPlayedCards(gameData.round.subrounds))
+            setCards(cards.toTypedArray())
             setupTrumpCard(gameData.round.deck.trump)
 
-            // Set rounds
             maxRounds = gameData.maxRounds
             initializeRoundCount(gameData.currentRound)
             playerCount = gameData.players.size
 
-            // Set score
             this.runOnUiThread {
                 val scores = gameData.playerScore.values.toTypedArray()
                 gameScreenViewModel.setScores(scores)
@@ -98,13 +100,17 @@ class GameScreenActivity : AppCompatActivity() {
 
             val alreadyPredicted = playerAlreadyPredicted(gameData.round.predictions, StoreToken(this).getUUID().toString())
             if (alreadyPredicted) {
-                setPlayerGameScreen()
+                getPlayerGameScreen(playerCount)?.let { newFragment ->
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerViewGame, newFragment)
+                        .runOnCommit {
+                            setPlayedCards(gameData.round.subrounds.last().cardsPlayed, gameData.players)
+                        }
+                        .commitAllowingStateLoss()
+                }
             }
 
-
-            // TODO: Check if I'm the current player
-
-            // TODO: Lay already played cards of the subround
+            isNextPlayer(players.indexOfFirst { player -> player.uuid == gameData.nextPlayer })
 
             return
         }
@@ -124,7 +130,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         myPlayerIndex = intent.getIntExtra("me", 0)
         playerCount = intent.getIntExtra("playerCount", 3)
-        maxRounds = intent.getIntExtra("maxRounds",20)
+        maxRounds = intent.getIntExtra("maxRounds", 20)
         gameScreenViewModel.setPosition(myPlayerIndex)
         initialCards?.let { setCards(it) }
 
@@ -134,6 +140,29 @@ class GameScreenActivity : AppCompatActivity() {
             val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
             trumpImageView.visibility = Visibilities.INVISIBLE.value
         }
+    }
+
+    private fun setPlayedCards(playedCards: List<PlayedCard>, players: List<Player>) {
+        Log.d("fragment", (supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame) is GameScreenThreePlayersFragment).toString())
+        playedCards.forEach { cardPlayed ->
+            val cardItem = cardPlayed.card
+            val player = cardPlayed.player
+            val playerIdx = players.indexOfFirst { playerS -> playerS.uuid == player.uuid }
+
+            val cardResourceId = getResourceId("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}")
+            val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx, myPlayerIndex, playerCount)
+            val playerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${positionOfPlayedCard}Card", "id", packageName))
+            setPlayerCard(playerCardImageView, cardResourceId)
+        }
+    }
+
+    private fun getAllPlayedCards(subrounds: List<SubRound>): List<PlayedCard> {
+        return subrounds.flatMap { it.cardsPlayed }
+    }
+
+    private fun removePlayedCard(cards: List<CardItem>, playedCards: List<PlayedCard>): List<CardItem> {
+        val playedCardItems = playedCards.map { it.card }
+        return cards.filter { it !in playedCardItems }
     }
 
     private fun playerAlreadyPredicted(predictions: Map<String, Int>, uuid: String): Boolean {
@@ -414,5 +443,11 @@ class GameScreenActivity : AppCompatActivity() {
     // Check if the player has any card of the required suit
     private fun hasCardOfSuit(cards: Array<CardItem>?, suit: Suit): Boolean {
         return cards?.any { it.suit == suit } ?: false
+    }
+
+    fun convertPlayersToLobbyPlayers(players: Array<Player>): Array<LobbyPlayer> {
+        return players.map { player ->
+            LobbyPlayer(uuid = player.uuid, name = player.username, isVisible = Visibilities.VISIBLE)
+        }.toTypedArray()
     }
 }
