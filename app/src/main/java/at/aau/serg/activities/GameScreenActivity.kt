@@ -68,7 +68,6 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         updateFragmentContainerView(TrickPredictionFragment())
-        initializeRoundCount()
         handleIntentData()
         setupSocketHandlers()
     }
@@ -110,6 +109,8 @@ class GameScreenActivity : AppCompatActivity() {
             val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
             trumpImageView.visibility = Visibilities.INVISIBLE.value
         }
+
+        initializeRoundCount()
     }
 
     private fun handleRecovery(gameData: GameRecovery) {
@@ -216,6 +217,7 @@ class GameScreenActivity : AppCompatActivity() {
 
     fun btnMenuClicked(view: View){
         removeSocketHandlers()
+
         startActivity(Intent(this, MainActivity::class.java))
     }
 

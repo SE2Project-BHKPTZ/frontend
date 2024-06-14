@@ -10,6 +10,10 @@ import java.net.URISyntaxException
 object SocketHandler {
     private lateinit var socket: Socket
     fun connect(uuid: String) {
+        if (::socket.isInitialized && socket.connected()) {
+            return
+        }
+
         try {
             val options: IO.Options = IO.Options()
             options.query = "uuid=$uuid"
