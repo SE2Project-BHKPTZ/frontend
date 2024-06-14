@@ -181,6 +181,7 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.off("lobby:userLeft")
         SocketHandler.off("lobby:userKick")
         SocketHandler.off("startGame")
+        SocketHandler.off("recovery")
 
         startActivity(intent)
     }

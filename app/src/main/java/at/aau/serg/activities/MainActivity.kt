@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
+import at.aau.serg.androidutils.GameUtils.parseGameDataJson
+import at.aau.serg.androidutils.GameUtils.parseLobbyJson
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
@@ -197,19 +199,5 @@ class MainActivity : AppCompatActivity() {
 
             startActivity(intent)
         }
-    }
-
-    fun parseLobbyJson(jsonObject: JSONObject): Lobby {
-        val gson = Gson()
-        return gson.fromJson(jsonObject.toString(), Lobby::class.java)
-    }
-
-    fun parseGameDataJson(jsonObject: JSONObject): GameRecovery {
-        val gson = GsonBuilder()
-            .registerTypeAdapter(CardItem::class.java, CardItemDeserializer())
-            .registerTypeAdapter(Score::class.java ,ScoreDeserializer())
-            .create()
-
-        return gson.fromJson(jsonObject.toString(), GameRecovery::class.java)
     }
 }
