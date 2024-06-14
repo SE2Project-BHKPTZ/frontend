@@ -88,13 +88,18 @@ class GameScreenActivity : AppCompatActivity() {
             // Set rounds
             maxRounds = gameData.maxRounds
             initializeRoundCount(gameData.currentRound)
+            playerCount = gameData.players.size
 
             // Set score
             this.runOnUiThread {
-                gameScreenViewModel.setScores(gameData.playerScore.values.toTypedArray())
+                val scores = gameData.playerScore.values.toTypedArray()
+                gameScreenViewModel.setScores(scores)
             }
 
-            // TODO: Check if a prediction has already been made -> Load game fragment
+            val alreadyPredicted = playerAlreadyPredicted(gameData.round.predictions, StoreToken(this).getUUID().toString())
+            if (alreadyPredicted) {
+                setPlayerGameScreen()
+            }
 
 
             // TODO: Check if I'm the current player
@@ -129,6 +134,10 @@ class GameScreenActivity : AppCompatActivity() {
             val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
             trumpImageView.visibility = Visibilities.INVISIBLE.value
         }
+    }
+
+    private fun playerAlreadyPredicted(predictions: Map<String, Int>, uuid: String): Boolean {
+        return predictions.containsKey(uuid)
     }
 
     private fun getPlayerIndex(players: List<Player>): Int {

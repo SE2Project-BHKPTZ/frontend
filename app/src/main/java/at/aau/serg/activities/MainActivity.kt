@@ -18,6 +18,7 @@ import at.aau.serg.models.Lobby
 import at.aau.serg.models.LobbyPlayer
 import at.aau.serg.models.Player
 import at.aau.serg.models.Score
+import at.aau.serg.models.ScoreDeserializer
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
@@ -206,6 +207,7 @@ class MainActivity : AppCompatActivity() {
     fun parseGameDataJson(jsonObject: JSONObject): GameRecovery {
         val gson = GsonBuilder()
             .registerTypeAdapter(CardItem::class.java, CardItemDeserializer())
+            .registerTypeAdapter(Score::class.java ,ScoreDeserializer())
             .create()
 
         return gson.fromJson(jsonObject.toString(), GameRecovery::class.java)
