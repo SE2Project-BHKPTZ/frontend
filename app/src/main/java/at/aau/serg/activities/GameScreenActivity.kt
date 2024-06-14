@@ -20,8 +20,11 @@ import at.aau.serg.androidutils.GameUtils.cardItemToJson
 import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
 import at.aau.serg.fragments.TrickPredictionFragment
+import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.GameRecovery
 import at.aau.serg.models.LobbyPlayer
+import at.aau.serg.models.Player
 import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
@@ -61,12 +64,46 @@ class GameScreenActivity : AppCompatActivity() {
         }
 
         updateFragmentContainerView(TrickPredictionFragment())
-        handleIntentData()
         initializeRoundCount()
+        handleIntentData()
         setupSocketHandlers()
     }
 
     private fun handleIntentData() {
+        val gameData: GameRecovery? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra("gameData", GameRecovery::class.java)
+        } else {
+            intent.getSerializableExtra("gameData") as? GameRecovery
+        }
+
+        if (gameData != null) {
+            // Set cards
+            myPlayerIndex = getPlayerIndex(gameData.players)
+            gameScreenViewModel.setPosition(myPlayerIndex)
+
+            // TODO: Remove already played cards from deck
+            setCards(gameData.round.deck.hands[myPlayerIndex].toTypedArray())
+            setupTrumpCard(gameData.round.deck.trump)
+
+            // Set rounds
+            maxRounds = gameData.maxRounds
+            initializeRoundCount(gameData.currentRound)
+
+            // Set score
+            this.runOnUiThread {
+                gameScreenViewModel.setScores(gameData.playerScore.values.toTypedArray())
+            }
+
+            // TODO: Check if a prediction has already been made -> Load game fragment
+
+
+            // TODO: Check if I'm the current player
+
+            // TODO: Lay already played cards of the subround
+
+            return
+        }
+
         val initialCards: Array<CardItem>?
         val initialTrumpCard: CardItem?
 
@@ -92,6 +129,11 @@ class GameScreenActivity : AppCompatActivity() {
             val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
             trumpImageView.visibility = Visibilities.INVISIBLE.value
         }
+    }
+
+    private fun getPlayerIndex(players: List<Player>): Int {
+        val uuid: String = StoreToken(this).getUUID().toString()
+        return players.indexOfFirst { player -> player.uuid == uuid}
     }
 
     private fun setupTrumpCard(card: CardItem) {
@@ -267,10 +309,10 @@ class GameScreenActivity : AppCompatActivity() {
         increaseRoundCount()
     }
 
-    private fun initializeRoundCount() {
+    private fun initializeRoundCount(num: Int = 1) {
         this.runOnUiThread {
-            trickViewModel.setRound(1)
-            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, 1, maxRounds)
+            trickViewModel.setRound(num)
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, num, maxRounds)
         }
     }
 

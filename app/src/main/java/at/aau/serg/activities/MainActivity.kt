@@ -12,14 +12,19 @@ import at.aau.serg.R
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.CardItemDeserializer
+import at.aau.serg.models.GameRecovery
 import at.aau.serg.models.Lobby
 import at.aau.serg.models.LobbyPlayer
+import at.aau.serg.models.Player
 import at.aau.serg.models.Score
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.SocketHandler
+import at.aau.serg.utils.CardsConverter
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import okhttp3.Response
 import org.json.JSONException
@@ -171,6 +176,8 @@ class MainActivity : AppCompatActivity() {
         val data = (socketResponse[0] as JSONObject)
         val status = data.getString("status")
 
+        SocketHandler.off("recovery")
+
         if (status == "JOIN_LOBBY") {
             val lobby = parseLobbyJson(data.getJSONObject("state"))
 
@@ -178,12 +185,29 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("lobbyCode", lobby.uuid)
             startActivity(intent)
         } else if (status == "PLAYING") {
-            // TODO: Recover playing state
+            Log.d("recovery", data.toString())
+
+            val gameData = parseGameDataJson(data.getJSONObject("state"))
+            Log.d("gamedata", gameData.toString())
+
+            val intent = Intent(baseContext, GameScreenActivity::class.java).apply {
+                putExtra("gameData", gameData)
+            }
+
+            startActivity(intent)
         }
     }
 
     fun parseLobbyJson(jsonObject: JSONObject): Lobby {
         val gson = Gson()
         return gson.fromJson(jsonObject.toString(), Lobby::class.java)
+    }
+
+    fun parseGameDataJson(jsonObject: JSONObject): GameRecovery {
+        val gson = GsonBuilder()
+            .registerTypeAdapter(CardItem::class.java, CardItemDeserializer())
+            .create()
+
+        return gson.fromJson(jsonObject.toString(), GameRecovery::class.java)
     }
 }
