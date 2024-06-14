@@ -64,20 +64,23 @@ class JoinLobbyActivity : AppCompatActivity() {
         if (response.isSuccessful) {
             val responseBody = response.body?.string()
             if (responseBody != null) {
-                val openLobbies = Array(JSONArray(responseBody).length()) {
-                    JSONArray(responseBody)[it]
+                val jsonArray = JSONArray(responseBody)
+                val openLobbies = mutableListOf<JSONObject>()
+                for (i in 0 until jsonArray.length()) {
+                    val lobby = jsonArray.getJSONObject(i)
+                    if (lobby.getJSONArray("players").length() < lobby.getInt("maxPlayers") &&
+                        lobby.getString("status") == LobbyStatus.CREATED.status) {
+                        openLobbies.add(lobby)
+                    }
                 }
-                for ((index, lobby) in openLobbies.withIndex()) {
-                    Log.d("LO", lobby.toString())
-                    val jsonLobby = JSONObject(lobby.toString())
-                    if(jsonLobby.getJSONArray("players").length() == jsonLobby.getInt("maxPlayers") ) continue
-                    if (jsonLobby.getString("status") != LobbyStatus.CREATED.status) continue
+                lobbies.clear()
+                for (lobby in openLobbies) {
                     lobbies.add(
-                        index, JoinLobbyLobby(
-                            jsonLobby.getString("name"),
-                            jsonLobby.getJSONArray("players").length(),
-                            jsonLobby.getInt("maxPlayers"),
-                            jsonLobby.getString("lobbyid")
+                        JoinLobbyLobby(
+                            lobby.getString("name"),
+                            lobby.getJSONArray("players").length(),
+                            lobby.getInt("maxPlayers"),
+                            lobby.getString("lobbyid")
                         )
                     )
                 }
