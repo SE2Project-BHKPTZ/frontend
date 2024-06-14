@@ -188,6 +188,9 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("nextPlayer", ::nextPlayer)
         SocketHandler.on("score", ::updateScores)
         SocketHandler.on("endGame", ::endGame)
+        SocketHandler.on("lobby:disconnect", ::userDisconnected)
+        SocketHandler.on("lobby:reconnect", ::userReconnected)
+        SocketHandler.on("lobby:closed", ::lobbyClosed)
     }
 
     private fun removeSocketHandlers() {
@@ -197,6 +200,10 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.off("nextPlayer")
         SocketHandler.off("score")
         SocketHandler.off("endGame")
+        SocketHandler.off("userDisconnected")
+        SocketHandler.off("lobby:disconnect")
+        SocketHandler.off("lobby:reconnect")
+        SocketHandler.off("lobby:closed")
     }
 
     fun btnMenuClicked(view: View){
@@ -422,6 +429,23 @@ class GameScreenActivity : AppCompatActivity() {
             putExtra("players", players)
         }
         startActivity(intent)
+    }
+
+    private fun userDisconnected(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received user disconnected event")
+        showToast(this, "User disconnected. Waiting for reconnect!")
+    }
+
+    private fun userReconnected(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received user reconnected event")
+        showToast(this, "User reconnected. Game can go on!")
+    }
+
+    private fun lobbyClosed(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received user lobby closed")
+        showToast(this, "User didn't reconnect in the grace period. Lobby will be closed")
+
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     private fun isCardPlayable(cardItem: CardItem): Boolean {
