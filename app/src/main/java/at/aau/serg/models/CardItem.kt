@@ -18,7 +18,7 @@ class CardItemDeserializer : JsonDeserializer<CardItem> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): CardItem {
         val jsonObject = json?.asJsonObject
         val value = jsonObject?.get("value")?.asString ?: ""
-        val suit = jsonObject?.get("suit")?.asString?.uppercase() ?: ""
+        val suit = jsonObject?.get("suit")?.asString?.uppercase() ?: "NOSUIT"
         return CardItem(value, Suit.valueOf(suit))
     }
 }

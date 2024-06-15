@@ -208,7 +208,6 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.off("nextPlayer")
         SocketHandler.off("score")
         SocketHandler.off("endGame")
-        SocketHandler.off("userDisconnected")
         SocketHandler.off("lobby:disconnect")
         SocketHandler.off("lobby:reconnect")
         SocketHandler.off("lobby:closed")

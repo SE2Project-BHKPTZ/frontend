@@ -67,7 +67,6 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.on("lobby:userLeft", ::userLeft)
         SocketHandler.on("lobby:userKick", ::userKick)
         SocketHandler.on("startGame", ::startGame)
-        SocketHandler.on("recovery", ::recoverGameState)
     }
 
     private fun onSuccessGetLobby(response: Response) {
@@ -137,12 +136,6 @@ class LobbyActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
     }
 
-    private fun recoverGameState(socketResponse: Array<Any>) {
-        Log.d("Recovery", "Recovery called")
-        val data = (socketResponse[0] as JSONObject)
-        Log.d("Recovery", data.toString())
-    }
-
     fun btnLeaveClicked(view: View) {
         HttpClient.get(
             "/lobbys/leave",
@@ -181,7 +174,6 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.off("lobby:userLeft")
         SocketHandler.off("lobby:userKick")
         SocketHandler.off("startGame")
-        SocketHandler.off("recovery")
 
         startActivity(intent)
     }

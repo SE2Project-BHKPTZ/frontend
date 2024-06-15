@@ -188,8 +188,6 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("lobbyCode", lobby.uuid)
             startActivity(intent)
         } else if (status == "PLAYING") {
-            Log.d("recovery", data.toString())
-
             val gameData = parseGameDataJson(data.getJSONObject("state"))
             Log.d("gamedata", gameData.toString())
 
