@@ -16,13 +16,20 @@ import androidx.fragment.app.Fragment
 import at.aau.serg.R
 import at.aau.serg.androidutils.CardUtils.getResourceId
 import at.aau.serg.androidutils.ErrorUtils.showToast
+import at.aau.serg.androidutils.GameUtils
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
 import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
+import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
+import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.GameRecovery
 import at.aau.serg.models.LobbyPlayer
+import at.aau.serg.models.PlayedCard
+import at.aau.serg.models.Player
 import at.aau.serg.models.Score
+import at.aau.serg.models.SubRound
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
 import at.aau.serg.network.SocketHandler
@@ -62,11 +69,21 @@ class GameScreenActivity : AppCompatActivity() {
 
         updateFragmentContainerView(TrickPredictionFragment())
         handleIntentData()
-        initializeRoundCount()
         setupSocketHandlers()
     }
 
     private fun handleIntentData() {
+        val gameData: GameRecovery? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra("gameData", GameRecovery::class.java)
+        } else {
+            intent.getSerializableExtra("gameData") as? GameRecovery
+        }
+
+        if (gameData != null) {
+            handleRecovery(gameData)
+            return
+        }
+
         val initialCards: Array<CardItem>?
         val initialTrumpCard: CardItem?
 
@@ -82,7 +99,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         myPlayerIndex = intent.getIntExtra("me", 0)
         playerCount = intent.getIntExtra("playerCount", 3)
-        maxRounds = intent.getIntExtra("maxRounds",20)
+        maxRounds = intent.getIntExtra("maxRounds", 20)
         gameScreenViewModel.setPosition(myPlayerIndex)
         initialCards?.let { setCards(it) }
 
@@ -92,6 +109,76 @@ class GameScreenActivity : AppCompatActivity() {
             val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
             trumpImageView.visibility = Visibilities.INVISIBLE.value
         }
+
+        initializeRoundCount()
+    }
+
+    private fun handleRecovery(gameData: GameRecovery) {
+        players = convertPlayersToLobbyPlayers(gameData.players.toTypedArray())
+
+        myPlayerIndex = getPlayerIndex(gameData.players)
+        this.runOnUiThread {
+            gameScreenViewModel.setPosition(myPlayerIndex)
+        }
+
+        val cards = removePlayedCard(gameData.round.deck.hands[myPlayerIndex], getAllPlayedCards(gameData.round.subrounds))
+        setCards(cards.toTypedArray())
+        setupTrumpCard(gameData.round.deck.trump)
+
+        maxRounds = gameData.maxRounds
+        initializeRoundCount(gameData.currentRound)
+        playerCount = gameData.players.size
+
+        this.runOnUiThread {
+            val scores = gameData.playerScore.values.toTypedArray()
+            gameScreenViewModel.setScores(scores)
+        }
+
+        val alreadyPredicted = playerAlreadyPredicted(gameData.round.predictions, StoreToken(this).getUUID().toString())
+        if (alreadyPredicted) {
+            getPlayerGameScreen(playerCount)?.let { newFragment ->
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerViewGame, newFragment)
+                    .runOnCommit {
+                        setPlayedCards(gameData.round.subrounds.last().cardsPlayed, gameData.players)
+                    }
+                    .commitAllowingStateLoss()
+            }
+        }
+
+        isNextPlayer(players.indexOfFirst { player -> player.uuid == gameData.nextPlayer })
+    }
+
+    private fun setPlayedCards(playedCards: List<PlayedCard>, players: List<Player>) {
+        Log.d("fragment", (supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame) is GameScreenThreePlayersFragment).toString())
+        playedCards.forEach { cardPlayed ->
+            val cardItem = cardPlayed.card
+            val player = cardPlayed.player
+            val playerIdx = players.indexOfFirst { playerS -> playerS.uuid == player.uuid }
+
+            val cardResourceId = getResourceId("card_${cardItem.suit.toString().lowercase()}_${cardItem.value}")
+            val positionOfPlayedCard = calculatePositionOfPlayer(playerIdx, myPlayerIndex, playerCount)
+            val playerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${positionOfPlayedCard}Card", "id", packageName))
+            setPlayerCard(playerCardImageView, cardResourceId)
+        }
+    }
+
+    private fun getAllPlayedCards(subrounds: List<SubRound>): List<PlayedCard> {
+        return subrounds.flatMap { it.cardsPlayed }
+    }
+
+    private fun removePlayedCard(cards: List<CardItem>, playedCards: List<PlayedCard>): List<CardItem> {
+        val playedCardItems = playedCards.map { it.card }
+        return cards.filter { it !in playedCardItems }
+    }
+
+    private fun playerAlreadyPredicted(predictions: Map<String, Int>, uuid: String): Boolean {
+        return predictions.containsKey(uuid)
+    }
+
+    private fun getPlayerIndex(players: List<Player>): Int {
+        val uuid: String = StoreToken(this).getUUID().toString()
+        return players.indexOfFirst { player -> player.uuid == uuid}
     }
 
     private fun setupTrumpCard(card: CardItem) {
@@ -108,6 +195,10 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.on("nextPlayer", ::nextPlayer)
         SocketHandler.on("score", ::updateScores)
         SocketHandler.on("endGame", ::endGame)
+        SocketHandler.on("lobby:disconnect", ::userDisconnected)
+        SocketHandler.on("lobby:reconnect", ::userReconnected)
+        SocketHandler.on("lobby:closed", ::lobbyClosed)
+        SocketHandler.on("recovery", ::recoveryEvent)
     }
 
     private fun removeSocketHandlers() {
@@ -117,9 +208,15 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.off("nextPlayer")
         SocketHandler.off("score")
         SocketHandler.off("endGame")
+        SocketHandler.off("lobby:disconnect")
+        SocketHandler.off("lobby:reconnect")
+        SocketHandler.off("lobby:closed")
+        SocketHandler.off("recovery")
     }
 
     fun btnMenuClicked(view: View){
+        removeSocketHandlers()
+
         startActivity(Intent(this, MainActivity::class.java))
     }
 
@@ -267,10 +364,10 @@ class GameScreenActivity : AppCompatActivity() {
         increaseRoundCount()
     }
 
-    private fun initializeRoundCount() {
+    private fun initializeRoundCount(num: Int = 1) {
         this.runOnUiThread {
-            trickViewModel.setRound(1)
-            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, 1, maxRounds)
+            trickViewModel.setRound(num)
+            findViewById<TextView>(R.id.tvRoundCount).text = getString(R.string.gameRoundPlaceholder, num, maxRounds)
         }
     }
 
@@ -344,6 +441,32 @@ class GameScreenActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun userDisconnected(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received user disconnected event")
+        showToast(this, "User disconnected. Waiting for reconnect!")
+    }
+
+    private fun userReconnected(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received user reconnected event")
+        showToast(this, "User reconnected. Game can go on!")
+    }
+
+    private fun lobbyClosed(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received user lobby closed event")
+        showToast(this, "User didn't reconnect in the grace period. Lobby will be closed")
+
+        removeSocketHandlers()
+        startActivity(Intent(this, MainActivity::class.java))
+    }
+
+    private fun recoveryEvent(socketResponse: Array<Any>) {
+        Log.d("Socket", "Received recovery event")
+        val data = (socketResponse[0] as JSONObject)
+
+        val gameData = GameUtils.parseGameDataJson(data.getJSONObject("state"))
+        handleRecovery(gameData)
+    }
+
     private fun isCardPlayable(cardItem: CardItem): Boolean {
         if(firstPlayedCard == null) return true
 
@@ -363,5 +486,11 @@ class GameScreenActivity : AppCompatActivity() {
     // Check if the player has any card of the required suit
     private fun hasCardOfSuit(cards: Array<CardItem>?, suit: Suit): Boolean {
         return cards?.any { it.suit == suit } ?: false
+    }
+
+    fun convertPlayersToLobbyPlayers(players: Array<Player>): Array<LobbyPlayer> {
+        return players.map { player ->
+            LobbyPlayer(uuid = player.uuid, name = player.username, isVisible = Visibilities.VISIBLE)
+        }.toTypedArray()
     }
 }

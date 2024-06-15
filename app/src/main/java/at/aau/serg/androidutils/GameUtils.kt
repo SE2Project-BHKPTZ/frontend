@@ -10,9 +10,15 @@ import at.aau.serg.fragments.GameScreenFourPlayersFragment
 import at.aau.serg.fragments.GameScreenSixPlayersFragment
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.models.CardItem
+import at.aau.serg.models.CardItemDeserializer
+import at.aau.serg.models.GameRecovery
+import at.aau.serg.models.Lobby
 import at.aau.serg.models.Score
+import at.aau.serg.models.ScoreDeserializer
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
 import at.aau.serg.viewmodels.GameScreenViewModel
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.json.JSONObject
 
 object GameUtils {
@@ -63,5 +69,19 @@ object GameUtils {
             }
             else -> null
         }
+    }
+
+    fun parseLobbyJson(jsonObject: JSONObject): Lobby {
+        val gson = Gson()
+        return gson.fromJson(jsonObject.toString(), Lobby::class.java)
+    }
+
+    fun parseGameDataJson(jsonObject: JSONObject): GameRecovery {
+        val gson = GsonBuilder()
+            .registerTypeAdapter(CardItem::class.java, CardItemDeserializer())
+            .registerTypeAdapter(Score::class.java , ScoreDeserializer())
+            .create()
+
+        return gson.fromJson(jsonObject.toString(), GameRecovery::class.java)
     }
 }

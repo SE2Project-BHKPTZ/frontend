@@ -2,12 +2,15 @@ package at.aau.serg.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import at.aau.serg.R
+import at.aau.serg.androidutils.GameUtils.parseGameDataJson
+import at.aau.serg.androidutils.GameUtils.parseLobbyJson
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
@@ -58,6 +61,7 @@ class MainActivity : AppCompatActivity() {
             if (responseBody != null) {
                 StoreToken(this).storeUUID(JSONObject(responseBody).getString("uuid"))
                 SocketHandler.connect(JSONObject(responseBody).getString("uuid"))
+                SocketHandler.on("recovery", ::recoverGameState)
                 return
             }
         }
@@ -161,4 +165,28 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun recoverGameState(socketResponse: Array<Any>) {
+        Log.d("Recovery", "Recovery called")
+        val data = (socketResponse[0] as JSONObject)
+        val status = data.getString("status")
+
+        SocketHandler.off("recovery")
+
+        if (status == "JOIN_LOBBY") {
+            val lobby = parseLobbyJson(data.getJSONObject("state"))
+
+            val intent = Intent(this, LobbyActivity::class.java)
+            intent.putExtra("lobbyCode", lobby.uuid)
+            startActivity(intent)
+        } else if (status == "PLAYING") {
+            val gameData = parseGameDataJson(data.getJSONObject("state"))
+            Log.d("gamedata", gameData.toString())
+
+            val intent = Intent(baseContext, GameScreenActivity::class.java).apply {
+                putExtra("gameData", gameData)
+            }
+
+            startActivity(intent)
+        }
+    }
 }
