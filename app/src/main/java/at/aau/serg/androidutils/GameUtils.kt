@@ -1,6 +1,9 @@
 package at.aau.serg.androidutils
 
 import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -20,6 +23,7 @@ import at.aau.serg.viewmodels.GameScreenViewModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.json.JSONObject
+import java.io.Serializable
 
 object GameUtils {
     fun updateScores(
@@ -83,5 +87,15 @@ object GameUtils {
             .create()
 
         return gson.fromJson(jsonObject.toString(), GameRecovery::class.java)
+    }
+
+    inline fun <reified T : java.io.Serializable> Bundle.serializable(key: String): T? = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializable(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getSerializable(key) as? T
+    }
+
+    inline fun <reified T : Serializable> Intent.serializable(key: String): T? = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
     }
 }

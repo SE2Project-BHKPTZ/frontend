@@ -98,6 +98,7 @@ class JoinLobbyActivity : AppCompatActivity() {
         createJoinLobbyPrompt(null)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun createJoinLobbyPrompt(response: Response?) {
         if (lobbyToJoin.lobbyID != "") {
             joinLobby(lobbyToJoin)
@@ -130,6 +131,7 @@ class JoinLobbyActivity : AppCompatActivity() {
         )
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onFailureLobby(e: IOException) {
         showToast(this, "Lobby functionality failed")
     }

@@ -88,6 +88,7 @@ class LobbyActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onFailure(e: IOException) {
         this.startActivity(Intent(this, MainActivity::class.java))
     }
@@ -131,6 +132,7 @@ class LobbyActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun userKick(socketResponse: Array<Any>) {
         showToast(this, "You are kicked from the lobby")
         startActivity(Intent(this, MainActivity::class.java))
@@ -148,10 +150,12 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.emit("startGame", "")
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun leftLobby(response: Response) {
         startActivity(Intent(this, MainActivity::class.java))
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onFailureLeaveLobby(e: IOException) {
         showToast(this, "Error leaving lobby")
     }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import at.aau.serg.R
 import okhttp3.Response
 import org.json.JSONObject
 

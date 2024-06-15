@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         startLoginActivity()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun startLoginOnFailure(e: IOException) {
         startLoginActivity()
     }
