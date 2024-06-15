@@ -69,6 +69,14 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.on("startGame", ::startGame)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        SocketHandler.off("lobby:userJoined")
+        SocketHandler.off("lobby:userLeft")
+        SocketHandler.off("lobby:userKick")
+        SocketHandler.off("startGame")
+    }
+
     private fun onSuccessGetLobby(response: Response) {
         if (response.isSuccessful) {
             response.body?.string()?.let { responseBody ->
@@ -173,11 +181,6 @@ class LobbyActivity : AppCompatActivity() {
             putExtra("me", getPlayerIndex())
             putExtra("players", lobbyPlayers)
         }
-
-        SocketHandler.off("lobby:userJoined")
-        SocketHandler.off("lobby:userLeft")
-        SocketHandler.off("lobby:userKick")
-        SocketHandler.off("startGame")
 
         startActivity(intent)
     }

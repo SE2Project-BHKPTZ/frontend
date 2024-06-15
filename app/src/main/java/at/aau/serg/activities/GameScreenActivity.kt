@@ -71,6 +71,11 @@ class GameScreenActivity : AppCompatActivity() {
         setupSocketHandlers()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        removeSocketHandlers()
+    }
+
     private fun handleIntentData() {
         val gameData: GameRecovery? = intent.serializable("gameData")
 
@@ -201,8 +206,6 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     fun btnMenuClicked(view: View){
-        removeSocketHandlers()
-
         startActivity(Intent(this, MainActivity::class.java))
     }
 
@@ -418,8 +421,6 @@ class GameScreenActivity : AppCompatActivity() {
             scoresMap[it] = Score(value.getString("score"), value.getInt("index"))
         }
 
-        removeSocketHandlers()
-
         val intent = Intent(this, ResultActivity::class.java).apply {
             putExtra("scores", scoresMap)
             putExtra("players", players)
@@ -444,7 +445,6 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Socket", "Received user lobby closed event")
         showToast(this, "User didn't reconnect in the grace period. Lobby will be closed")
 
-        removeSocketHandlers()
         startActivity(Intent(this, MainActivity::class.java))
     }
 
