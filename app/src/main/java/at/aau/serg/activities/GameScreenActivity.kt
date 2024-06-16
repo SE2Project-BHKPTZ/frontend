@@ -114,7 +114,13 @@ class GameScreenActivity : AppCompatActivity() {
 
         val cards = removePlayedCard(gameData.round.deck.hands[myPlayerIndex], getAllPlayedCards(gameData.round.subrounds))
         setCards(cards.toTypedArray())
-        setupTrumpCard(gameData.round.deck.trump)
+        if(gameData.round.deck.trump != null){
+            setupTrumpCard(gameData.round.deck.trump)
+        }else {
+            val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
+            trumpImageView.visibility = Visibilities.INVISIBLE.value
+        }
+
 
         maxRounds = gameData.maxRounds
         initializeRoundCount(gameData.currentRound)
