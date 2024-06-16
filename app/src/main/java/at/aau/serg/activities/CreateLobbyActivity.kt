@@ -1,6 +1,5 @@
 package at.aau.serg.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -82,10 +81,11 @@ class CreateLobbyActivity : AppCompatActivity() {
         cLobby(null)
     }
 
+
+    @Suppress("UNUSED_PARAMETER")
     private fun cLobby(response: Response?) {
         val lobbyName = findViewById<EditText>(R.id.inputName).text.toString()
         val lobbyIsPublic = findViewById<CheckBox>(R.id.checkBoxIsPublic).isChecked
-
 
         if (lobbyName.isEmpty()) {
             showToast(this, "Name cannot be empty")

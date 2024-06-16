@@ -22,14 +22,8 @@ import okhttp3.Response
 import java.io.IOException
 
 
-class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
+class LobbyPlayerAdapter(private val context: ContextWrapper, private val listdata: Array<LobbyPlayer>) :
     RecyclerView.Adapter<LobbyPlayerAdapter.ViewHolder>() {
-    private val listdata: Array<LobbyPlayer>
-    private val context:ContextWrapper
-    init {
-        this.listdata = listdata
-        this.context = context
-    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -64,6 +58,7 @@ class LobbyPlayerAdapter(context: ContextWrapper,listdata: Array<LobbyPlayer>) :
         Log.d("LobbyPlayerAdapter",responseBody)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onKickFailure(e: IOException) {
         showToast(context, "Error kicking player")
     }

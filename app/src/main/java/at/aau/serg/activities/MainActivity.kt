@@ -55,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        SocketHandler.off("recovery")
+    }
+
     private fun connectSocket(response: Response) {
         if (response.isSuccessful) {
             val responseBody = response.body?.string()
@@ -68,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         startLoginActivity()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun startLoginOnFailure(e: IOException) {
         startLoginActivity()
     }
@@ -169,8 +175,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("Recovery", "Recovery called")
         val data = (socketResponse[0] as JSONObject)
         val status = data.getString("status")
-
-        SocketHandler.off("recovery")
 
         if (status == "JOIN_LOBBY") {
             val lobby = parseLobbyJson(data.getJSONObject("state"))

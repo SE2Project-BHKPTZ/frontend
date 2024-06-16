@@ -54,6 +54,7 @@ class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<Joi
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun joinLobby(response: Response?) {
         HttpClient.post(
             "/lobbys/join",
@@ -63,6 +64,7 @@ class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<Joi
         )
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onFailureLobby(e: IOException) {
             showToast(context, "Lobby functionality failed")
     }

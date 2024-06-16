@@ -1,7 +1,6 @@
 package at.aau.serg.activities
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,8 +17,8 @@ import at.aau.serg.androidutils.CardUtils.getResourceId
 import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.androidutils.GameUtils
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
-import at.aau.serg.androidutils.GameUtils.convertSerializableToArray
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
+import at.aau.serg.androidutils.GameUtils.serializable
 import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.logic.StoreToken
@@ -72,30 +71,22 @@ class GameScreenActivity : AppCompatActivity() {
         setupSocketHandlers()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        removeSocketHandlers()
+    }
+
     private fun handleIntentData() {
-        val gameData: GameRecovery? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra("gameData", GameRecovery::class.java)
-        } else {
-            intent.getSerializableExtra("gameData") as? GameRecovery
-        }
+        val gameData: GameRecovery? = intent.serializable("gameData")
 
         if (gameData != null) {
             handleRecovery(gameData)
             return
         }
 
-        val initialCards: Array<CardItem>?
-        val initialTrumpCard: CardItem?
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            initialCards = intent.getSerializableExtra("cards", Array<CardItem>::class.java)
-            initialTrumpCard = intent.getSerializableExtra("trump", CardItem::class.java)
-            players = intent.getSerializableExtra("players", Array<LobbyPlayer>::class.java) ?: emptyArray()
-        } else {
-            initialCards = convertSerializableToArray(intent.getSerializableExtra("cards"))
-            initialTrumpCard = intent.getSerializableExtra("trump") as? CardItem
-            players = convertSerializableToArray(intent.getSerializableExtra("players")) ?: emptyArray()
-        }
+        val initialCards: Array<CardItem>?  = intent.serializable("cards")
+        val initialTrumpCard: CardItem? = intent.serializable("trump")
+        players = intent.serializable<Array<LobbyPlayer>>("players") ?: emptyArray()
 
         myPlayerIndex = intent.getIntExtra("me", 0)
         playerCount = intent.getIntExtra("playerCount", 3)
@@ -215,8 +206,6 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     fun btnMenuClicked(view: View){
-        removeSocketHandlers()
-
         startActivity(Intent(this, MainActivity::class.java))
     }
 
@@ -432,8 +421,6 @@ class GameScreenActivity : AppCompatActivity() {
             scoresMap[it] = Score(value.getString("score"), value.getInt("index"))
         }
 
-        removeSocketHandlers()
-
         val intent = Intent(this, ResultActivity::class.java).apply {
             putExtra("scores", scoresMap)
             putExtra("players", players)
@@ -441,21 +428,23 @@ class GameScreenActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun userDisconnected(socketResponse: Array<Any>) {
         Log.d("Socket", "Received user disconnected event")
         showToast(this, "User disconnected. Waiting for reconnect!")
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun userReconnected(socketResponse: Array<Any>) {
         Log.d("Socket", "Received user reconnected event")
         showToast(this, "User reconnected. Game can go on!")
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun lobbyClosed(socketResponse: Array<Any>) {
         Log.d("Socket", "Received user lobby closed event")
         showToast(this, "User didn't reconnect in the grace period. Lobby will be closed")
 
-        removeSocketHandlers()
         startActivity(Intent(this, MainActivity::class.java))
     }
 
