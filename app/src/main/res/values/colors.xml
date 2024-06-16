@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--Color ideas by ChatGPT (GPT-4o)-->
+    <color name="deepPurple">#4B0082</color>
+    <color name="midnightBlue">#191970</color>
+    <color name="gold">#FFD700</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="emeraldGreen">#50C878</color>
+    <color name="rubyRed">#9B111E</color>
+    <color name="charcoalGrey">#36454F</color>
 </resources>

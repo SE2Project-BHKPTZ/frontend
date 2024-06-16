@@ -30,6 +30,7 @@
             android:valueFrom="0"
             android:valueTo="20"
             android:stepSize="1"
+            style="@style/slider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvPredictionInfo" />
@@ -60,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/gameConfirm"
+            style="@style/btnSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvPredictionScore" />

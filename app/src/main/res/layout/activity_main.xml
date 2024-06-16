@@ -8,76 +8,59 @@
     tools:context=".activities.MainActivity">
 
     <TextView
-        android:id="@+id/tvHello"
+        android:id="@+id/tvWizard"
+        style="@style/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.178" />
-
-    <Button
-        android:id="@+id/btnGoToLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="46dp"
-        android:onClick="btnGoToLoginClicked"
-        android:text="@string/login"
+        android:layout_marginTop="64dp"
+        android:text="@string/appName"
+        android:textColor="@color/gold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHello" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <Button
-        android:id="@+id/tmpBtnCLobby"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/theCardGame"
+        android:textColor="@color/gold"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvWizard" />
+
+    <Button
+        android:id="@+id/btnCLobby"
+        style="@style/btnPrimaryWithHat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:onClick="btnCLobbyClicked"
         android:text="@string/createLobby"
+        app:layout_constraintBottom_toTopOf="@+id/btnJLobby"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoToLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/tvWizard"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/tmpBtnJLobby"
+        android:id="@+id/btnJLobby"
+        style="@style/btnSecondaryWithStaff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="32dp"
         android:onClick="btnJLobbyClicked"
         android:text="@string/joinLobby"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoToLogin" />
-
-    <Button
-        android:id="@+id/tmpBtnGoToGameScreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
-        android:onClick="openGameActivity"
-        android:text="@string/tmpGameActivity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoToLogin" />
-
-    <Button
-        android:id="@+id/tmpBtnGoToResultScreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="openResultActivity"
-        android:text="@string/tmp_result_activity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tmpBtnGoToGameScreen" />
-
+        app:layout_constraintTop_toBottomOf="@+id/btnCLobby" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
