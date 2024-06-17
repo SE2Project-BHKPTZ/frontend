@@ -107,6 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivPlayer1Card"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
@@ -121,6 +122,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginBottom="-16dp"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivPlayer2Card"
             app:layout_constraintEnd_toStartOf="@+id/ivGameScreenCenter"
             app:layout_constraintStart_toEndOf="@+id/ivPlayer2Card" />
@@ -132,6 +134,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginBottom="-32dp"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivGameScreenCenter"
             app:layout_constraintEnd_toStartOf="@+id/ivGameScreenCenter"
             app:layout_constraintStart_toEndOf="@+id/ivPlayer3Card" />
@@ -141,6 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivGameScreenCenter"
             app:layout_constraintEnd_toStartOf="@+id/ivPlayer5Card"
             app:layout_constraintStart_toEndOf="@+id/ivPlayer3Card"
@@ -153,6 +157,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="-32dp"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivGameScreenCenter"
             app:layout_constraintEnd_toStartOf="@+id/ivPlayer5Card"
             app:layout_constraintStart_toEndOf="@+id/ivGameScreenCenter" />
@@ -164,6 +169,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="-16dp"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivPlayer6Card"
             app:layout_constraintEnd_toStartOf="@+id/ivPlayer6Card"
             app:layout_constraintStart_toEndOf="@+id/ivGameScreenCenter" />

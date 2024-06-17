@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="137dp"
         android:text="@string/username"
+        style="@style/textView"
         app:layout_constraintStart_toStartOf="@+id/editTextUsername"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
         android:text="@string/password"
+        style="@style/textView"
         app:layout_constraintStart_toStartOf="@+id/editTextPassword"
         app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
 
@@ -77,6 +79,7 @@
         android:textAlignment="center"
         android:onClick="tvNoAccountYetClicked"
         android:textSize="25sp"
+        style="@style/textView"
         app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -90,7 +93,7 @@
         android:layout_marginBottom="100dp"
         android:text="@string/login"
         android:onClick="btnLoginClicked"
-        style="@style/btnRegisterLoginActivity"
+        style="@style/btnSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

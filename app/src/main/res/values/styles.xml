@@ -3,19 +3,24 @@
     <style name="headline">
         <item name="android:textSize">80sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/light_gray</item>
     </style>
 
     <style name="btnRegisterLoginActivity">
         <item name="android:textSize">30sp</item>
-        <item name="android:textColor">@color/emeraldGreen</item>
+        <item name="android:textColor">@color/primary_purple</item>
         <item name="textOutlineColor">#ffffff</item>
-        <item name="android:backgroundTint">@color/charcoalGrey</item>
+        <item name="android:backgroundTint">@color/deep_purple</item>
     </style>
 
     <style name="EditTextView">
-        <item name="android:textColor">@color/gold</item>
-        <item name="android:textColorHint">@color/silver</item>
-        <item name="android:backgroundTint">@color/deepPurple</item>
+        <item name="android:textColor">@color/light_gray</item>
+        <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:backgroundTint">@color/dark_navy</item>
+    </style>
+
+    <style name="textView">
+        <item name="android:textColor">@color/light_gray</item>
     </style>
 
     <style name="btnDefaultMainActivity">
@@ -25,33 +30,35 @@
     </style>
 
     <style name="btnPrimary" parent="btnDefaultMainActivity">
-        <item name="android:backgroundTint">@color/charcoalGrey</item>
-        <item name="android:textColor">@color/emeraldGreen</item>
+        <item name="android:backgroundTint">@color/primary_purple</item>
+        <item name="android:textColor">@color/white</item>
     </style>
+
     <style name="btnPrimaryWithHat" parent="btnPrimary">
         <item name="android:drawableLeft">@drawable/witch_hat</item>
     </style>
 
     <style name="btnSecondary" parent="btnDefaultMainActivity">
-        <item name="android:backgroundTint">@color/silver</item>
-        <item name="android:textColor">@color/midnightBlue</item>
+        <item name="android:backgroundTint">@color/light_gray</item>
+        <item name="android:textColor">@color/dark_navy</item>
     </style>
+
     <style name="btnSecondaryWithStaff" parent="btnSecondary">
-        <item name="android:backgroundTint">@color/silver</item>
+        <item name="android:backgroundTint">@color/light_gray</item>
         <item name="android:drawableLeft">@drawable/staff</item>
-        <item name="android:textColor">@color/midnightBlue</item>
+        <item name="android:textColor">@color/dark_navy</item>
     </style>
 
     <style name="btnGoBack">
         <item name="android:textSize">30sp</item>
-        <item name="android:textColor">@color/silver</item>
-        <item name="android:backgroundTint">@color/rubyRed</item>
+        <item name="android:textColor">@color/light_gray</item>
+        <item name="android:backgroundTint">@color/deep_purple</item>
     </style>
 
     <style name="slider">
-        <item name="haloColor">@color/midnightBlue</item>
-        <item name="thumbColor">@color/deepPurple</item>
-        <item name="tickColor">@color/deepPurple</item>
-        <item name="trackColor">@color/silver</item>
+        <item name="haloColor">@color/deep_purple</item>
+        <item name="thumbColor">@color/primary_purple</item>
+        <item name="tickColor">@color/primary_purple</item>
+        <item name="trackColor">@color/light_gray</item>
     </style>
 </resources>
