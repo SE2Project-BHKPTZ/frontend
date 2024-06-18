@@ -31,13 +31,17 @@ import at.aau.serg.models.Score
 import at.aau.serg.models.SubRound
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
+import at.aau.serg.network.CallbackCreator
+import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.GameScreenViewModel
 import at.aau.serg.viewmodels.TrickPredictionViewModel
+import okhttp3.Response
 import org.json.JSONObject
+import java.io.IOException
 
 class GameScreenActivity : AppCompatActivity() {
 
@@ -212,7 +216,22 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     fun btnMenuClicked(view: View){
+        HttpClient.get(
+            "/lobbys/leave",
+            StoreToken(this).getAccessToken(),
+            CallbackCreator().createCallback(::leaveGameFailure, ::leaveGame)
+        )
         startActivity(Intent(this, MainActivity::class.java))
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun leaveGame(response: Response) {
+        startActivity(Intent(this, MainActivity::class.java))
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun leaveGameFailure(e: IOException) {
+        showToast(this, "Error leaving game")
     }
 
     fun btnChangeFragmentClicked(view: View) {
