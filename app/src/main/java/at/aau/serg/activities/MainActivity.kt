@@ -13,11 +13,6 @@ import at.aau.serg.androidutils.GameUtils.parseGameDataJson
 import at.aau.serg.androidutils.GameUtils.parseLobbyJson
 import at.aau.serg.logic.Authentication
 import at.aau.serg.logic.StoreToken
-import at.aau.serg.models.CardItem
-import at.aau.serg.models.LobbyPlayer
-import at.aau.serg.models.Score
-import at.aau.serg.models.Suit
-import at.aau.serg.models.Visibilities
 import at.aau.serg.network.CallbackCreator
 import at.aau.serg.network.SocketHandler
 import okhttp3.Response

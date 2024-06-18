@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import at.aau.serg.R
 import at.aau.serg.activities.GameScreenActivity
 import at.aau.serg.adapters.CardsRecyclerViewAdapter
-import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.models.CardItem
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.GameScreenViewModel
