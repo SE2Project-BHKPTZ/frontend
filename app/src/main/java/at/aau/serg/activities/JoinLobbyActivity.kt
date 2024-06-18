@@ -103,8 +103,6 @@ class JoinLobbyActivity : AppCompatActivity() {
             runOnUiThread {
                 adapter.notifyDataSetChanged()
             }
-
-            Log.d("LO", lobbies.toString())
         }
     }
 

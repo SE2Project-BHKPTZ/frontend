@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.androidutils.ErrorUtils.showToast
@@ -38,9 +37,8 @@ class LobbyPlayerAdapter(private val context: ContextWrapper, private val listda
         val player: LobbyPlayer = listdata[position]
         holder.txtPlayerName.text = player.name
         holder.btnKick.visibility = player.isVisible.value
-        holder.btnKick.setOnClickListener { view ->
+        holder.btnKick.setOnClickListener {
             kickPlayer(player)
-            showToast(view.context,"click on item: " + player.uuid)
         }
     }
 
@@ -68,14 +66,7 @@ class LobbyPlayerAdapter(private val context: ContextWrapper, private val listda
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var btnKick: Button
-        var txtPlayerName: TextView
-        var constraintLayout: ConstraintLayout
-
-        init {
-            btnKick = itemView.findViewById<View>(R.id.btnKick) as Button
-            txtPlayerName = itemView.findViewById<View>(R.id.tvPlayerName) as TextView
-            constraintLayout = itemView.findViewById<View>(R.id.constraintLayout) as ConstraintLayout
-        }
+        val btnKick: Button = itemView.findViewById<View>(R.id.btnKick) as Button
+        val txtPlayerName: TextView = itemView.findViewById<View>(R.id.tvPlayerName) as TextView
     }
 }

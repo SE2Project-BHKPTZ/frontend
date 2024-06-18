@@ -122,53 +122,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun btnGoToLoginClicked(view: View) {
-        startActivity(Intent(this, LoginActivity::class.java))
-    }
-
-    fun openGameActivity(view: View){
-        val intent = Intent(
-            baseContext,
-            GameScreenActivity::class.java
-        )
-
-        val sampleCards: Array<CardItem> = arrayOf(
-            CardItem("2", Suit.HEARTS),
-            CardItem("5", Suit.SPADES),
-            CardItem("7", Suit.DIAMONDS),
-            CardItem("13", Suit.CLUBS),
-            CardItem("4", Suit.HEARTS)
-        )
-        intent.putExtra("cards", sampleCards)
-        intent.putExtra("trump", CardItem("3", Suit.HEARTS))
-        intent.putExtra("playerCount", 4)
-        intent.putExtra("me", 0)
-
-        startActivity(intent)
-    }
-
     fun btnCLobbyClicked(view: View) {
         startActivity(Intent(this, CreateLobbyActivity::class.java))
     }
 
     fun btnJLobbyClicked(view: View) {
         startActivity(Intent(this, JoinLobbyActivity::class.java))
-    }
-
-    fun openResultActivity(view: View) {
-        val scores = hashMapOf(
-            "1" to Score("60", 1),
-            "2" to Score("100", 2),
-            "3" to Score("20", 3)
-        )
-
-        val players = arrayOf(LobbyPlayer("1", "Player 1", Visibilities.VISIBLE), LobbyPlayer("2", "Player 2", Visibilities.VISIBLE), LobbyPlayer("3", "Player 3", Visibilities.VISIBLE))
-
-        val intent = Intent(this, ResultActivity::class.java).apply {
-            putExtra("scores", scores)
-            putExtra("players", players)
-        }
-        startActivity(intent)
     }
 
     private fun recoverGameState(socketResponse: Array<Any>) {
