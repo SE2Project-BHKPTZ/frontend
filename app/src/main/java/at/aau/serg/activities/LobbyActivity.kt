@@ -67,6 +67,7 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.on("lobby:userLeft", ::userLeft)
         SocketHandler.on("lobby:userKick", ::userKick)
         SocketHandler.on("startGame", ::startGame)
+        SocketHandler.on("lobby:disconnect", ::userLeft)
     }
 
     override fun onDestroy() {
