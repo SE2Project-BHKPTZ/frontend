@@ -8,6 +8,8 @@ import okhttp3.Response
 import org.json.JSONObject
 
 object ErrorUtils {
+    private var currentToast: Toast? = null
+
     fun getErrorMessageFromJSONResponse(response: Response, defaultMessage: String?): String {
         val responseString = response.body?.string().orEmpty()
 
@@ -21,7 +23,9 @@ object ErrorUtils {
     fun showToast(context: Context, message: String) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            currentToast?.cancel()
+            currentToast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
+            currentToast?.show()
         }
     }
 }
