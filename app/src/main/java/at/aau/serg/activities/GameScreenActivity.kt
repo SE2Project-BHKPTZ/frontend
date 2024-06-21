@@ -312,10 +312,12 @@ class GameScreenActivity : AppCompatActivity() {
         val newWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${newWinnerPosition}Card", "id", packageName))
         runOnUiThread{
             newWinnerCardImageView.setBackgroundResource(R.drawable.card_border_selected)
-            winnerPlayerIndex?.let {
-                val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
-                    winnerPlayerIndex!!, myPlayerIndex, playerCount
-                )}Card", "id", packageName))
+        }
+        if(winnerPlayerIndex != null){
+            val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
+                winnerPlayerIndex!!, myPlayerIndex, playerCount
+            )}Card", "id", packageName))
+            runOnUiThread {
                 oldWinnerCardImageView.setBackgroundResource(R.drawable.card_border_default)
             }
         }
