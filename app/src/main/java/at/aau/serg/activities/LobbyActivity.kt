@@ -70,6 +70,7 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.on("lobby:userLeft", ::userLeft)
         SocketHandler.on("lobby:userKick", ::userKick)
         SocketHandler.on("startGame", ::startGame)
+        SocketHandler.on("lobby:disconnect", ::userLeft)
     }
 
     override fun onStop() {
@@ -189,7 +190,9 @@ class LobbyActivity : AppCompatActivity() {
     }
 
     private fun playerCount(): Int {
-        return Arrays.stream<Any>(lobbyPlayers).filter { e: Any? -> e != null }.count()
+        return Arrays.stream(lobbyPlayers).filter { e: LobbyPlayer ->
+            e.uuid != ""
+        }.count()
             .toInt();
     }
 
