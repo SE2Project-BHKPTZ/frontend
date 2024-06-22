@@ -336,6 +336,37 @@ class GameScreenActivity : AppCompatActivity() {
             allowedToPlayCard = true
             showToast(this, "You are now!")
         }
+
+        // highlight the current player card
+        val calcNextPlayerPosition = calculatePositionOfPlayer(nextPlayerIdx, myPlayerIndex, playerCount)
+        val calcCurrentPlayerPosition = calculatePositionOfPlayer(nextPlayerIdx-1, myPlayerIndex, playerCount)
+        // need to be on an extra thread with sleep!, because in the first round, the playerCardImageViews are not loaded yet
+        Thread {
+            Thread.sleep(1000) // because playerCardImageViews might not be loaded (null)
+            val nextPlayerImageView = findViewById<ImageView>(
+                resources.getIdentifier(
+                    "ivPlayer${calcNextPlayerPosition}Card",
+                    "id",
+                    packageName
+                )
+            )
+
+            var currentPlayerImageView: ImageView? = null
+            if(firstPlayedCard != null && winnerPlayerIndex != null && calculatePositionOfPlayer(
+                    winnerPlayerIndex!!, myPlayerIndex, playerCount) != calcCurrentPlayerPosition)
+                currentPlayerImageView = findViewById(
+                    resources.getIdentifier(
+                        "ivPlayer${calcCurrentPlayerPosition}Card",
+                        "id",
+                        packageName
+                    )
+                )
+
+            runOnUiThread {
+                currentPlayerImageView?.setBackgroundResource(R.drawable.card_border_default)
+                nextPlayerImageView.setBackgroundResource(R.drawable.card_border_playable)
+            }
+        }.start()
     }
 
     private fun startRound(socketResponse: Array<Any>) {
