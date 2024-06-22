@@ -56,7 +56,8 @@
         android:textSize="24sp"
         style="@style/btnPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPlayers"

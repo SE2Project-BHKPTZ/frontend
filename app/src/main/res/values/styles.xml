@@ -30,7 +30,7 @@
     </style>
 
     <style name="btnPrimary" parent="btnDefaultMainActivity">
-        <item name="android:backgroundTint">@color/primary_purple</item>
+        <item name="android:backgroundTint">@color/button_background_tint</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
@@ -60,5 +60,10 @@
         <item name="thumbColor">@color/primary_purple</item>
         <item name="tickColor">@color/primary_purple</item>
         <item name="trackColor">@color/light_gray</item>
+    </style>
+
+    <style name="checkbox" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="buttonTint">@color/white</item>
+        <item name="buttonIconTint">@color/black</item>
     </style>
 </resources>

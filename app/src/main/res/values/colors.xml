@@ -2,8 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <!--Color ideas by ChatGPT (GPT-4o)-->
+    <color name="primary_purple_disabled">#268F37FF</color>
     <color name="primary_purple">#8F37FF</color>
     <color name="accent_orange">#FDBC68</color>
     <color name="dark_navy">#141026</color>
