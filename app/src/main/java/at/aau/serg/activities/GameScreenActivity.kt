@@ -32,8 +32,6 @@ import at.aau.serg.models.Score
 import at.aau.serg.models.SubRound
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
-import at.aau.serg.network.CallbackCreator
-import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
