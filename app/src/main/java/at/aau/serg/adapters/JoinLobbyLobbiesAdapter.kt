@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import at.aau.serg.R
 import at.aau.serg.activities.LobbyActivity
@@ -24,14 +23,11 @@ import okhttp3.Response
 import java.io.IOException
 
 
-class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<JoinLobbyLobby>) :
-    RecyclerView.Adapter<JoinLobbyLobbiesAdapter.ViewHolder>() {
+class JoinLobbyLobbiesAdapter(
+    private val context: ContextWrapper,
     private val listdata: MutableList<JoinLobbyLobby>
-    private val context:ContextWrapper
-    init {
-        this.listdata = listdata
-        this.context = context
-    }
+) :
+    RecyclerView.Adapter<JoinLobbyLobbiesAdapter.ViewHolder>() {
 
     private var lobbyID = ""
 
@@ -93,16 +89,8 @@ class JoinLobbyLobbiesAdapter(context: ContextWrapper, listdata: MutableList<Joi
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var btnJoin: Button
-        var txtLobbyName: TextView
-        var txtPlayerCount: TextView
-        var constraintLayout: ConstraintLayout
-
-        init {
-            btnJoin = itemView.findViewById<View>(R.id.btnJoin) as Button
-            txtLobbyName = itemView.findViewById<View>(R.id.tvLobbyName) as TextView
-            txtPlayerCount = itemView.findViewById<View>(R.id.tvPlayerCount) as TextView
-            constraintLayout = itemView.findViewById<View>(R.id.constraintLayout) as ConstraintLayout
-        }
+        var btnJoin: Button = itemView.findViewById<View>(R.id.btnJoin) as Button
+        var txtLobbyName: TextView = itemView.findViewById<View>(R.id.tvLobbyName) as TextView
+        var txtPlayerCount: TextView = itemView.findViewById<View>(R.id.tvPlayerCount) as TextView
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -47,6 +48,17 @@ class LobbyActivity : AppCompatActivity() {
             insets
         }
 
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                HttpClient.get(
+                    "/lobbys/leave",
+                    StoreToken(this@LobbyActivity).getAccessToken(),
+                    CallbackCreator().createCallback(::onFailureLeaveLobby, ::leftLobby)
+                )
+            }
+        })
+
+
         val recyclerView = findViewById<View>(R.id.recyclerViewPlayers) as RecyclerView
         adapter = LobbyPlayerAdapter(this, lobbyPlayers)
         recyclerView.setHasFixedSize(true)
@@ -62,15 +74,19 @@ class LobbyActivity : AppCompatActivity() {
             StoreToken(this).getAccessToken(),
             CallbackCreator().createCallback(::onFailure, ::onSuccessGetLobby)
         )
+    }
 
+    override fun onStart() {
+        super.onStart()
         SocketHandler.on("lobby:userJoined", ::userJoined)
         SocketHandler.on("lobby:userLeft", ::userLeft)
         SocketHandler.on("lobby:userKick", ::userKick)
         SocketHandler.on("startGame", ::startGame)
+        SocketHandler.on("lobby:disconnect", ::userLeft)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         SocketHandler.off("lobby:userJoined")
         SocketHandler.off("lobby:userLeft")
         SocketHandler.off("lobby:userKick")
@@ -92,6 +108,8 @@ class LobbyActivity : AppCompatActivity() {
                     runOnUiThread { adapter.notifyItemChanged(i) }
                 }
                 isAdmin = players.getJSONObject(0).getString("uuid") == StoreToken(this).getUUID().toString()
+
+                if (isAdmin) runOnUiThread { findViewById<Button>(R.id.btnStartGame).visibility = Visibilities.VISIBLE.value }
             }
         }
     }
@@ -186,7 +204,9 @@ class LobbyActivity : AppCompatActivity() {
     }
 
     private fun playerCount(): Int {
-        return Arrays.stream<Any>(lobbyPlayers).filter { e: Any? -> e != null }.count()
+        return Arrays.stream(lobbyPlayers).filter { e: LobbyPlayer ->
+            e.uuid != ""
+        }.count()
             .toInt();
     }
 

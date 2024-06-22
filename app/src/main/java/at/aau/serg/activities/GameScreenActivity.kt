@@ -3,9 +3,9 @@ package at.aau.serg.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -66,13 +66,23 @@ class GameScreenActivity : AppCompatActivity() {
             insets
         }
 
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Log.d("GameScreen","Back button pressed will be ignored")
+            }
+        })
+
         updateFragmentContainerView(TrickPredictionFragment())
         handleIntentData()
+    }
+
+    override fun onStart() {
+        super.onStart()
         setupSocketHandlers()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         removeSocketHandlers()
     }
 
@@ -209,23 +219,6 @@ class GameScreenActivity : AppCompatActivity() {
         SocketHandler.off("lobby:reconnect")
         SocketHandler.off("lobby:closed")
         SocketHandler.off("recovery")
-    }
-
-    fun btnMenuClicked(view: View){
-        startActivity(Intent(this, MainActivity::class.java))
-    }
-
-    fun btnChangeFragmentClicked(view: View) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame)
-        val newFragment = when (fragment) {
-            is TrickPredictionFragment -> getPlayerGameScreen(3)
-            else -> TrickPredictionFragment()
-        }
-
-        if (newFragment != null) {
-            cardPlayed = false
-            updateFragmentContainerView(newFragment)
-        }
     }
 
     private fun updateFragmentContainerView(newFragment: Fragment){

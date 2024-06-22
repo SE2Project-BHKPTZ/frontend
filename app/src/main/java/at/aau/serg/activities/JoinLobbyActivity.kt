@@ -103,8 +103,6 @@ class JoinLobbyActivity : AppCompatActivity() {
             runOnUiThread {
                 adapter.notifyDataSetChanged()
             }
-
-            Log.d("LO", lobbies.toString())
         }
     }
 
@@ -183,8 +181,8 @@ class JoinLobbyActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         handler.removeCallbacks(pollingRunnable)
     }
 }

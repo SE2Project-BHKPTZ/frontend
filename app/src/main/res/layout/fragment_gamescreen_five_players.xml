@@ -97,6 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivPlayer1Card"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
@@ -110,6 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="-20dp"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivPlayer2Card"
             app:layout_constraintEnd_toStartOf="@+id/ivGameScreenCenter"
             app:layout_constraintStart_toEndOf="@+id/ivPlayer2Card" />
@@ -119,6 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivGameScreenCenter"
             app:layout_constraintStart_toEndOf="@+id/ivPlayer3Card"
             app:layout_constraintTop_toBottomOf="@+id/ivPlayer3Card"
@@ -129,6 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintEnd_toStartOf="@+id/ivPlayer4Card"
             app:layout_constraintTop_toBottomOf="@+id/ivPlayer4Card" />
 
@@ -138,6 +142,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="-20dp"
             android:text="@string/gameNoPoints"
+            style="@style/textView"
             app:layout_constraintBottom_toTopOf="@+id/ivPlayer5Card"
             app:layout_constraintEnd_toStartOf="@+id/ivPlayer5Card"
             app:layout_constraintStart_toEndOf="@+id/ivGameScreenCenter" />
