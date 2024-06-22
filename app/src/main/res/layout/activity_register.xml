@@ -9,11 +9,11 @@
 
     <TextView
         android:id="@+id/tvRegister"
+        style="@style/headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/register"
-        style="@style/headline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,6 +21,7 @@
 
     <TextView
         android:id="@+id/tvUsername"
+        style="@style/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="137dp"
@@ -30,21 +31,22 @@
 
     <EditText
         android:id="@+id/editTextUsername"
+        style="@style/EditTextView"
         android:layout_width="280dp"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
+        android:autofillHints="username"
         android:ems="10"
         android:hint="@string/username"
         android:inputType="text"
-        style="@style/EditTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUsername"
-        android:autofillHints="username"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
     <TextView
         android:id="@+id/tvPassword"
+        style="@style/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
@@ -54,28 +56,29 @@
 
     <EditText
         android:id="@+id/editTextPassword"
+        style="@style/EditTextView"
         android:layout_width="280dp"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
+        android:autofillHints="password"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        style="@style/EditTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPassword"
-        android:autofillHints="password"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvPassword" />
 
     <TextView
         android:id="@+id/tvAlreadyHaveAnAccount"
+        style="@style/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="161dp"
         android:layout_marginBottom="159dp"
+        android:onClick="tvAlreadyHaveAnAccountClicked"
         android:text="@string/alreadyHaveAccount"
         android:textAlignment="center"
-        android:onClick="tvAlreadyHaveAnAccountClicked"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/btnRegister"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,12 +88,12 @@
 
     <Button
         android:id="@+id/btnRegister"
+        style="@style/btnSecondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
         android:onClick="btnRegisterClicked"
         android:text="@string/register"
-        style="@style/btnRegisterLoginActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

@@ -108,6 +108,8 @@ class LobbyActivity : AppCompatActivity() {
                     runOnUiThread { adapter.notifyItemChanged(i) }
                 }
                 isAdmin = players.getJSONObject(0).getString("uuid") == StoreToken(this).getUUID().toString()
+
+                if (isAdmin) runOnUiThread { findViewById<Button>(R.id.btnStartGame).visibility = Visibilities.VISIBLE.value }
             }
         }
     }

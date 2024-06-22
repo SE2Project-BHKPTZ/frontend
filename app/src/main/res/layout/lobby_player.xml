@@ -13,6 +13,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/lobbyPlayersPlayerNamePlaceholder"
         android:textSize="24sp"
+        style="@style/textView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
