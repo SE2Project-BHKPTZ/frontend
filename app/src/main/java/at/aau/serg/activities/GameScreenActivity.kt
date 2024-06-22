@@ -68,11 +68,15 @@ class GameScreenActivity : AppCompatActivity() {
 
         updateFragmentContainerView(TrickPredictionFragment())
         handleIntentData()
+    }
+
+    override fun onStart() {
+        super.onStart()
         setupSocketHandlers()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         removeSocketHandlers()
     }
 

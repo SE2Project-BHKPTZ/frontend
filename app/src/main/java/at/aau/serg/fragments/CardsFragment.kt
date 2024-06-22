@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import at.aau.serg.R
 import at.aau.serg.activities.GameScreenActivity
 import at.aau.serg.adapters.CardsRecyclerViewAdapter
-import at.aau.serg.androidutils.ErrorUtils.showToast
 import at.aau.serg.models.CardItem
 import at.aau.serg.viewmodels.CardsViewModel
 import at.aau.serg.viewmodels.GameScreenViewModel
@@ -54,7 +53,6 @@ class CardsFragment : Fragment() {
 
     private fun onCardClicked(cardItem: CardItem) {
         val activity = activity
-        context?.let { showToast(it, "Card clicked: ${cardItem.value} of ${cardItem.suit}") }
         if (activity is GameScreenActivity && activity.supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame) !is TrickPredictionFragment) {
             val cardIsPlayed = activity.onCardClicked(cardItem)
             if (cardIsPlayed.not()) return

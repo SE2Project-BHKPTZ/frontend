@@ -62,15 +62,18 @@ class LobbyActivity : AppCompatActivity() {
             StoreToken(this).getAccessToken(),
             CallbackCreator().createCallback(::onFailure, ::onSuccessGetLobby)
         )
+    }
 
+    override fun onStart() {
+        super.onStart()
         SocketHandler.on("lobby:userJoined", ::userJoined)
         SocketHandler.on("lobby:userLeft", ::userLeft)
         SocketHandler.on("lobby:userKick", ::userKick)
         SocketHandler.on("startGame", ::startGame)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         SocketHandler.off("lobby:userJoined")
         SocketHandler.off("lobby:userLeft")
         SocketHandler.off("lobby:userKick")
