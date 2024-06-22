@@ -6,13 +6,6 @@
         <item name="android:textColor">@color/light_gray</item>
     </style>
 
-    <style name="btnRegisterLoginActivity">
-        <item name="android:textSize">30sp</item>
-        <item name="android:textColor">@color/primary_purple</item>
-        <item name="textOutlineColor">#ffffff</item>
-        <item name="android:backgroundTint">@color/deep_purple</item>
-    </style>
-
     <style name="EditTextView">
         <item name="android:textColor">@color/light_gray</item>
         <item name="android:textColorHint">@color/light_gray</item>
