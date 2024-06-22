@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -46,6 +47,17 @@ class LobbyActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                HttpClient.get(
+                    "/lobbys/leave",
+                    StoreToken(this@LobbyActivity).getAccessToken(),
+                    CallbackCreator().createCallback(::onFailureLeaveLobby, ::leftLobby)
+                )
+            }
+        })
+
 
         val recyclerView = findViewById<View>(R.id.recyclerViewPlayers) as RecyclerView
         adapter = LobbyPlayerAdapter(this, lobbyPlayers)

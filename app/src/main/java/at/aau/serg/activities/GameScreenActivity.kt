@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,8 @@ import at.aau.serg.models.Score
 import at.aau.serg.models.SubRound
 import at.aau.serg.models.Suit
 import at.aau.serg.models.Visibilities
+import at.aau.serg.network.CallbackCreator
+import at.aau.serg.network.HttpClient
 import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
 import at.aau.serg.utils.GameUtils.calculatePositionOfPlayer
@@ -65,6 +68,12 @@ class GameScreenActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Log.d("GameScreen","Back button pressed will be ignored")
+            }
+        })
 
         updateFragmentContainerView(TrickPredictionFragment())
         handleIntentData()
