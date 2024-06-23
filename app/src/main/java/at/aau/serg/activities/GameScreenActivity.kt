@@ -334,7 +334,6 @@ class GameScreenActivity : AppCompatActivity() {
     private fun isNextPlayer(nextPlayerIdx: Int){
         if (nextPlayerIdx == myPlayerIndex) {
             allowedToPlayCard = true
-            showToast(this, "You are now!")
         }
 
         // highlight the current player card
