@@ -354,23 +354,20 @@ class GameScreenActivity : AppCompatActivity() {
             )
         )
 
-        if (nextPlayerImageView != null) {
-            var currentPlayerImageView: ImageView? = null
-            if (firstPlayedCard != null && winnerPlayerIndex != null &&
-                calculatePositionOfPlayer(winnerPlayerIndex!!, myPlayerIndex, playerCount) != calcCurrentPlayerPosition) {
-                currentPlayerImageView = findViewById(
-                    resources.getIdentifier(
-                        "ivPlayer${calcCurrentPlayerPosition}Card",
-                        "id",
-                        packageName
-                    )
+        var currentPlayerImageView: ImageView? = null
+        if(firstPlayedCard != null && calculatePositionOfPlayer(
+                winnerPlayerIndex!!, myPlayerIndex, playerCount) != calcCurrentPlayerPosition)
+            currentPlayerImageView = findViewById(
+                resources.getIdentifier(
+                    "ivPlayer${calcCurrentPlayerPosition}Card",
+                    "id",
+                    packageName
                 )
-            }
+            )
 
-            runOnUiThread {
-                currentPlayerImageView?.setBackgroundResource(R.drawable.card_border_default)
-                nextPlayerImageView.setBackgroundResource(R.drawable.card_border_playable)
-            }
+        runOnUiThread {
+            currentPlayerImageView?.setBackgroundResource(R.drawable.card_border_default)
+            nextPlayerImageView?.setBackgroundResource(R.drawable.card_border_playable)
         }
     }
 
