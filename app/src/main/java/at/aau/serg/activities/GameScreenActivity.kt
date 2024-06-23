@@ -79,6 +79,11 @@ class GameScreenActivity : AppCompatActivity() {
                 super.onFragmentViewCreated(fm, f, v, savedInstanceState)
                 highlightCurrentPlayerCard(nextPlayerIdx)
             }
+
+            override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
+                super.onFragmentResumed(fm, f)
+                highlightCurrentPlayerCard(nextPlayerIdx)
+            }
         }, true)
 
         updateFragmentContainerView(TrickPredictionFragment())
@@ -345,7 +350,6 @@ class GameScreenActivity : AppCompatActivity() {
         Log.d("Card", "highlight")
         val calcNextPlayerPosition = calculatePositionOfPlayer(nextPlayerIdx, myPlayerIndex, playerCount)
         val calcCurrentPlayerPosition = calculatePositionOfPlayer(nextPlayerIdx-1, myPlayerIndex, playerCount)
-
         val nextPlayerImageView = findViewById<ImageView>(
             resources.getIdentifier(
                 "ivPlayer${calcNextPlayerPosition}Card",
