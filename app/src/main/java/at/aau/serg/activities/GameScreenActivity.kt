@@ -351,7 +351,7 @@ class GameScreenActivity : AppCompatActivity() {
             )
 
             var currentPlayerImageView: ImageView? = null
-            if(firstPlayedCard != null && winnerPlayerIndex != null && calculatePositionOfPlayer(
+            if(firstPlayedCard != null && calculatePositionOfPlayer(
                     winnerPlayerIndex!!, myPlayerIndex, playerCount) != calcCurrentPlayerPosition)
                 currentPlayerImageView = findViewById(
                     resources.getIdentifier(
