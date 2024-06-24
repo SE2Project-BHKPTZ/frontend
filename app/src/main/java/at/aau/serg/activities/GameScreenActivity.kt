@@ -3,6 +3,7 @@ package at.aau.serg.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import at.aau.serg.R
 import at.aau.serg.androidutils.CardUtils.getResourceId
 import at.aau.serg.androidutils.ErrorUtils.showToast
@@ -19,7 +21,6 @@ import at.aau.serg.androidutils.GameUtils
 import at.aau.serg.androidutils.GameUtils.cardItemToJson
 import at.aau.serg.androidutils.GameUtils.getPlayerGameScreen
 import at.aau.serg.androidutils.GameUtils.serializable
-import at.aau.serg.fragments.GameScreenThreePlayersFragment
 import at.aau.serg.fragments.TrickPredictionFragment
 import at.aau.serg.logic.StoreToken
 import at.aau.serg.models.CardItem
@@ -53,6 +54,7 @@ class GameScreenActivity : AppCompatActivity() {
     private var maxRounds = 0
     private var allowedToPlayCard = false
     private var myPlayerIndex: Int = 0
+    private var nextPlayerIdx: Int = 0
     private var winnerPlayerIndex: Int? = null
     private lateinit var players: Array<LobbyPlayer>
 
@@ -71,6 +73,18 @@ class GameScreenActivity : AppCompatActivity() {
                 Log.d("GameScreen","Back button pressed will be ignored")
             }
         })
+
+        supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+                super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+                highlightCurrentPlayerCard(nextPlayerIdx)
+            }
+
+            override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
+                super.onFragmentResumed(fm, f)
+                highlightCurrentPlayerCard(nextPlayerIdx)
+            }
+        }, true)
 
         updateFragmentContainerView(TrickPredictionFragment())
         handleIntentData()
@@ -157,7 +171,6 @@ class GameScreenActivity : AppCompatActivity() {
     }
 
     private fun setPlayedCards(playedCards: List<PlayedCard>, players: List<Player>) {
-        Log.d("fragment", (supportFragmentManager.findFragmentById(R.id.fragmentContainerViewGame) is GameScreenThreePlayersFragment).toString())
         playedCards.forEach { cardPlayed ->
             val cardItem = cardPlayed.card
             val player = cardPlayed.player
@@ -305,10 +318,12 @@ class GameScreenActivity : AppCompatActivity() {
         val newWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${newWinnerPosition}Card", "id", packageName))
         runOnUiThread{
             newWinnerCardImageView.setBackgroundResource(R.drawable.card_border_selected)
-            winnerPlayerIndex?.let {
-                val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
-                    winnerPlayerIndex!!, myPlayerIndex, playerCount
-                )}Card", "id", packageName))
+        }
+        if(winnerPlayerIndex != null){
+            val oldWinnerCardImageView = findViewById<ImageView>(resources.getIdentifier("ivPlayer${calculatePositionOfPlayer(
+                winnerPlayerIndex!!, myPlayerIndex, playerCount
+            )}Card", "id", packageName))
+            runOnUiThread {
                 oldWinnerCardImageView.setBackgroundResource(R.drawable.card_border_default)
             }
         }
@@ -325,7 +340,38 @@ class GameScreenActivity : AppCompatActivity() {
     private fun isNextPlayer(nextPlayerIdx: Int){
         if (nextPlayerIdx == myPlayerIndex) {
             allowedToPlayCard = true
-            showToast(this, "You are now!")
+        }
+        this.nextPlayerIdx = nextPlayerIdx
+
+        highlightCurrentPlayerCard(nextPlayerIdx)
+    }
+
+    private fun highlightCurrentPlayerCard(nextPlayerIdx: Int) {
+        Log.d("Card", "highlight")
+        val calcNextPlayerPosition = calculatePositionOfPlayer(nextPlayerIdx, myPlayerIndex, playerCount)
+        val calcCurrentPlayerPosition = calculatePositionOfPlayer(nextPlayerIdx-1, myPlayerIndex, playerCount)
+        val nextPlayerImageView = findViewById<ImageView>(
+            resources.getIdentifier(
+                "ivPlayer${calcNextPlayerPosition}Card",
+                "id",
+                packageName
+            )
+        )
+
+        var currentPlayerImageView: ImageView? = null
+        if(firstPlayedCard != null && calculatePositionOfPlayer(
+                winnerPlayerIndex!!, myPlayerIndex, playerCount) != calcCurrentPlayerPosition)
+            currentPlayerImageView = findViewById(
+                resources.getIdentifier(
+                    "ivPlayer${calcCurrentPlayerPosition}Card",
+                    "id",
+                    packageName
+                )
+            )
+
+        runOnUiThread {
+            currentPlayerImageView?.setBackgroundResource(R.drawable.card_border_default)
+            nextPlayerImageView?.setBackgroundResource(R.drawable.card_border_playable)
         }
     }
 
