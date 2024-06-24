@@ -34,13 +34,17 @@ object SocketHandler {
     }
 
     fun on(eventName: String, callback: (Array<Any>) -> Unit) {
-        socket.on(eventName) { args ->
-            callback(args)
+        if (::socket.isInitialized) {
+            socket.on(eventName) { args ->
+                callback(args)
+            }
         }
     }
 
     fun off(eventName: String) {
-        socket.off(eventName)
+        if (::socket.isInitialized) {
+            socket.off(eventName)
+        }
     }
 
     fun setupBasicListeners() {
