@@ -85,6 +85,7 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.on("lobby:userKick", ::userKick)
         SocketHandler.on("startGame", ::startGame)
         SocketHandler.on("lobby:disconnect", ::userLeft)
+        SocketHandler.on("disconnect", ::leaveLobbyEvent)
     }
 
     override fun onStop() {
@@ -93,6 +94,7 @@ class LobbyActivity : AppCompatActivity() {
         SocketHandler.off("lobby:userLeft")
         SocketHandler.off("lobby:userKick")
         SocketHandler.off("startGame")
+        SocketHandler.off("disconnect")
     }
 
     private fun onSuccessGetLobby(response: Response) {
@@ -213,6 +215,12 @@ class LobbyActivity : AppCompatActivity() {
             StoreToken(this).getAccessToken(),
             CallbackCreator().createCallback(::onFailureLeaveLobby, ::leftLobby)
         )
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun leaveLobbyEvent(socketResponse: Array<Any>) {
+        showToast(this, "Left lobby since connection was lost")
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     fun btnStartGame(view: View) {
