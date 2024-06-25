@@ -25,6 +25,7 @@ import at.aau.serg.network.SocketHandler
 import at.aau.serg.utils.CardsConverter
 import okhttp3.Response
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.Arrays
@@ -36,7 +37,8 @@ class LobbyActivity : AppCompatActivity() {
     }
     private lateinit var adapter: LobbyPlayerAdapter
     private var isAdmin: Boolean = false
-    private var maxRounds : Int = 0
+    private var maxRounds: Int = 0
+    private var adminUUID: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,22 +97,52 @@ class LobbyActivity : AppCompatActivity() {
 
     private fun onSuccessGetLobby(response: Response) {
         if (response.isSuccessful) {
+
             response.body?.string()?.let { responseBody ->
                 maxRounds = JSONObject(responseBody).getInt("maxRounds")
 
                 val players = JSONArray(JSONObject(responseBody).getString("players"))
-                for (i in 0 until players.length()) {
-                    val player = players.getJSONObject(i)
-                    lobbyPlayers[i].apply {
-                        uuid = player.getString("uuid")
-                        name = player.getString("username")
+
+                Log.d("LobbyPlayer", StoreToken(this).getUUID().toString())
+                Log.d("LobbyAdmin", players.getJSONObject(0).getString("uuid"))
+                adminUUID = players.getJSONObject(0).getString("uuid")
+                isAdmin = adminUUID == StoreToken(this).getUUID().toString()
+
+                for (i in 0 until 6) {
+
+                    val player = getPlayerOrNull(players, i)
+                    if (player != null) {
+                        lobbyPlayers[i].apply {
+                            uuid = player.getString("uuid")
+                            name = player.getString("username")
+                            if (isAdmin && player.getString("uuid") != StoreToken(this@LobbyActivity).getUUID()
+                                    .toString()
+                            ) isVisible = Visibilities.VISIBLE
+                        }
+                    } else {
+                        lobbyPlayers[i].apply {
+                            uuid = ""
+                            name = ""
+                            isVisible = Visibilities.INVISIBLE
+                        }
                     }
+
                     runOnUiThread { adapter.notifyItemChanged(i) }
                 }
-                isAdmin = players.getJSONObject(0).getString("uuid") == StoreToken(this).getUUID().toString()
 
-                if (isAdmin) runOnUiThread { findViewById<Button>(R.id.btnStartGame).visibility = Visibilities.VISIBLE.value }
+                if (isAdmin) runOnUiThread {
+                    findViewById<Button>(R.id.btnStartGame).visibility = Visibilities.VISIBLE.value
+                }
             }
+        }
+    }
+
+    private fun getPlayerOrNull(players: JSONArray, index: Int): JSONObject? {
+        return try {
+            players.getJSONObject(index)
+
+        } catch (e: JSONException) {
+            null
         }
     }
 
@@ -145,17 +177,28 @@ class LobbyActivity : AppCompatActivity() {
         Log.d("Lobby", "$playerData left")
         val playerToRemove = lobbyPlayers.indexOfFirst { it.uuid == playerData }
         if (playerToRemove != -1) {
+            val playerToRemoveUUID = lobbyPlayers[playerToRemove].uuid
+
             lobbyPlayers[playerToRemove].apply {
                 uuid = ""
                 name = ""
                 isVisible = Visibilities.INVISIBLE
             }
             runOnUiThread { adapter.notifyItemChanged(playerToRemove) }
+
+            if (playerToRemoveUUID == adminUUID) {
+                HttpClient.get(
+                    "lobbys/my",
+                    StoreToken(this).getAccessToken(),
+                    CallbackCreator().createCallback(::onFailure, ::onSuccessGetLobby)
+                )
+            }
         }
 
         if (playerCount() < 3 && isAdmin) {
             runOnUiThread { findViewById<Button>(R.id.btnStartGame).isEnabled = false }
         }
+
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -195,7 +238,7 @@ class LobbyActivity : AppCompatActivity() {
             putExtra("cards", CardsConverter.convertCards(cards))
             putExtra("trump", trumpCard?.let { CardsConverter.convertCard(it) })
             putExtra("playerCount", gameData.getJSONArray("hands").length())
-            putExtra("maxRounds",maxRounds)
+            putExtra("maxRounds", maxRounds)
             putExtra("me", getPlayerIndex())
             putExtra("players", lobbyPlayers)
         }
@@ -212,6 +255,6 @@ class LobbyActivity : AppCompatActivity() {
 
     private fun getPlayerIndex(): Int {
         val uuid: String = StoreToken(this).getUUID().toString()
-        return lobbyPlayers.indexOfFirst { player -> player.uuid == uuid}
+        return lobbyPlayers.indexOfFirst { player -> player.uuid == uuid }
     }
 }
