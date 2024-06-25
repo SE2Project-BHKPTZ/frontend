@@ -130,13 +130,7 @@ class MainActivity : AppCompatActivity() {
         val data = (socketResponse[0] as JSONObject)
         val status = data.getString("status")
 
-        if (status == "JOIN_LOBBY") {
-            val lobby = parseLobbyJson(data.getJSONObject("state"))
-
-            val intent = Intent(this, LobbyActivity::class.java)
-            intent.putExtra("lobbyCode", lobby.uuid)
-            startActivity(intent)
-        } else if (status == "PLAYING") {
+       if (status == "PLAYING") {
             val gameData = parseGameDataJson(data.getJSONObject("state"))
             Log.d("gamedata", gameData.toString())
 
