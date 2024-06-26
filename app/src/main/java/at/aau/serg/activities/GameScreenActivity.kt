@@ -261,7 +261,7 @@ class GameScreenActivity : AppCompatActivity() {
         countPlayedCards++
 
         val json: JSONObject = cardItemToJson(cardItem)
-        json.put("trump", if (::trumpCard.isInitialized) trumpCard.suit else null)
+        json.put("trump", if (::trumpCard.isInitialized and !isLastRound()) trumpCard.suit else null)
 
         SocketHandler.emit("cardPlayed", json)
         return true
@@ -387,6 +387,7 @@ class GameScreenActivity : AppCompatActivity() {
 
         val trumpImageView: ImageView = findViewById(R.id.ivTrumpCard)
         if (trumpCard != null) {
+            this.trumpCard = trumpCard
             val cardResourceId = getResourceId("card_${trumpCard.suit.toString().lowercase()}_${trumpCard.value}")
             setPlayerCard(trumpImageView, cardResourceId)
         } else {
@@ -526,5 +527,9 @@ class GameScreenActivity : AppCompatActivity() {
         return players.map { player ->
             LobbyPlayer(uuid = player.uuid, name = player.username, isVisible = Visibilities.VISIBLE)
         }.toTypedArray()
+    }
+
+    private fun isLastRound(): Boolean {
+        return maxRounds == trickViewModel.round.value
     }
 }
